@@ -166,35 +166,7 @@ fun AddPayMethod(
     }
 }
 
-@Composable
-fun PetShopAppBar(
-    modifier: Modifier = Modifier,
-    title: String
-) {
-    Row(
-        horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 16.dp, top = 14.dp, end = 16.dp, bottom = 14.dp)
-    ) {
-        IconButton(onClick = { /*TODO*/ }) {
-            Icon(
-                imageVector = Icons.Filled.ArrowBack,
-                contentDescription = null
-            )
-        }
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleMedium.copy(
-                fontSize = 20.sp
-            ),
-            modifier = Modifier
-                .padding(start = 8.dp)
-                .weight(1f)
-        )
-    }
-}
+
 
 @Preview
 @Composable

@@ -49,11 +49,12 @@ class MainActivity : ComponentActivity() {
                 ) {
                     // Lựa chọn màn hình ở đây:
                     //SelectVoucher()
-                    SelectPayMethod()
+                    //SelectPayMethod()
                     //Login()
                     //Register()
                     //Transaction()
                     //LoadingScreen()
+                    CheckOut()
                 }
             }
         }
