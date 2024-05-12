@@ -97,13 +97,7 @@ fun BoughtItem(p: Product)
                         text = p.name,
 
                         // Body/14/Medium
-                        style = TextStyle(
-                            fontSize = 14.sp,
-                            lineHeight = 20.sp,
-                            //fontFamily = FontFamily(Font(R.font.poppins)),
-                            fontWeight = FontWeight(500),
-                            color = Color(0xFF555555),
-                        )
+                        style = MaterialTheme.typography.bodyMedium
                     )
 
                     Spacer(modifier = Modifier.weight(1f))
