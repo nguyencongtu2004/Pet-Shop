@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -81,12 +82,19 @@ fun Information() {
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(
-                            text = "Khách hàng thân thiết",
-                            style = MaterialTheme.typography.titleLarge
+                            text = "Chỉnh sửa",
+                            style = MaterialTheme.typography.labelMedium
                         )
-                        /*IconButton(onClick = { *//*TODO*//* }) {
-                            Icon(icon = Icons.Default.ArrowForward)
-                        }*/
+                        IconButton(
+                            onClick = { /*TODO*/ },
+                            modifier = Modifier.padding(all = 0.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.KeyboardArrowRight,
+                                contentDescription = null,
+                                modifier = Modifier.padding(all = 0.dp)
+                            )
+                        }
                     }
 
                 }
