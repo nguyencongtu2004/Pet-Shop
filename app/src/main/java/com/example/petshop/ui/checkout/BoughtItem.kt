@@ -1,4 +1,4 @@
-package com.example.petshop.ui.theme
+package com.example.petshop.ui.checkout
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -32,7 +32,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.petshop.CheckOut
 import com.example.petshop.R
 import com.example.petshop.model.Product
 import com.example.petshop.ui.theme.PetShopTheme
@@ -239,7 +238,7 @@ fun BoughtItem(p: Product)
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun GreetingPreview() {
+fun BoughtItemPreview() {
     PetShopTheme {
         BoughtItem(p = Product("Thức an", "Cho chó", 45000.0, 2))
     }

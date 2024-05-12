@@ -1,4 +1,4 @@
-package com.example.petshop
+package com.example.petshop.ui.checkout
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
@@ -36,6 +36,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.petshop.R
+import com.example.petshop.ui.PetShopAppBar
 import com.example.petshop.ui.theme.PetShopTheme
 
 

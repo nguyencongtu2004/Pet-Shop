@@ -1,4 +1,4 @@
-package com.example.petshop
+package com.example.petshop.ui.login_register
 
 
 import androidx.compose.foundation.Image
@@ -40,6 +40,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.petshop.R
 import com.example.petshop.ui.theme.PetShopTheme
 
 @Composable
