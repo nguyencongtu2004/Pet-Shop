@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -87,13 +88,7 @@ fun EndBar() {
             Column {
                 Text(
                     text = "Tổng cộng",
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        lineHeight = 20.sp,
-                        fontWeight = FontWeight(500),
-                        color = Color(0xFF555555),
-                        textAlign = TextAlign.Center,
-                    )
+                    style = MaterialTheme.typography.bodyMedium,
                 )
 
                 Text(
