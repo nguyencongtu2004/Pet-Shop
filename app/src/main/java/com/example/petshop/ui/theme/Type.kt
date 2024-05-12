@@ -6,50 +6,49 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+
+import androidx.compose.ui.text.googlefonts.GoogleFont
+import androidx.compose.ui.text.googlefonts.Font
 import com.example.petshop.R
 
-// Set of Material typography styles to start with
-val Typography = Typography(
-    bodyLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
-    ),
-    titleMedium = TextStyle(
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
-        fontFamily = FontFamily(Font(R.font.poppins_bold)),
-        fontWeight = FontWeight(500),
-        //color = Color(0xFF3C3C3C),
-    ),
-    titleLarge = TextStyle(
-        fontSize = 18.sp,
-        lineHeight = 24.sp,
-        fontFamily = FontFamily(Font(R.font.poppins_bold)),
-        fontWeight = FontWeight(500),
-        //color = Color(0xFF3C3C3C),
-    ),
-    titleSmall = TextStyle(
-        fontSize = 12.sp,
-        lineHeight = 24.sp,
-        fontFamily = FontFamily(Font(R.font.poppins_bold)),
-        fontWeight = FontWeight(500),
-        //color = Color(0xFF3C3C3C),
-    ),
-    bodyMedium = TextStyle(
-        fontSize = 14.sp,
-        lineHeight = 20.sp,
-        fontFamily = FontFamily(Font(R.font.poppins_regular)),
-        fontWeight = FontWeight(400),
-        //color = Color(0xFF555555),
-    ),
-    bodySmall = TextStyle(
-        fontSize = 12.sp,
-        lineHeight = 20.sp,
-        fontFamily = FontFamily(Font(R.font.poppins_regular)),
-        fontWeight = FontWeight(400),
-        //color = Color(0xFF555555),
+val provider = GoogleFont.Provider(
+    providerAuthority = "com.google.android.gms.fonts",
+    providerPackage = "com.google.android.gms",
+    certificates = R.array.com_google_android_gms_fonts_certs
+)
+
+val bodyFontFamily = FontFamily(
+    Font(
+        googleFont = GoogleFont("Poppins"),
+        fontProvider = provider,
     )
 )
+
+val displayFontFamily = FontFamily(
+    Font(
+        googleFont = GoogleFont("Poppins"),
+        fontProvider = provider,
+    )
+)
+
+// Default Material 3 typography values
+val baseline = Typography()
+
+val AppTypography = Typography(
+    displayLarge = baseline.displayLarge.copy(fontFamily = displayFontFamily),
+    displayMedium = baseline.displayMedium.copy(fontFamily = displayFontFamily),
+    displaySmall = baseline.displaySmall.copy(fontFamily = displayFontFamily),
+    headlineLarge = baseline.headlineLarge.copy(fontFamily = displayFontFamily),
+    headlineMedium = baseline.headlineMedium.copy(fontFamily = displayFontFamily),
+    headlineSmall = baseline.headlineSmall.copy(fontFamily = displayFontFamily),
+    titleLarge = baseline.titleLarge.copy(fontFamily = displayFontFamily),
+    titleMedium = baseline.titleMedium.copy(fontFamily = displayFontFamily),
+    titleSmall = baseline.titleSmall.copy(fontFamily = displayFontFamily),
+    bodyLarge = baseline.bodyLarge.copy(fontFamily = bodyFontFamily),
+    bodyMedium = baseline.bodyMedium.copy(fontFamily = bodyFontFamily),
+    bodySmall = baseline.bodySmall.copy(fontFamily = bodyFontFamily),
+    labelLarge = baseline.labelLarge.copy(fontFamily = bodyFontFamily),
+    labelMedium = baseline.labelMedium.copy(fontFamily = bodyFontFamily),
+    labelSmall = baseline.labelSmall.copy(fontFamily = bodyFontFamily),
+)
+

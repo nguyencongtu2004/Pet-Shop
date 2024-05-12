@@ -41,13 +41,17 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            PetShopTheme {
+            PetShopTheme(
+                darkTheme = false,
+                dynamicColor = false,
+            ) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
                     // Lựa chọn màn hình ở đây:
+
                     //SelectVoucher()
                     //SelectPayMethod()
                     //Login()
