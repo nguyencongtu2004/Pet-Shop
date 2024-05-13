@@ -37,12 +37,15 @@ import com.example.petshop.model.Product
 import com.example.petshop.ui.theme.PetShopTheme
 
 @Composable
-fun BoughtItem(p: Product)
+fun BoughtItem(
+    modifier: Modifier = Modifier,
+    p: Product
+)
 {
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.End,
-        modifier = Modifier
+        modifier = modifier
             .background(color = Color(0xFFFEFEFE))
             .padding(start = 20.dp, top = 8.dp, end = 20.dp, bottom = 8.dp)
     ) {

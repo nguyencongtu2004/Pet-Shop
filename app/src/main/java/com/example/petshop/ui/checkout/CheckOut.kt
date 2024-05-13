@@ -40,8 +40,10 @@ fun CheckOut() {
             modifier = Modifier
                 .padding(it)
         ) {
-            var product: Product = Product("Thức an", "Cho chó", 45000.0, 2)
-            BoughtItem(p = product)
+            var product: Product = Product("Thức ăn", "Cho chó", 45000.0, 2)
+            BoughtItem(
+                p = product,
+            )
             LazyColumn {
                 item {
                     Information()
