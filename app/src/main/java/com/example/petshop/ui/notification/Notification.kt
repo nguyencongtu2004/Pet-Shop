@@ -1,4 +1,4 @@
-package com.example.petshop.ui.information
+package com.example.petshop.ui.notification
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
