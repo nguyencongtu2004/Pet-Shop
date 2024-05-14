@@ -7,6 +7,4 @@ data class Product(
     var oldPrice: Double = 0.0,
     var quantity: Int = 0,
     var star: Double = 0.0,
-) {
-
-}
+)

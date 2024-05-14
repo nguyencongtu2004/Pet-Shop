@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.magnifier
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -27,7 +26,6 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -46,9 +44,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 import com.example.petshop.R
+import com.example.petshop.model.BottomNavigationBarItem
 
 @Composable
 fun PetShopAppBar(
@@ -81,9 +79,10 @@ fun PetShopAppBar(
 }
 
 @Composable
-fun TopAppBar(
+fun TopAppBarNoSearch(
     //modifier: Modifier = Modifier,
-    title: String
+    title: String,
+    onBackClick: () -> Unit = {},
 ) {
     Row(
         horizontalArrangement = Arrangement.Start,
@@ -92,7 +91,7 @@ fun TopAppBar(
             .fillMaxWidth()
             .padding(start = 16.dp, top = 14.dp, end = 16.dp, bottom = 14.dp)
     ) {
-        IconButton(onClick = { /*TODO*/ }) {
+        IconButton(onClick = onBackClick) {
             Icon(
                 imageVector = Icons.Filled.ArrowBack,
                 contentDescription = null
@@ -192,11 +191,7 @@ fun BottomAppBar() {
 }
 
 
-data class BottomNavigationBarItem(
-    val label: String,
-    val selectIcon: Painter,
-    val unSelectIcon: Painter,
-)
+
 
 @Composable
 fun PetShopBottomNavigationBar() {
@@ -258,12 +253,12 @@ fun PetShopBottomNavigationBar() {
 }
 
 @Composable
-fun PetShopTopAppBar(
+fun TopAppBarWithSearch(
     onSearchTextChanged: (String) -> Unit,
     onSearchIconClicked: () -> Unit,
-    onAction1Clicked: () -> Unit,
-    onAction2Clicked: () -> Unit,
-    onAction3Clicked: () -> Unit,
+    filterClicked: () -> Unit,
+    notificationClicked: () -> Unit,
+    cartClicked: () -> Unit,
     searchText: String = ""
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -344,21 +339,21 @@ fun PetShopTopAppBar(
             )
         }
 
-        IconButton(onClick = onAction1Clicked) {
+        IconButton(onClick = filterClicked) {
             Icon(
                 painter = painterResource(id = R.drawable.filter),
                 contentDescription = "Lọc",
                 tint = Color(0xFF5D4037),
             )
         }
-        IconButton(onClick = onAction2Clicked) {
+        IconButton(onClick = notificationClicked) {
             Icon(
                 painter = painterResource(id = R.drawable.bell),
                 contentDescription = "Thông báo",
                 tint = Color(0xFF5D4037),
             )
         }
-        IconButton(onClick = onAction3Clicked) {
+        IconButton(onClick = cartClicked) {
             Icon(
                 painter = painterResource(id = R.drawable.shopping_cart),
                 contentDescription = "Giỏ hàng",
@@ -371,10 +366,10 @@ fun PetShopTopAppBar(
 @Preview(showBackground = true)
 @Composable
 fun PetShopTopAppBarPreview() {
-    PetShopTopAppBar(
-        onAction1Clicked = { /*TODO*/ },
-        onAction2Clicked = { /*TODO*/ },
-        onAction3Clicked = { /*TODO*/ },
+    TopAppBarWithSearch(
+        filterClicked = { /*TODO*/ },
+        notificationClicked = { /*TODO*/ },
+        cartClicked = { /*TODO*/ },
         onSearchIconClicked = { /*TODO*/ },
         onSearchTextChanged = { /*TODO*/ }
     )
@@ -389,7 +384,7 @@ fun PetShopBottomNavigationItemPreview() {
 @Preview
 @Composable
 fun TopAppBarPreview() {
-    TopAppBar(title = "test")
+    TopAppBarNoSearch(title = "test")
 }
 
 @Preview

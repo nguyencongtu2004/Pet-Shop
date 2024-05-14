@@ -1,6 +1,5 @@
 package com.example.petshop.ui.home
 
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -19,7 +18,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
@@ -43,12 +41,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.petshop.R
 import com.example.petshop.model.Product
-import com.example.petshop.ui.PetShopBottomNavigationBar
-import com.example.petshop.ui.PetShopTopAppBar
 
 @Composable
-fun HomeScreen() {
-    val products = listOf(
+fun HomeScreen(
+    bannerItems: List<Painter> = listOf(),
+    products: List<Product> = listOf(),
+    onProductClick: () -> Unit = { /*TODO*/ },
+    firstTabProduct: List<Product> = listOf(),
+    secondTabProduct: List<Product> = listOf(),
+    thirdTabProduct: List<Product> = listOf(),
+) {
+    /*val products = listOf(
         Product(
             name = "Đồ ăn",
             description = "Cho chó",
@@ -97,45 +100,27 @@ fun HomeScreen() {
             star = 4.5,
             quantity = 1,
         ),
-    )
-    val bannerItems = listOf(
+    )*/
+    /*val bannerItems = listOf(
         painterResource(id = R.drawable.banner),
         painterResource(id = R.drawable.banner),
         painterResource(id = R.drawable.banner),
-    )
+    )*/
 
     var selectedTabIndex by remember { mutableStateOf(0) } // Chọn tab "Đang giao" hoặc "Đã giao"
-    var searchText by remember { mutableStateOf("") }
+    //var searchText by remember { mutableStateOf("") }
 
-    Scaffold(
-        topBar = {
-            PetShopTopAppBar(
-                onAction1Clicked = { Log.d("HomeScreen", "Action 1 clicked") },
-                onAction2Clicked = { Log.d("HomeScreen", "Action 2 clicked") },
-                onAction3Clicked = { Log.d("HomeScreen", "Action 3 clicked") },
-                onSearchIconClicked = { Log.d("HomeScreen", "Search icon clicked") },
-                onSearchTextChanged = {text -> searchText = text },
-                searchText = searchText,
-
-            )
-        },
-        bottomBar = { PetShopBottomNavigationBar() }
-    ) {
-        Column(
-            modifier = Modifier.padding(it)
-        ) {
-            HorizontalBanner(bannerItems = bannerItems)
-            Box {
-                ProductTabs(
-                    selectedTabIndex,
-                    firstTabProduct = products,
-                    secondTabProduct = products,
-                    //thirdTabProduct = products,
-                ) { tab ->
-                    selectedTabIndex = tab
-                }
+    Column {
+        HorizontalBanner(bannerItems = bannerItems)
+        Box {
+            ProductTabs(
+                selectedTabIndex,
+                firstTabProduct = firstTabProduct,
+                secondTabProduct = secondTabProduct,
+                thirdTabProduct = thirdTabProduct,
+            ) { tab ->
+                selectedTabIndex = tab
             }
-
         }
     }
 }
@@ -260,7 +245,7 @@ fun ProductTabs(
             },
             modifier = Modifier
                 .background(color = Color(0xFFFFFFFF))
-                //.height(56.dp)
+            //.height(56.dp)
         ) {
             val tabs = listOf("Thức ăn", "Dụng cụ", "Thời trang")
             tabs.forEachIndexed { index, title ->
@@ -307,7 +292,7 @@ fun HorizontalBanner(bannerItems: List<Painter>) {
         state = pagerState,
         modifier = Modifier
             .fillMaxWidth()
-            .height(200.dp)
+            .height(160.dp)
     ) {
         val bannerItem = bannerItems[it]
         // Hiển thị nội dung của mỗi mục trong banner ở đây

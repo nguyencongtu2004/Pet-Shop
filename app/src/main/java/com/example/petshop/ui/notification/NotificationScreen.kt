@@ -1,62 +1,64 @@
 package com.example.petshop.ui.notification
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.petshop.ui.theme.PetShopTheme
-import androidx.compose.ui.res.painterResource
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.petshop.R
-import com.example.petshop.ui.PetShopAppBar
+import com.example.petshop.model.Notification
+import com.example.petshop.ui.theme.PetShopTheme
+
 
 @Composable
-fun NotificationScreen() {
-    Scaffold(
-        topBar = { PetShopAppBar(title = "Thông báo") }
+fun NotificationScreen(
+    modifier: Modifier = Modifier,
+    notifications: List<Notification> = emptyList()
+) {
+    LazyColumn(
+        modifier = modifier.fillMaxWidth()
     ) {
-        LazyColumn(
-            modifier = Modifier
-                .padding(it)
-                .fillMaxWidth()
-        ) {
-            item {
-                Notification(title = "JACK", description = "5 củ")
-            }
+        items(notifications) { noti ->
+            Notification(notification = noti)
         }
     }
+
 }
 
 @Composable
-fun Notification(title: String, description: String) {
+fun Notification(
+    notification: Notification = Notification(
+        title = "JACK",
+        description = "5 củ",
+        image = painterResource(id = R.drawable.notiication_bell)
+    )
+) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(14.dp, Alignment.Start),
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
-            .padding(start = 12.dp, end = 12.dp)
+            .padding(vertical = 12.dp, horizontal = 16.dp)
+            .fillMaxWidth()
 
     ) {
         Column {
             Image(
-                painter = painterResource(id = R.drawable.notiication_bell),
+                painter = notification.image!!,
                 contentDescription = "image description",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -66,14 +68,12 @@ fun Notification(title: String, description: String) {
         }
         Column {
             Text(
-                text = title,
+                text = notification.title,
                 style = MaterialTheme.typography.titleMedium
             )
-
             Spacer(modifier = Modifier.height(6.dp))
-
             Text(
-                text = description,
+                text = notification.description,
                 style = MaterialTheme.typography.bodySmall
             )
 
@@ -85,6 +85,39 @@ fun Notification(title: String, description: String) {
 @Composable
 fun NotificationDemo() {
     PetShopTheme {
-        NotificationScreen()
+        NotificationScreen(
+            notifications = listOf(
+                Notification(
+                    title = "JACK",
+                    description = "5 củ",
+                    image = painterResource(id = R.drawable.notiication_bell)
+                ),
+                Notification(
+                    title = "JACK",
+                    description = "5 củ",
+                    image = painterResource(id = R.drawable.notiication_bell)
+                ),
+                Notification(
+                    title = "JACK",
+                    description = "5 củ",
+                    image = painterResource(id = R.drawable.notiication_bell)
+                ),
+                Notification(
+                    title = "JACK",
+                    description = "5 củ",
+                    image = painterResource(id = R.drawable.notiication_bell)
+                ),
+                Notification(
+                    title = "JACK",
+                    description = "5 củ",
+                    image = painterResource(id = R.drawable.notiication_bell)
+                ),
+                Notification(
+                    title = "JACK",
+                    description = "5 củ",
+                    image = painterResource(id = R.drawable.notiication_bell)
+                ),
+            )
+        )
     }
 }
