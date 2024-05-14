@@ -2,10 +2,8 @@ package com.example.petshop.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -13,27 +11,30 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.petshop.ui.theme.PetShopTheme
+import com.example.petshop.R
+import androidx.compose.ui.graphics.painter.Painter
 
 @Composable
 fun PetShopAppBar(
@@ -176,6 +177,86 @@ fun BottomAppBar() {
     }
 }
 
+
+
+
+
+
+
+data class BottomNavigationBarItem(
+    val label: String,
+    val selectIcon: Painter,
+    val unSelectIcon: Painter,
+)
+
+@Composable
+fun BottomNavigationBar() {
+    val selectedIndex = remember { mutableStateOf(0) }
+
+    val items = listOf(
+        BottomNavigationBarItem(
+            label = "Trang chủ",
+            selectIcon = painterResource(id = R.drawable.home_icon_selected),
+            unSelectIcon = painterResource(id = R.drawable.home_icon_unselected)
+        ),
+        BottomNavigationBarItem(
+            label = "Chat",
+            selectIcon = painterResource(id = R.drawable.message_icon_unselected),
+            unSelectIcon = painterResource(id = R.drawable.message_icon_unselected)
+        ),
+        BottomNavigationBarItem(
+            label = "Tài khoản",
+            selectIcon = painterResource(id = R.drawable.user_icon_selected),
+            unSelectIcon = painterResource(id = R.drawable.user_icon_unselected)
+        )
+    )
+
+    NavigationBar(
+        containerColor = Color.White
+    ) {
+        items.forEach { item ->
+            val index = items.indexOf(item)
+            NavigationBarItem(
+                icon = {
+                    Icon(
+                        painter = if (index == selectedIndex.value) item.selectIcon else item.unSelectIcon,
+                        contentDescription = null,
+                        tint = Color.Unspecified // Use Color.Unspecified to keep the original color of the icons
+                    )
+                },
+                label = {
+                    Text(
+                        text = item.label,
+                        style = MaterialTheme.typography.labelMedium,
+                        color = if (index == selectedIndex.value) Color(0xFF5D4037) else Color.Gray
+                    )
+                },
+                selected = (index == selectedIndex.value),
+                onClick = {
+                    selectedIndex.value = index
+                    // chuyển trang
+                },
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = Color(0xFF5D4037),
+                    unselectedIconColor = Color.Gray,
+                    selectedTextColor = Color(0xFF5D4037),
+                    unselectedTextColor = Color.Gray,
+                    indicatorColor = Color.White
+                )
+            )
+        }
+    }
+}
+
+
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewPetShopBottomNavigationItem() {
+    MaterialTheme {
+        BottomNavigationBar()
+    }
+}
 @Preview
 @Composable
 fun TopAppBarPreview() {
