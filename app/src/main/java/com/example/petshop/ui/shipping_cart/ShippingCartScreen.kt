@@ -1,4 +1,4 @@
-package com.example.petshop.ui.cart
+package com.example.petshop.ui.shipping_cart
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -18,6 +19,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -36,7 +38,33 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.petshop.R
+import com.example.petshop.ui.BottomAppBar
+import com.example.petshop.ui.PetShopAppBar
 import com.example.petshop.ui.theme.PetShopTheme
+
+@Composable
+fun ShoppingCartScreen(){
+    Scaffold(
+        topBar = { PetShopAppBar(title = "Giỏ hàng")},
+        bottomBar = {BottomAppBar()}
+    ){
+        LazyColumn(
+            modifier = Modifier.padding(it)
+        ){
+            item{
+                BoughtItemCart()
+                BoughtItemCart()
+                BoughtItemCart()
+                BoughtItemCart()
+                BoughtItemCart()
+                BoughtItemCart()
+                BoughtItemCart()
+                BoughtItemCart()
+                BoughtItemCart()
+            }
+        }
+    }
+}
 
 @Composable
 fun BoughtItemCart(){
@@ -74,11 +102,31 @@ fun BoughtItemCart(){
                     painter = painterResource(id = R.drawable.product_image),
                     contentDescription = null,
                     modifier = Modifier
-                        .shadow(elevation = 2.2138051986694336.dp, spotColor = Color(0x05000000), ambientColor = Color(0x05000000))
-                        .shadow(elevation = 5.32008171081543.dp, spotColor = Color(0x07000000), ambientColor = Color(0x07000000))
-                        .shadow(elevation = 10.017241477966309.dp, spotColor = Color(0x09000000), ambientColor = Color(0x09000000))
-                        .shadow(elevation = 17.869047164916992.dp, spotColor = Color(0x0B000000), ambientColor = Color(0x0B000000))
-                        .shadow(elevation = 33.422088623046875.dp, spotColor = Color(0x0D000000), ambientColor = Color(0x0D000000))
+                        .shadow(
+                            elevation = 2.2138051986694336.dp,
+                            spotColor = Color(0x05000000),
+                            ambientColor = Color(0x05000000)
+                        )
+                        .shadow(
+                            elevation = 5.32008171081543.dp,
+                            spotColor = Color(0x07000000),
+                            ambientColor = Color(0x07000000)
+                        )
+                        .shadow(
+                            elevation = 10.017241477966309.dp,
+                            spotColor = Color(0x09000000),
+                            ambientColor = Color(0x09000000)
+                        )
+                        .shadow(
+                            elevation = 17.869047164916992.dp,
+                            spotColor = Color(0x0B000000),
+                            ambientColor = Color(0x0B000000)
+                        )
+                        .shadow(
+                            elevation = 33.422088623046875.dp,
+                            spotColor = Color(0x0D000000),
+                            ambientColor = Color(0x0D000000)
+                        )
                         .width(58.dp)
                         .height(69.dp)
                 )
@@ -250,6 +298,6 @@ fun BoughtItemCart(){
 @Composable
 fun BoughtItemPreview() {
     PetShopTheme {
-        BoughtItemCart()
+        ShoppingCartScreen()
     }
 }

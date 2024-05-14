@@ -3,6 +3,7 @@ package com.example.petshop.ui.shipment
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
@@ -16,7 +17,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.petshop.ui.PetShopAppBar
 import com.example.petshop.ui.theme.PetShopTheme
+
+@Composable
+fun ShipmentStateScreen(){
+    Scaffold(
+        topBar = { PetShopAppBar(title = "Đơn hàng") }
+    ) { paddingValues ->
+        var selectedTabIndex by remember { mutableStateOf(0) } // Chọn tab "Đang giao" hoặc "Đã giao"
+
+        // Apply padding to your content
+        Box(modifier = Modifier.padding(paddingValues)) {
+            ShippingAndShippedTab(selectedTabIndex) { tab ->
+                selectedTabIndex = tab // Cập nhật trạng thái của tab khi người dùng chọn
+            }
+        }
+    }
+}
 
 @Composable
 fun ShippingAndShippedTab(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
@@ -110,10 +128,6 @@ fun ShippingAndShippedTab(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
 @Composable
 fun TabPreview() {
     PetShopTheme {
-        var selectedTabIndex by remember { mutableStateOf(0) } // Chọn tab "Đang giao" hoặc "Đã giao"
-
-        ShippingAndShippedTab(selectedTabIndex) { tab ->
-            selectedTabIndex = tab // Cập nhật trạng thái của tab khi người dùng chọn
-        }
+        ShipmentStateScreen()
     }
 }

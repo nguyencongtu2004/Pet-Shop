@@ -37,7 +37,7 @@ fun BoughtItemShipping(){
         verticalArrangement = Arrangement.spacedBy(0.dp, Alignment.Top),
         horizontalAlignment = Alignment.Start,
         modifier = Modifier
-            .height(169.dp)
+            .height(150.dp)
             .background(color = Color(0xFFFFFFFF))
             .padding(start = 8.dp, end = 8.dp, bottom = 6.dp)
     ) {
@@ -227,7 +227,6 @@ fun BoughtItemShipping(){
                 ),
 
                 modifier = Modifier
-                    .height(29.dp)
                     .padding(top = 3.dp)
             )
 

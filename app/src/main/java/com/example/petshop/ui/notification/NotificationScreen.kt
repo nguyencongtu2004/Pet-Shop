@@ -15,21 +15,44 @@ import androidx.compose.ui.unit.sp
 import com.example.petshop.ui.theme.PetShopTheme
 import androidx.compose.ui.res.painterResource
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import com.example.petshop.R
-
+import com.example.petshop.ui.PetShopAppBar
 
 @Composable
-fun Notification(title: String, description: String){
+fun NotificationScreen() {
+    Scaffold(
+        topBar = { PetShopAppBar(title = "Thông báo") }
+    ) {
+        LazyColumn(
+            modifier = Modifier
+                .padding(it)
+                .fillMaxWidth()
+        ) {
+            item {
+                Notification(title = "JACK", description = "5 củ")
+            }
+        }
+    }
+}
+
+@Composable
+fun Notification(title: String, description: String) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(14.dp, Alignment.Start),
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .padding(start = 12.dp, end = 12.dp)
+
     ) {
         Column {
             Image(
@@ -44,24 +67,14 @@ fun Notification(title: String, description: String){
         Column {
             Text(
                 text = title,
-                style = TextStyle(
-                    fontSize = 16.sp,
-                    lineHeight = 26.sp,
-                    //fontFamily = FontFamily(Font(R.font.poppins)),
-                    fontWeight = FontWeight(700),
-                    color = Color(0xFF000000),
-                )
+                style = MaterialTheme.typography.titleMedium
             )
+
+            Spacer(modifier = Modifier.height(6.dp))
 
             Text(
                 text = description,
-                style = TextStyle(
-                    fontSize = 10.sp,
-                    lineHeight = 10.sp,
-                    //fontFamily = FontFamily(Font(R.font.poppins)),
-                    fontWeight = FontWeight(300),
-                    color = Color(0xFF000000),
-                )
+                style = MaterialTheme.typography.bodySmall
             )
 
         }
@@ -72,6 +85,6 @@ fun Notification(title: String, description: String){
 @Composable
 fun NotificationDemo() {
     PetShopTheme {
-        Notification(title = "test", description = "nothing")
+        NotificationScreen()
     }
 }

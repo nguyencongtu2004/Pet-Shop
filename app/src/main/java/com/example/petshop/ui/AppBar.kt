@@ -112,7 +112,7 @@ fun BottomAppBar() {
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(0.dp, Alignment.Start),
-            verticalAlignment = Alignment.Bottom,
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .height(42.dp)
                 .padding(start = 8.dp)
