@@ -243,6 +243,6 @@ fun BoughtItem(
 @Composable
 fun BoughtItemPreview() {
     PetShopTheme {
-        BoughtItem(p = Product("Thức an", "Cho chó", 45000.0, 2))
+        BoughtItem(p = Product("Thức an", description = "Cho chó", price = 45000.0, quantity = 2))
     }
 }

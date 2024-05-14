@@ -3,6 +3,7 @@ package com.example.petshop.ui.shipment
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -37,7 +38,10 @@ fun ShipmentStateScreen(){
 }
 
 @Composable
-fun ShippingAndShippedTab(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
+fun ShippingAndShippedTab(
+    selectedTabIndex: Int,
+    onTabSelected: (Int) -> Unit,
+) {
     Column {
         TabRow(
             selectedTabIndex = selectedTabIndex,
@@ -63,14 +67,7 @@ fun ShippingAndShippedTab(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
             ) {
                 Text(
                     text = "Đang giao",
-
-                    // Heading 3/Medium (16)
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        //fontFamily = FontFamily(Font(R.font.poppins)),
-                        fontWeight = FontWeight(500),
-                        color = Color(0xFF5D4037),
-                    )
+                    style = MaterialTheme.typography.titleSmall
                 )
             }
 
@@ -81,14 +78,7 @@ fun ShippingAndShippedTab(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
             ) {
                 Text(
                     text = "Đã giao",
-
-                    // Heading 3/Medium (16)
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        //fontFamily = FontFamily(Font(R.font.poppins)),
-                        fontWeight = FontWeight(500),
-                        color = Color(0xFF5D4037),
-                    )
+                    style = MaterialTheme.typography.titleSmall
                 )
             }
         }
