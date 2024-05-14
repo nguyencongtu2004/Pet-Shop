@@ -8,6 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.example.petshop.ui.checkout.CheckOut
+import com.example.petshop.ui.home.HomeScreen
 import com.example.petshop.ui.theme.PetShopTheme
 
 class MainActivity : ComponentActivity() {
@@ -31,7 +32,8 @@ class MainActivity : ComponentActivity() {
                     //Register()
                     //Transaction()
                     //LoadingScreen()
-                    CheckOut()
+                    //CheckOut()
+                    HomeScreen()
                 }
             }
         }

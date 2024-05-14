@@ -1,30 +1,34 @@
 package com.example.petshop.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.magnifier
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,18 +36,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 import com.example.petshop.R
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 
 @Composable
 fun PetShopAppBar(
@@ -187,11 +192,6 @@ fun BottomAppBar() {
 }
 
 
-
-
-
-
-
 data class BottomNavigationBarItem(
     val label: String,
     val selectIcon: Painter,
@@ -257,12 +257,135 @@ fun PetShopBottomNavigationBar() {
     }
 }
 
+@Composable
+fun PetShopTopAppBar(
+    onSearchTextChanged: (String) -> Unit,
+    onSearchIconClicked: () -> Unit,
+    onAction1Clicked: () -> Unit,
+    onAction2Clicked: () -> Unit,
+    onAction3Clicked: () -> Unit,
+    searchText: String = ""
+) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(56.dp)
+            .padding(horizontal = 8.dp)
+            .background(Color.White)
+    ) {
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .background(Color.White, RoundedCornerShape(16.dp))
+                //.border(1.dp, Color(0xFFCACACA), RoundedCornerShape(16.dp))
+                .padding(horizontal = 8.dp) // Padding inside the box
+        ) {
+            Column {
+                Spacer(modifier = Modifier.height(9.dp))
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(36.dp)
+                        .background(Color.Transparent, RoundedCornerShape(16.dp))
+                        .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(16.dp))
+
+                        // nền trong suốt
+                        .background(Color.Transparent)
+                )
+            }
+            OutlinedTextField(
+                value = searchText,
+                onValueChange = onSearchTextChanged,
+                maxLines = 1,
+                textStyle = MaterialTheme.typography.bodyMedium,
+                placeholder = {
+                    Text(
+                        "Tìm kiếm",
+                        style = MaterialTheme.typography.bodyMedium
+                            .copy(color = Color(0xFFCACACA))
+                    )
+                },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Search,
+                ),
+                keyboardActions = KeyboardActions(
+                    onSearch = {
+                        // Đóng bàn phím khi nhấn search
+                        keyboardController?.hide()
+                    },
+                ),
+                leadingIcon = {
+                    IconButton(
+                        onClick = onSearchIconClicked,
+                        modifier = Modifier.padding(0.dp),
+                    ) {
+                        Icon(
+                            Icons.Filled.Search,
+                            contentDescription = "Search",
+                            tint = Color(0xFF5D4037),
+                            modifier = Modifier.padding(0.dp),
+                        )
+                    }
+                },
+                // làm mờ viền để tự thêm viền của mình
+                colors = TextFieldDefaults.colors(
+                    unfocusedContainerColor = Color.Transparent,
+                    focusedContainerColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(0.dp) // Remove padding from the TextField itself
+            )
+        }
+
+        IconButton(onClick = onAction1Clicked) {
+            Icon(
+                painter = painterResource(id = R.drawable.filter),
+                contentDescription = "Lọc",
+                tint = Color(0xFF5D4037),
+            )
+        }
+        IconButton(onClick = onAction2Clicked) {
+            Icon(
+                painter = painterResource(id = R.drawable.bell),
+                contentDescription = "Thông báo",
+                tint = Color(0xFF5D4037),
+            )
+        }
+        IconButton(onClick = onAction3Clicked) {
+            Icon(
+                painter = painterResource(id = R.drawable.shopping_cart),
+                contentDescription = "Giỏ hàng",
+                tint = Color(0xFF5D4037),
+            )
+        }
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewPetShopBottomNavigationItem() {
+fun PetShopTopAppBarPreview() {
+    PetShopTopAppBar(
+        onAction1Clicked = { /*TODO*/ },
+        onAction2Clicked = { /*TODO*/ },
+        onAction3Clicked = { /*TODO*/ },
+        onSearchIconClicked = { /*TODO*/ },
+        onSearchTextChanged = { /*TODO*/ }
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PetShopBottomNavigationItemPreview() {
     PetShopBottomNavigationBar()
 }
+
 @Preview
 @Composable
 fun TopAppBarPreview() {

@@ -1,5 +1,6 @@
 package com.example.petshop.ui.home
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -33,23 +34,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.petshop.R
 import com.example.petshop.model.Product
 import com.example.petshop.ui.PetShopBottomNavigationBar
-import com.example.petshop.ui.shipment.BoughtItemShipping
-import com.example.petshop.ui.shipment.ShippedBoughtItem
-import com.example.petshop.ui.shipment.ShippingAndShippedTab
+import com.example.petshop.ui.PetShopTopAppBar
 
 @Composable
 fun HomeScreen() {
@@ -103,14 +98,27 @@ fun HomeScreen() {
             quantity = 1,
         ),
     )
-    var selectedTabIndex by remember { mutableStateOf(0) } // Chọn tab "Đang giao" hoặc "Đã giao"
     val bannerItems = listOf(
         painterResource(id = R.drawable.banner),
         painterResource(id = R.drawable.banner),
         painterResource(id = R.drawable.banner),
-        )
+    )
+
+    var selectedTabIndex by remember { mutableStateOf(0) } // Chọn tab "Đang giao" hoặc "Đã giao"
+    var searchText by remember { mutableStateOf("") }
 
     Scaffold(
+        topBar = {
+            PetShopTopAppBar(
+                onAction1Clicked = { Log.d("HomeScreen", "Action 1 clicked") },
+                onAction2Clicked = { Log.d("HomeScreen", "Action 2 clicked") },
+                onAction3Clicked = { Log.d("HomeScreen", "Action 3 clicked") },
+                onSearchIconClicked = { Log.d("HomeScreen", "Search icon clicked") },
+                onSearchTextChanged = {text -> searchText = text },
+                searchText = searchText,
+
+            )
+        },
         bottomBar = { PetShopBottomNavigationBar() }
     ) {
         Column(
@@ -246,11 +254,13 @@ fun ProductTabs(
                         .tabIndicatorOffset(tabPositions[selectedTabIndex])
                         //.width(187.5.dp)
                         .height(3.dp)
-                        .background(color = Color(0xFF5D4037))
+                        .background(color = Color(0xFF5D373F))
                         .offset(y = 13.dp)
                 )
             },
-            modifier = Modifier.background(color = Color(0xFFFEFEFE))
+            modifier = Modifier
+                .background(color = Color(0xFFFFFFFF))
+                //.height(56.dp)
         ) {
             val tabs = listOf("Thức ăn", "Dụng cụ", "Thời trang")
             tabs.forEachIndexed { index, title ->
