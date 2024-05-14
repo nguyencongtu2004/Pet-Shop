@@ -1,8 +1,10 @@
 package com.example.petshop.model
 
 class Product(
-    name:String,
-    description: String,
-    price: Double,
-    quantity: Int,
-)
+    var name:String,
+    var description: String,
+    var price: Double,
+    var quantity: Int,
+) {
+
+}
