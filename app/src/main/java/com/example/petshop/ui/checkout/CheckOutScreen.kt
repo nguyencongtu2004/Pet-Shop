@@ -21,11 +21,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.petshop.R
 import com.example.petshop.model.Product
 import com.example.petshop.ui.PetShopAppBar
 import com.example.petshop.ui.theme.PetShopTheme
@@ -40,7 +42,11 @@ fun CheckOut() {
             modifier = Modifier
                 .padding(it)
         ) {
-            var product: Product = Product("Thức ăn", "Cho chó", 45000.0, quantity = 2)
+            val product: Product = Product(name = "Thức ăn",
+                description = "Cho chó",
+                image = painterResource(id = R.drawable.avt),
+                price = 45000.0,
+                quantity = 2)
             BoughtItem(
                 p = product,
             )

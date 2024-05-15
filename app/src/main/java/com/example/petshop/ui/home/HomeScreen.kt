@@ -46,66 +46,11 @@ import com.example.petshop.model.Product
 fun HomeScreen(
     bannerItems: List<Painter> = listOf(),
     products: List<Product> = listOf(),
-    onProductClick: () -> Unit = { /*TODO*/ },
+    onProductClick: () -> Unit = {},
     firstTabProduct: List<Product> = listOf(),
     secondTabProduct: List<Product> = listOf(),
     thirdTabProduct: List<Product> = listOf(),
 ) {
-    /*val products = listOf(
-        Product(
-            name = "Đồ ăn",
-            description = "Cho chó",
-            price = 12000.0,
-            oldPrice = 9999999.0,
-            star = 4.5,
-            quantity = 1,
-        ),
-        Product(
-            name = "Đồ ăn",
-            description = "Cho chó",
-            price = 12000.0,
-            oldPrice = 9999999.0,
-            star = 4.5,
-            quantity = 1,
-        ),
-        Product(
-            name = "Đồ ăn",
-            description = "Cho chó",
-            price = 12000.0,
-            oldPrice = 9999999.0,
-            star = 4.5,
-            quantity = 1,
-        ),
-        Product(
-            name = "Đồ ăn",
-            description = "Cho chó",
-            price = 12000.0,
-            oldPrice = 9999999.0,
-            star = 4.5,
-            quantity = 1,
-        ),
-        Product(
-            name = "Đồ ăn",
-            description = "Cho chó",
-            price = 12000.0,
-            oldPrice = 9999999.0,
-            star = 4.5,
-            quantity = 1,
-        ),
-        Product(
-            name = "Đồ ăn",
-            description = "Cho chó",
-            price = 12000.0,
-            oldPrice = 9999999.0,
-            star = 4.5,
-            quantity = 1,
-        ),
-    )*/
-    /*val bannerItems = listOf(
-        painterResource(id = R.drawable.banner),
-        painterResource(id = R.drawable.banner),
-        painterResource(id = R.drawable.banner),
-    )*/
 
     var selectedTabIndex by remember { mutableStateOf(0) } // Chọn tab "Đang giao" hoặc "Đã giao"
     //var searchText by remember { mutableStateOf("") }

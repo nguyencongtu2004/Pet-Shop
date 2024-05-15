@@ -15,18 +15,20 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.petshop.model.FoodProduct
 import com.example.petshop.model.Notification
 import com.example.petshop.model.Product
 import com.example.petshop.ui.TopAppBarNoSearch
 import com.example.petshop.ui.TopAppBarWithSearch
 import com.example.petshop.ui.home.HomeScreen
 import com.example.petshop.ui.notification.NotificationScreen
-
+import com.example.petshop.ui.shipping_cart.ShoppingCartScreen
 
 
 enum class PetShopScreen() {
     HomePage(),
-    NotificationScreen()
+    NotificationScreen(),
+    ShoppingCartScreen(),
 
 }
 
@@ -122,6 +124,59 @@ fun PetShopApp(
             image = painterResource(id = R.drawable.notiication_bell)
         ),
     )
+    val productsInCart = listOf(
+        FoodProduct(
+            name = "Thức ăn",
+            description = "Cho chó",
+            price = 12000.0,
+            oldPrice = 9999999.0,
+            star = 4.5,
+            quantity = 1,
+            weight = 1.5,
+            type = "Thức ăn khô",
+        ),
+        FoodProduct(
+            name = "Thức ăn",
+            description = "Cho chó",
+            price = 12000.0,
+            oldPrice = 9999999.0,
+            star = 4.5,
+            quantity = 1,
+            weight = 1.5,
+            type = "Thức ăn khô",
+        ),
+        FoodProduct(
+            name = "Thức ăn",
+            description = "Cho chó",
+            price = 12000.0,
+            oldPrice = 9999999.0,
+            star = 4.5,
+            quantity = 1,
+            weight = 1.5,
+            type = "Thức ăn khô",
+        ),
+        FoodProduct(
+            name = "Thức ăn",
+            description = "Cho chó",
+            price = 12000.0,
+            oldPrice = 9999999.0,
+            star = 4.5,
+            quantity = 1,
+            weight = 1.5,
+            type = "Thức ăn khô",
+        ),
+        FoodProduct(
+            name = "Thức ăn",
+            description = "Cho chó",
+            price = 12000.0,
+            oldPrice = 9999999.0,
+            star = 4.5,
+            quantity = 1,
+            weight = 1.5,
+            type = "Thức ăn khô",
+        ),
+
+    )
 
 
     // TRẠNG THÁI CỦA MÀN HÌNH Ở ĐÂY!!!!!!!!!!!!!!!
@@ -144,9 +199,10 @@ fun PetShopApp(
                     filterClicked = { /*TODO*/ },
                     notificationClicked = {
                         isSearchBarVisible = false
-                        navController.navigate(PetShopScreen.NotificationScreen.name)
-                                          },
-                    cartClicked = { /*TODO*/ },
+                        navController.navigate(PetShopScreen.NotificationScreen.name)},
+                    cartClicked = {
+                        isSearchBarVisible = false
+                        navController.navigate(PetShopScreen.ShoppingCartScreen.name)},
                     searchText = searchText,
                 )
             else
@@ -179,6 +235,11 @@ fun PetShopApp(
             // Màn hình thông báo
             composable(route = PetShopScreen.NotificationScreen.name) {
                 NotificationScreen(notifications = notifications)
+            }
+
+            // Màn hình giỏ hàng
+            composable(route = PetShopScreen.ShoppingCartScreen.name) {
+                ShoppingCartScreen(products = productsInCart)
             }
         }
     }

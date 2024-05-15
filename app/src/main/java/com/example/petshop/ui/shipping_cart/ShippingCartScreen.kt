@@ -1,25 +1,31 @@
 package com.example.petshop.ui.shipping_cart
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,77 +35,72 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.petshop.R
-import com.example.petshop.ui.BottomAppBar
-import com.example.petshop.ui.PetShopAppBar
+import com.example.petshop.model.FoodProduct
+import com.example.petshop.model.Product
 import com.example.petshop.ui.theme.PetShopTheme
 
 @Composable
-fun ShoppingCartScreen(){
-    Scaffold(
-        topBar = { PetShopAppBar(title = "Giỏ hàng")},
-        bottomBar = {BottomAppBar()}
-    ){
-        LazyColumn(
-            modifier = Modifier.padding(it)
-        ){
-            item{
-                BoughtItemCart()
-                BoughtItemCart()
-                BoughtItemCart()
-                BoughtItemCart()
-                BoughtItemCart()
-                BoughtItemCart()
-                BoughtItemCart()
-                BoughtItemCart()
-                BoughtItemCart()
-            }
+fun ShoppingCartScreen(
+    modifier: Modifier = Modifier,
+    products: List<Product> = emptyList()
+) {
+    LazyColumn() {
+        items(products) { product ->
+            BoughtItemCart(product = product)
+            Divider()
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BoughtItemCart(){
+fun BoughtItemCart(
+    modifier: Modifier = Modifier,
+    product: Product = FoodProduct(
+        name = "Thức ăn hạt mềm Zenith",
+        description = "Nổi tiếng với đồ ăn cho chó con được yêu thích",
+        price = 90000.0,
+        oldPrice = 0.0,
+        quantity = 1,
+        star = 0.0,
+        image = painterResource(id = R.drawable.avt),
+        type = "Cá hồi",
+        weight = 0.5
+    )
+) {
+    var quantity by remember { mutableStateOf(product.quantity) }
+
     Column(
         verticalArrangement = Arrangement.spacedBy(0.dp, Alignment.Top),
         horizontalAlignment = Alignment.Start,
-        modifier = Modifier
-            .height(120.dp)
-            .background(color = Color(0xFFFFFFFF))
+        modifier = modifier
             .padding(start = 8.dp, end = 8.dp, bottom = 6.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .height(79.dp)
-                .background(color = Color(0xFFFFFFFF))
-                .padding(start = 10.dp, top = 5.dp, end = 10.dp, bottom = 13.dp)
+            modifier = Modifier.padding(start = 10.dp, top = 5.dp, end = 10.dp, bottom = 13.dp)
         ) {
-            Spacer(modifier = Modifier.weight(1f))
             var checkedState by remember { mutableStateOf(false) }
             Checkbox(
                 checked = checkedState,
                 onCheckedChange = { checkedState = it },
                 modifier = Modifier
-                    .padding(end = 8.dp)
-                    .width(13.84615.dp)
-                    .height(13.84615.dp)
+                    .padding(end = 14.dp)
+                    .width(14.dp)
+                    .height(14.dp)
             )
-
             Column(
                 verticalArrangement = Arrangement.Center,
-                modifier = Modifier.width(58.dp)
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.product_image),
+                    painter = product.image ?: painterResource(id = R.drawable.avt),
                     contentDescription = null,
                     modifier = Modifier
                         .shadow(
@@ -127,169 +128,155 @@ fun BoughtItemCart(){
                             spotColor = Color(0x0D000000),
                             ambientColor = Color(0x0D000000)
                         )
-                        .width(58.dp)
+                        .width(69.dp)
                         .height(69.dp)
                 )
             }
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            Column {
+            Column(
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Text(
-                    text = "Thức ăn hạt mềm Zenith",
+                    text = product.name,
                     // Body/14/Medium
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        lineHeight = 20.sp,
-                        fontWeight = FontWeight(500),
-                        color = Color(0xFF555555),
-                    ),
-                    modifier = Modifier
-                        .height(20.dp)
+                    style = MaterialTheme.typography.titleMedium,
+                    //modifier = Modifier.height(20.dp)
                 )
-
                 Spacer(modifier = Modifier.height(6.dp))
-
                 Text(
-                    text = "Nổi tiếng với đồ ăn cho chó con được yêu thích",
+                    text = product.description,
                     // Body/12/Regular
-                    style = TextStyle(
-                        fontSize = 12.sp,
-                        lineHeight = 18.sp,
-                        fontWeight = FontWeight(400),
-                        color = Color(0xFF555555),
-                    )
+                    style = MaterialTheme.typography.bodySmall,
                 )
-
                 Spacer(modifier = Modifier.height(6.dp))
-
-                // Checkbox
-
             }
         }
-
-
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(22.dp, Alignment.CenterHorizontally),
-            verticalAlignment = Alignment.CenterVertically,
+        Column(
             modifier = Modifier
-                .height(29.dp)
-                .background(color = Color(0xFFFFFFFF))
+                .fillMaxWidth()
+                //.background(color = Color(0xFFFFFFFF))
+                .padding(start = 10.dp, end = 10.dp, bottom = 10.dp)
         ) {
             Row(
-                horizontalArrangement = Arrangement.spacedBy(9.dp, Alignment.Start),
-                verticalAlignment = Alignment.Top
+                //horizontalArrangement = Arrangement.spacedBy(22.dp, Alignment.CenterHorizontally),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Spacer(modifier = Modifier.width(8.dp))
-                Column(modifier = Modifier
-                    .width(53.dp)
-                    .height(23.dp)
-                    .background(color = Color(0xFF5D4037), shape = RoundedCornerShape(size = 8.dp))
-                    .padding(start = 12.dp, top = 4.dp, end = 12.dp, bottom = 4.dp)) {
-                    Text(
-                        text = "0.5kg",
-                        style = TextStyle(
-                            fontSize = 10.sp,
-                            //fontFamily = FontFamily(Font(R.font.poppins)),
-                            fontWeight = FontWeight(600),
-                            color = Color(0xFFFEFEFE),
-                        )
-                    )
-                }
-
-                Column (modifier = Modifier
-                    .width(53.dp)
-                    .height(23.dp)
-                    .background(color = Color(0xFF5D4037), shape = RoundedCornerShape(size = 8.dp))
-                    .padding(start = 12.dp, top = 4.dp, end = 12.dp, bottom = 4.dp))
-                {
-                    Text(
-                        text = "Cá hồi",
-                        style = TextStyle(
-                            fontSize = 10.sp,
-                            //fontFamily = FontFamily(Font(R.font.poppins)),
-                            fontWeight = FontWeight(600),
-                            color = Color(0xFFFEFEFE),
-                        )
-                    )
-                }
-
-                Text(
-                    text = "90.000 đ",
-
-                    // Body/14/Medium
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        lineHeight = 20.sp,
-                        //fontFamily = FontFamily(Font(R.font.poppins)),
-                        fontWeight = FontWeight(500),
-                        color = Color(0xFF3C3C3C),
-                        textAlign = TextAlign.Center
-                    ),
-
+                // loại ta chọn TODO
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(9.dp),
+                    verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
-                        .width(75.dp)
-                        .height(29.dp)
-                )
+                        .width(160.dp)
+                    //.padding(horizontal = 10.dp)
+                ) {
+                    item {
+                        if (product is FoodProduct)
+                            FilterChip(
+                                label = {
+                                    Text(
+                                        text = product.type,
+                                        style = MaterialTheme.typography.labelSmall
+                                    )
+                                },
+                                onClick = { /*TODO*/ },
+                                selected = true,
+                                colors = FilterChipDefaults.filterChipColors(
+                                    labelColor = Color(0xFF000000),
+                                    selectedLabelColor = Color.White,
+                                    selectedContainerColor = Color(0xFF5D4037),
+                                ),
+                                shape = RoundedCornerShape(8.dp),
+                                modifier = Modifier
+                                    .height(28.dp)
+                            )
+                    }
+                    item {
+                        if (product is FoodProduct)
+                            FilterChip(
+                                label = {
+                                    Text(
+                                        text = product.weight.toString() + "kg",
+                                        style = MaterialTheme.typography.labelSmall
+                                    )
+                                },
+                                onClick = { /*TODO*/ },
+                                selected = true,
+                                colors = FilterChipDefaults.filterChipColors(
+                                    labelColor = Color(0xFF000000),
+                                    selectedLabelColor = Color.White,
+                                    selectedContainerColor = Color(0xFF5D4037),
+                                ),
+                                shape = RoundedCornerShape(8.dp),
+                                modifier = Modifier
+                                    .height(28.dp)
+                            )
+                    }
+                    // Thêm loại khác
+                }
+                Row(
+                    //modifier = Modifier.padding(horizontal = 8.dp),
 
-                Row(){
+                    verticalAlignment = Alignment.CenterVertically
+
+                ) {
+                    Spacer(modifier = Modifier.weight(1f))
                     IconButton(onClick = { /*TODO*/ }) {
                         Icon(
                             imageVector = Icons.Default.Delete,
                             contentDescription = null
                         )
                     }
-
+                    // -
                     IconButton(
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                            if (quantity > 1) quantity--
+                            product.quantity = quantity
+                        },
                         modifier = Modifier
                             .border(width = 1.dp, color = Color(0xFFCACACA))
                             .padding(1.dp)
-                            .width(24.dp)
-                            .height(24.dp)
+                            .width(30.dp)
+                            .height(30.dp)
                     ) {
                         Icon(
                             imageVector = Icons.Default.KeyboardArrowDown,
                             contentDescription = null,
                         )
                     }
-
+                    // Số lượng
                     Text(
-                        text = "2",
-
-                        // Body/12/Medium
-                        style = TextStyle(
-                            fontSize = 16.sp,
-                            lineHeight = 18.sp,
-                            //fontFamily = FontFamily(Font(R.font.poppins)),
-                            fontWeight = FontWeight(500),
-                            color = Color(0xFF3C3C3C),
-                            textAlign = TextAlign.Center,
-                        ),
-
+                        text = quantity.toString(),
+                        style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier
-                            .width(24.dp)
-                            .height(24.dp)
-                            .align(Alignment.CenterVertically)
-                            //.border(width = 1.dp, color = Color(0xFFCACACA))
+                            .width(36.dp), textAlign = TextAlign.Center
                     )
-
+                    // +
                     IconButton(
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                            quantity++
+                            product.quantity = quantity
+                        },
                         modifier = Modifier
                             .border(width = 1.dp, color = Color(0xFFCACACA))
                             .padding(1.dp)
-                            .width(24.dp)
-                            .height(24.dp)
+                            .width(30.dp)
+                            .height(30.dp)
                     ) {
                         Icon(
                             imageVector = Icons.Default.KeyboardArrowUp,
                             contentDescription = null
                         )
-                        
+
                     }
                 }
             }
+
+            // Giá tiền (có thể có bug)
+            Text(
+                text = (product.price * quantity).toString().replace(".0", "") + "đ",
+                style = MaterialTheme.typography.bodyLarge,
+                textAlign = TextAlign.End,
+                modifier = Modifier.fillMaxWidth()
+            )
         }
     }
 }
@@ -298,6 +285,60 @@ fun BoughtItemCart(){
 @Composable
 fun BoughtItemPreview() {
     PetShopTheme {
-        ShoppingCartScreen()
+        ShoppingCartScreen(
+            products = listOf(
+                FoodProduct(
+                    name = "Thức ăn",
+                    description = "Cho chó",
+                    price = 12000.0,
+                    oldPrice = 9999999.0,
+                    star = 4.5,
+                    quantity = 1,
+                    weight = 1.5,
+                    type = "Thức ăn khô",
+                ),
+                FoodProduct(
+                    name = "Thức ăn",
+                    description = "Cho chó",
+                    price = 12000.0,
+                    oldPrice = 9999999.0,
+                    star = 4.5,
+                    quantity = 1,
+                    weight = 1.5,
+                    type = "Thức ăn khô",
+                ),
+                FoodProduct(
+                    name = "Thức ăn",
+                    description = "Cho chó",
+                    price = 12000.0,
+                    oldPrice = 9999999.0,
+                    star = 4.5,
+                    quantity = 1,
+                    weight = 1.5,
+                    type = "Thức ăn khô",
+                ),
+                FoodProduct(
+                    name = "Thức ăn",
+                    description = "Cho chó",
+                    price = 12000.0,
+                    oldPrice = 9999999.0,
+                    star = 4.5,
+                    quantity = 1,
+                    weight = 1.5,
+                    type = "Thức ăn khô",
+                ),
+                FoodProduct(
+                    name = "Thức ăn",
+                    description = "Cho chó",
+                    price = 12000.0,
+                    oldPrice = 9999999.0,
+                    star = 4.5,
+                    quantity = 1,
+                    weight = 1.5,
+                    type = "Thức ăn khô",
+                ),
+
+                )
+        )
     }
 }
