@@ -26,16 +26,17 @@ import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -44,19 +45,53 @@ import androidx.compose.ui.unit.dp
 import com.example.petshop.R
 import com.example.petshop.model.FoodProduct
 import com.example.petshop.model.Product
+import com.example.petshop.ui.CheckoutBottomBar
 import com.example.petshop.ui.theme.PetShopTheme
 
 @Composable
 fun ShoppingCartScreen(
     modifier: Modifier = Modifier,
-    products: List<Product> = emptyList()
+    products: List<Product> = emptyList(),
+    onBuyClicked: () -> Unit = { }
 ) {
-    LazyColumn() {
-        items(products) { product ->
-            BoughtItemCart(product = product)
-            Divider()
+    var totalAmount by remember { mutableStateOf(0.0) }
+    val selectedItems = remember { mutableStateListOf<Product>() }
+
+    Scaffold(
+        bottomBar = {
+            if (selectedItems.isNotEmpty())
+                CheckoutBottomBar(
+                    total = totalAmount,
+                    onBuyClicked = onBuyClicked
+                )
+        }
+    ) {
+        LazyColumn {
+            items(products) { product ->
+                BoughtItemCart(product = product, onQuantityChange = { isChecked, newQuantity ->
+                    if (isChecked) {
+                        if (!selectedItems.contains(product)) {
+                            selectedItems.add(product)
+                        }
+                        product.quantity = newQuantity
+                    } else {
+                        selectedItems.remove(product)
+                    }
+                    totalAmount = selectedItems.sumOf { it.price * it.quantity }
+                })
+                Divider()
+            }
         }
     }
+
+    /*Text(
+        text = "Total: ${totalAmount.toString().replace(".0", "")}đ",
+        style = MaterialTheme.typography.titleSmall,
+        textAlign = TextAlign.End,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    )*/
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -73,9 +108,11 @@ fun BoughtItemCart(
         image = painterResource(id = R.drawable.avt),
         type = "Cá hồi",
         weight = 0.5
-    )
+    ),
+    onQuantityChange: (Boolean, Int) -> Unit
 ) {
     var quantity by remember { mutableStateOf(product.quantity) }
+    var checkedState by remember { mutableStateOf(false) }
 
     Column(
         verticalArrangement = Arrangement.spacedBy(0.dp, Alignment.Top),
@@ -87,10 +124,12 @@ fun BoughtItemCart(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(start = 10.dp, top = 5.dp, end = 10.dp, bottom = 13.dp)
         ) {
-            var checkedState by remember { mutableStateOf(false) }
             Checkbox(
                 checked = checkedState,
-                onCheckedChange = { checkedState = it },
+                onCheckedChange = {
+                    checkedState = it
+                    onQuantityChange(checkedState, quantity)
+                },
                 modifier = Modifier
                     .padding(end = 14.dp)
                     .width(14.dp)
@@ -137,14 +176,11 @@ fun BoughtItemCart(
             ) {
                 Text(
                     text = product.name,
-                    // Body/14/Medium
                     style = MaterialTheme.typography.titleMedium,
-                    //modifier = Modifier.height(20.dp)
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 Text(
                     text = product.description,
-                    // Body/12/Regular
                     style = MaterialTheme.typography.bodySmall,
                 )
                 Spacer(modifier = Modifier.height(6.dp))
@@ -153,20 +189,16 @@ fun BoughtItemCart(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                //.background(color = Color(0xFFFFFFFF))
                 .padding(start = 10.dp, end = 10.dp, bottom = 10.dp)
         ) {
             Row(
-                //horizontalArrangement = Arrangement.spacedBy(22.dp, Alignment.CenterHorizontally),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                // loại ta chọn TODO
                 LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(9.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .width(160.dp)
-                    //.padding(horizontal = 10.dp)
                 ) {
                     item {
                         if (product is FoodProduct)
@@ -185,8 +217,7 @@ fun BoughtItemCart(
                                     selectedContainerColor = Color(0xFF5D4037),
                                 ),
                                 shape = RoundedCornerShape(8.dp),
-                                modifier = Modifier
-                                    .height(28.dp)
+                                modifier = Modifier.height(28.dp)
                             )
                     }
                     item {
@@ -194,7 +225,7 @@ fun BoughtItemCart(
                             FilterChip(
                                 label = {
                                     Text(
-                                        text = product.weight.toString() + "kg",
+                                        text = "${product.weight}kg",
                                         style = MaterialTheme.typography.labelSmall
                                     )
                                 },
@@ -206,17 +237,12 @@ fun BoughtItemCart(
                                     selectedContainerColor = Color(0xFF5D4037),
                                 ),
                                 shape = RoundedCornerShape(8.dp),
-                                modifier = Modifier
-                                    .height(28.dp)
+                                modifier = Modifier.height(28.dp)
                             )
                     }
-                    // Thêm loại khác
                 }
                 Row(
-                    //modifier = Modifier.padding(horizontal = 8.dp),
-
                     verticalAlignment = Alignment.CenterVertically
-
                 ) {
                     Spacer(modifier = Modifier.weight(1f))
                     IconButton(onClick = { /*TODO*/ }) {
@@ -225,11 +251,11 @@ fun BoughtItemCart(
                             contentDescription = null
                         )
                     }
-                    // -
                     IconButton(
                         onClick = {
                             if (quantity > 1) quantity--
                             product.quantity = quantity
+                            onQuantityChange(checkedState, quantity)
                         },
                         modifier = Modifier
                             .border(width = 1.dp, color = Color(0xFFCACACA))
@@ -242,18 +268,17 @@ fun BoughtItemCart(
                             contentDescription = null,
                         )
                     }
-                    // Số lượng
                     Text(
                         text = quantity.toString(),
                         style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier
-                            .width(36.dp), textAlign = TextAlign.Center
+                        modifier = Modifier.width(36.dp),
+                        textAlign = TextAlign.Center
                     )
-                    // +
                     IconButton(
                         onClick = {
                             quantity++
                             product.quantity = quantity
+                            onQuantityChange(checkedState, quantity)
                         },
                         modifier = Modifier
                             .border(width = 1.dp, color = Color(0xFFCACACA))
@@ -265,14 +290,11 @@ fun BoughtItemCart(
                             imageVector = Icons.Default.KeyboardArrowUp,
                             contentDescription = null
                         )
-
                     }
                 }
             }
-
-            // Giá tiền (có thể có bug)
             Text(
-                text = (product.price * quantity).toString().replace(".0", "") + "đ",
+                text = "${(product.price * quantity).toString().replace(".0", "")}đ",
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.End,
                 modifier = Modifier.fillMaxWidth()
@@ -337,8 +359,7 @@ fun BoughtItemPreview() {
                     weight = 1.5,
                     type = "Thức ăn khô",
                 ),
-
-                )
+            )
         )
     }
 }

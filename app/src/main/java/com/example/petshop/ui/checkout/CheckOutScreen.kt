@@ -33,7 +33,7 @@ import com.example.petshop.ui.PetShopAppBar
 import com.example.petshop.ui.theme.PetShopTheme
 
 @Composable
-fun CheckOut() {
+fun CheckOutScreen() {
     Scaffold(
         topBar = { PetShopAppBar(title = "Thanh toán") },
         bottomBar = { EndBar() }
@@ -141,6 +141,6 @@ fun EndBar() {
 @Composable
 fun GreetingPreview() {
     PetShopTheme {
-        CheckOut()
+        CheckOutScreen()
     }
 }

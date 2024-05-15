@@ -6,4 +6,5 @@ data class BottomNavigationBarItem(
     val label: String,
     val selectIcon: Painter,
     val unSelectIcon: Painter,
+    val onClick: () -> Unit = {},
 )
