@@ -75,7 +75,7 @@ fun CheckoutItem(
         quantity = 1,
         star = 0.0,
         image = painterResource(id = R.drawable.avt),
-        type = "Cá hồi",
+        flavor = "Cá hồi",
         weight = 0.5
     ),
 ) {
@@ -177,7 +177,7 @@ fun CheckoutItem(
                         FilterChip(
                             label = {
                                 Text(
-                                    text = product.type,
+                                    text = product.flavor,
                                     style = MaterialTheme.typography.labelSmall
                                 )
                             },

@@ -99,7 +99,7 @@ fun BoughtItemCart(
         quantity = 1,
         star = 0.0,
         image = painterResource(id = R.drawable.avt),
-        type = "Cá hồi",
+        flavor = "Cá hồi",
         weight = 0.5
     ),
     onQuantityChange: (Boolean, Int) -> Unit
@@ -198,7 +198,7 @@ fun BoughtItemCart(
                             FilterChip(
                                 label = {
                                     Text(
-                                        text = product.type,
+                                        text = product.flavor,
                                         style = MaterialTheme.typography.labelSmall
                                     )
                                 },
@@ -310,7 +310,7 @@ fun BoughtItemPreview() {
                     star = 4.5,
                     quantity = 1,
                     weight = 1.5,
-                    type = "Thức ăn khô",
+                    flavor = "Thức ăn khô",
                 ),
                 FoodProduct(
                     name = "Thức ăn",
@@ -320,7 +320,7 @@ fun BoughtItemPreview() {
                     star = 4.5,
                     quantity = 1,
                     weight = 1.5,
-                    type = "Thức ăn khô",
+                    flavor = "Thức ăn khô",
                 ),
                 FoodProduct(
                     name = "Thức ăn",
@@ -330,7 +330,7 @@ fun BoughtItemPreview() {
                     star = 4.5,
                     quantity = 1,
                     weight = 1.5,
-                    type = "Thức ăn khô",
+                    flavor = "Thức ăn khô",
                 ),
                 FoodProduct(
                     name = "Thức ăn",
@@ -340,7 +340,7 @@ fun BoughtItemPreview() {
                     star = 4.5,
                     quantity = 1,
                     weight = 1.5,
-                    type = "Thức ăn khô",
+                    flavor = "Thức ăn khô",
                 ),
                 FoodProduct(
                     name = "Thức ăn",
@@ -350,7 +350,7 @@ fun BoughtItemPreview() {
                     star = 4.5,
                     quantity = 1,
                     weight = 1.5,
-                    type = "Thức ăn khô",
+                    flavor = "Thức ăn khô",
                 ),
             )
         )

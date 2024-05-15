@@ -20,6 +20,36 @@ class FoodProduct(
     oldPrice: Double = 0.0,
     quantity: Int = 0,
     star: Double = 0.0,
+
+    // Phân loại để chọn mua (ví dụ 1kg, 2kg, vị thịt, vị cá...)
     var weight: Double = 0.0,
-    var type: String = ""
+    var flavor: String = ""
+) : Product(name, description, image, price, oldPrice, quantity, star)
+
+class ToyProduct(
+    name: String = "Dụng cụ chơi",
+    description: String = "",
+    image: Painter? = null,
+    price: Double = 0.0,
+    oldPrice: Double = 0.0,
+    quantity: Int = 0,
+    star: Double = 0.0,
+
+    // Phân loại để chọn mua
+    var something1: Double = 0.0,
+    var something2: String = ""
+) : Product(name, description, image, price, oldPrice, quantity, star)
+
+class ClothesProduct(
+    name: String = "Quần áo",
+    description: String = "",
+    image: Painter? = null,
+    price: Double = 0.0,
+    oldPrice: Double = 0.0,
+    quantity: Int = 0,
+    star: Double = 0.0,
+
+    // Phân loại để chọn mua
+    var something3: Double = 0.0,
+    var something4: String = ""
 ) : Product(name, description, image, price, oldPrice, quantity, star)

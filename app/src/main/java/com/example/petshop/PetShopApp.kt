@@ -80,7 +80,7 @@ fun PetShopApp(
             star = 4.5,
             quantity = 1,
             weight = 1.5,
-            type = "Thức ăn khô",
+            flavor = "Thức ăn khô",
         ),
         // Thêm các sản phẩm khác ở đây...
     )
