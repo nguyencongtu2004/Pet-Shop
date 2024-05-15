@@ -3,6 +3,7 @@ package com.example.petshop
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -11,6 +12,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -18,29 +20,26 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.petshop.model.FoodProduct
 import com.example.petshop.model.Notification
+import com.example.petshop.model.Screen
 import com.example.petshop.model.Product
 import com.example.petshop.model.User
 import com.example.petshop.ui.PetShopNavigationBar
 import com.example.petshop.ui.TopAppBarNoSearch
 import com.example.petshop.ui.TopAppBarWithSearch
-import com.example.petshop.ui.checkout.CheckOutScreen
+import com.example.petshop.ui.checkout.CheckoutScreen
 import com.example.petshop.ui.home.HomeScreen
 import com.example.petshop.ui.notification.NotificationScreen
 import com.example.petshop.ui.shipping_cart.ShoppingCartScreen
 import com.example.petshop.ui.user_informaion.EditProfile
 import com.example.petshop.ui.user_informaion.ProfileScreen
 
-enum class PetShopScreen {
-    HomePage,
-    NotificationScreen,
-    ShoppingCartScreen,
-    ProfileScreen,
-
-    // Các màn hình trong trang Profile
-    EditProfileScreen,
-
-    // Các màn hình thanh toán
-    CheckOutScreen
+// Hàm điều hướng tới màn hình mới và loại bỏ màn hình hiện tại khỏi ngăn xếp
+fun navigateAndReplace(navController: NavController, route: String) {
+    navController.navigate(route) {
+        popUpTo(navController.graph.startDestinationId) {
+            inclusive = true
+        }
+    }
 }
 
 @Composable
@@ -97,18 +96,34 @@ fun PetShopApp(
         password = "password",
         address = "đâu đó",
     )
+    val productsToBuy: List<Product> = mutableListOf<Product>()
 
     // TRẠNG THÁI CỦA MÀN HÌNH Ở ĐÂY
     val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentScreen =
-        PetShopScreen.valueOf(backStackEntry?.destination?.route ?: PetShopScreen.HomePage.name)
+    val currentScreen = backStackEntry?.destination?.route ?: Screen.HomePage.route
 
     var selectedTabIndex by rememberSaveable { mutableStateOf(0) } // Chọn tab "Đang giao" hoặc "Đã giao"
     var searchText by rememberSaveable { mutableStateOf("") }
 
     var isSearchBarVisible by rememberSaveable { mutableStateOf(true) }
     var isNavigationBarVisible by rememberSaveable { mutableStateOf(true) }
-    var selectedIndex = remember { mutableStateOf(0) }
+    val selectedIndex = remember { mutableStateOf(0) }
+
+
+
+    // Cập nhật trạng thái khi currentScreen thay đổi (chạy đoạn code dưới sau mỗi lần currentScreen thay đổi)
+    LaunchedEffect(currentScreen) {
+        when (currentScreen) {
+            Screen.HomePage.route, Screen.ProfileScreen.route -> {
+                isSearchBarVisible = true
+                isNavigationBarVisible = true
+            }
+            else -> {
+                isSearchBarVisible = false
+                isNavigationBarVisible = false
+            }
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -118,23 +133,17 @@ fun PetShopApp(
                     onSearchIconClicked = { /*TODO*/ },
                     filterClicked = { /*TODO*/ },
                     notificationClicked = {
-                        isSearchBarVisible = false
-                        isNavigationBarVisible = false
-                        navController.navigate(PetShopScreen.NotificationScreen.name)
+                        navController.navigate(Screen.NotificationScreen.route)
                     },
                     cartClicked = {
-                        isSearchBarVisible = false
-                        isNavigationBarVisible = false
-                        navController.navigate(PetShopScreen.ShoppingCartScreen.name)
+                        navController.navigate(Screen.ShoppingCartScreen.route)
                     },
                     searchText = searchText,
                 )
             else
                 TopAppBarNoSearch(
-                    title = currentScreen.name,
+                    title = currentScreen,
                     onBackClick = {
-                        isSearchBarVisible = true
-                        isNavigationBarVisible = true
                         navController.popBackStack()
                     }
                 )
@@ -145,25 +154,32 @@ fun PetShopApp(
                     selectedIndex = selectedIndex.value,
                     updateIndex = { selectedIndex.value = it },
                     onHomeClick = {
-                        if (currentScreen != PetShopScreen.HomePage)
-                            navController.navigate(PetShopScreen.HomePage.name)
+                        if (currentScreen != Screen.HomePage.route) {
+                            navController.navigate(Screen.HomePage.route) {
+                                popUpTo(Screen.HomePage.route) { inclusive = true }
+                            }
+                        }
                     },
                     onChatClick = { /*TODO*/ },
                     onUserClick = {
-                        if (currentScreen != PetShopScreen.ProfileScreen)
-                            navController.navigate(PetShopScreen.ProfileScreen.name)
+                        if (currentScreen != Screen.ProfileScreen.route) {
+                            navController.navigate(Screen.ProfileScreen.route) {
+                                popUpTo(Screen.HomePage.route) { inclusive = false }
+                            }
+                        }
                     },
                 )
         }
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = PetShopScreen.HomePage.name, // Màn hình bắt đầu
+            startDestination = Screen.HomePage.route, // Màn hình bắt đầu
             modifier = Modifier.padding(innerPadding),
         ) {
             // Màn hình chính
-            composable(route = PetShopScreen.HomePage.name) {
+            composable(route = Screen.HomePage.route) {
                 HomeScreen(
+                    navController = navController,
                     products = products,
                     bannerItems = bannerItems,
                     onProductClick = { /*TODO*/ },
@@ -172,46 +188,60 @@ fun PetShopApp(
                 )
             }
 
-            // Màn hình thông báo
-            composable(route = PetShopScreen.NotificationScreen.name) {
-                NotificationScreen(notifications = notifications)
-            }
-
-            // Màn hình giỏ hàng
-            composable(route = PetShopScreen.ShoppingCartScreen.name) {
-                ShoppingCartScreen(
-                    products = productsInCart,
-                    onBuyClicked = {
-                        isSearchBarVisible = false
-                        isNavigationBarVisible = false
-                        navController.navigate(PetShopScreen.CheckOutScreen.name)
-                                   },
-                )
-            }
-
             // Màn hình thông tin cá nhân
-            composable(route = PetShopScreen.ProfileScreen.name) {
+            composable(route = Screen.ProfileScreen.route) {
                 ProfileScreen(
+                    navController = navController,
                     user = loginedUser,
                     onEditProfileClicked = {
-                        navController.navigate(PetShopScreen.EditProfileScreen.name)
-                        isSearchBarVisible = false
-                        isNavigationBarVisible = false
+                        navController.navigate(Screen.EditProfileScreen.route)
+
                     },
                 )
             }
 
+
+
+
+
+            // Màn hình thông báo
+            composable(route = Screen.NotificationScreen.route) {
+                NotificationScreen(
+                    navController = navController,
+                    notifications = notifications
+                )
+            }
+
+            // Màn hình giỏ hàng
+            composable(route = Screen.ShoppingCartScreen.route) {
+                ShoppingCartScreen(
+                    products = productsInCart,
+                    onBuyClicked = {
+                        navController.navigate(Screen.CheckoutScreen.route)
+                    },
+
+                )
+            }
+
+            // Các màn hình thanh toán
+            composable(route = Screen.CheckoutScreen.route) {
+                CheckoutScreen(
+                    products = productsInCart
+                )
+            }
+
+
+
             // Các màn hình trong trang Profile
-            composable(route = PetShopScreen.EditProfileScreen.name) {
+            composable(route = Screen.EditProfileScreen.route) {
                 EditProfile(
                     user = loginedUser,
                 )
             }
 
-            // Các màn hình thanh toán
-            composable(route = PetShopScreen.CheckOutScreen.name) {
-                CheckOutScreen()
-            }
+
+
+
         }
     }
 }

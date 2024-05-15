@@ -52,7 +52,7 @@ import com.example.petshop.ui.theme.PetShopTheme
 fun ShoppingCartScreen(
     modifier: Modifier = Modifier,
     products: List<Product> = emptyList(),
-    onBuyClicked: () -> Unit = { }
+    onBuyClicked: () -> Unit = { },
 ) {
     var totalAmount by remember { mutableStateOf(0.0) }
     val selectedItems = remember { mutableStateListOf<Product>() }
@@ -66,7 +66,9 @@ fun ShoppingCartScreen(
                 )
         }
     ) {
-        LazyColumn {
+        LazyColumn(
+            modifier = Modifier.padding(it),
+        ) {
             items(products) { product ->
                 BoughtItemCart(product = product, onQuantityChange = { isChecked, newQuantity ->
                     if (isChecked) {
@@ -83,15 +85,6 @@ fun ShoppingCartScreen(
             }
         }
     }
-
-    /*Text(
-        text = "Total: ${totalAmount.toString().replace(".0", "")}đ",
-        style = MaterialTheme.typography.titleSmall,
-        textAlign = TextAlign.End,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    )*/
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

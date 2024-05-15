@@ -2,6 +2,7 @@ package com.example.petshop.ui.checkout
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,6 +15,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,120 +31,91 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.petshop.R
+import com.example.petshop.model.User
 
 @Composable
-fun Information(){
+fun Information(
+    modifier: Modifier = Modifier,
+    user: User = User()
+) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(6.dp, Alignment.Top),
-        horizontalAlignment = Alignment.Start, // Căn lề trái
-        modifier = Modifier.padding(horizontal = 12.dp)
+        horizontalAlignment = Alignment.Start,
+        modifier = modifier
     ) {
         Text(
             text = "Thông tin người nhận",
-            style = TextStyle(
-                fontSize = 14.sp,
-                lineHeight = 20.sp,
-                fontWeight = FontWeight(600),
+            style = MaterialTheme.typography.titleMedium,
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = user.name,
+            style = MaterialTheme.typography.bodySmall.copy(
+                fontWeight = FontWeight(300),
                 color = Color(0xFF3C3C3C),
             ),
-            modifier = Modifier.padding(start = 8.dp) // Thêm padding từ bên trái
         )
-
+        Spacer(modifier = Modifier.height(2.dp))
         Text(
-            text = "Nguyễn Công Tú",
-            style = TextStyle(
-                fontSize = 12.sp,
-                lineHeight = 18.sp,
-                fontWeight = FontWeight(400),
-                color = Color(0xFF555555),
+            text = user.phone,
+            style = MaterialTheme.typography.bodySmall.copy(
+                fontWeight = FontWeight(300),
+                color = Color(0xFF3C3C3C),
             ),
-            modifier = Modifier.padding(start = 8.dp) // Thêm padding từ bên trái
         )
-
-        Text(
-            text = "0932564789",
-            style = TextStyle(
-                fontSize = 12.sp,
-                lineHeight = 18.sp,
-                fontWeight = FontWeight(400),
-                color = Color(0xFF555555),
-            ),
-            modifier = Modifier.padding(start = 8.dp) // Thêm padding từ bên trái
-        )
-
-        Divider(
-            modifier = Modifier
-                .background(color = Color(0xFFEFEBE9))
-        )
-
+        Spacer(modifier = Modifier.height(4.dp))
+        Divider()
+        Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = "Địa chỉ",
-            style = TextStyle(
-                fontSize = 14.sp,
-                lineHeight = 20.sp,
-                fontWeight = FontWeight(600),
+            style = MaterialTheme.typography.titleMedium,
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = user.name,
+            style = MaterialTheme.typography.bodySmall.copy(
+                fontWeight = FontWeight(300),
                 color = Color(0xFF3C3C3C),
             ),
-            modifier = Modifier.padding(start = 8.dp) // Thêm padding từ bên trái
-        )
-
-        Text(
-            text = "Thôn Cành Lá, Xã Cành Cây, Huyện Gió Mây, Tỉnh Đồi Núi",
-            style = TextStyle(
-                fontSize = 12.sp,
-                lineHeight = 18.sp,
-                fontWeight = FontWeight(400),
-                color = Color(0xFF555555),
-            ),
-            modifier = Modifier.padding(start = 8.dp) // Thêm padding từ bên trái
         )
 
 
 
-        Row {
-            Spacer(modifier = Modifier.weight(1f))
+
+        Row(
+            modifier = Modifier
+                .width(100.dp)
+                .height(25.dp)
+                .clickable { /*TODO*/ }
+                .align(Alignment.End)
+        ) {
+            Text(
+                text = "Chỉnh sửa",
+                style = MaterialTheme.typography.labelMedium,
+                modifier = Modifier.padding(vertical = 5.dp)
+            )
             IconButton(
                 onClick = { /*TODO*/ },
-                modifier = Modifier
-                    .width(72.dp)
-                    .height(18.dp)
+                modifier = Modifier.padding(all = 0.dp)
             ) {
-                Row {
-
-                    Text(
-                        text = "Chỉnh sửa",
-                        style = TextStyle(
-                            fontSize = 10.sp,
-                            lineHeight = 18.sp,
-                            fontWeight = FontWeight(500),
-                            color = Color(0xFF5D4037),
-                        ),
-                        modifier = Modifier
-                            .width(52.dp)
-                            .height(18.dp)
-                    )
-
-                    Image(
-                        painter = painterResource(id = R.drawable.edit2),
-                        contentDescription = "image description",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .width(20.dp)
-                            .height(20.dp)
-                            .padding(3.dp)
-                    )
-                }
+                Icon(
+                    imageVector = Icons.Default.KeyboardArrowRight,
+                    contentDescription = null,
+                    modifier = Modifier.padding(all = 0.dp)
+                )
             }
         }
     }
 }
 
 @Composable
-fun Delivery(){
-    Column (
+fun Delivery(
+    modifier: Modifier = Modifier
+) {
+    Column(
         verticalArrangement = Arrangement.spacedBy(6.dp, Alignment.Top),
         horizontalAlignment = Alignment.Start, // Căn lề trái
-        modifier = Modifier.padding(horizontal = 12.dp)){
+        modifier = modifier,
+    ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(6.dp, Alignment.Top),
             horizontalAlignment = Alignment.Start,
@@ -180,7 +153,7 @@ fun Delivery(){
                 Column(
                     verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Top),
                     horizontalAlignment = Alignment.Start,
-                ){
+                ) {
                     Text(
                         text = "Hỏa tốc",
 
@@ -223,7 +196,7 @@ fun Delivery(){
                 Column(
                     verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Top),
                     horizontalAlignment = Alignment.Start,
-                ){
+                ) {
                     Text(
                         text = "Thường",
 
@@ -273,7 +246,7 @@ fun Delivery(){
                 Column(
                     verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Top),
                     horizontalAlignment = Alignment.Start,
-                ){
+                ) {
                     Text(
                         text = "Phương thức thanh toán",
 
@@ -317,7 +290,7 @@ fun Delivery(){
                 Column(
                     verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Top),
                     horizontalAlignment = Alignment.Start,
-                ){
+                ) {
                     Text(
                         text = "Voucher",
 
@@ -359,10 +332,12 @@ fun Delivery(){
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            Divider(modifier = Modifier
-                .width(375.dp)
-                .height(4.dp)
-                .background(color = Color(0xFFEFEBE9)))
+            Divider(
+                modifier = Modifier
+                    .width(375.dp)
+                    .height(4.dp)
+                    .background(color = Color(0xFFEFEBE9))
+            )
 
         }
     }
@@ -505,6 +480,6 @@ fun Delivery(){
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun InforPreview() {
-
+fun InformationPreview() {
+    Delivery()
 }

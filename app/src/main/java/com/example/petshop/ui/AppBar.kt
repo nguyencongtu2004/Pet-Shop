@@ -17,6 +17,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -25,13 +26,17 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -338,6 +343,51 @@ fun PetShopTopAppBarPreview() {
     )
 }
 
+
+@Composable
+fun EndBar() {
+    BottomAppBar(
+        modifier = Modifier
+            .height(66.dp)
+            .background(color = Color(0xFFFEFEFE))
+            .shadow(
+                elevation = 10.dp,
+                spotColor = Color(0x26000000),
+                ambientColor = Color(0x26000000)
+            )
+    ) {
+        Row(
+            Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Spacer(modifier = Modifier.width(9.dp))
+
+            Column {
+                Text(
+                    text = "Tổng cộng",
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+
+                Text(
+                    text = "57.000 đ",
+                    style = TextStyle(
+                        fontSize = 18.sp,
+                        lineHeight = 26.sp,
+                        fontWeight = FontWeight(700),
+                        color = Color(0xFF3C3C3C),
+                    )
+                )
+            }
+
+            Spacer(modifier = Modifier.weight(1f))
+            TextButton(onClick = { /*TODO*/ }) {
+                Text("Thanh toán")
+            }
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun PetShopNavigationBarPreview() {
@@ -357,4 +407,5 @@ fun CheckoutBottomBarPreview() {
         total = 120000.0
     )
 }
+
 

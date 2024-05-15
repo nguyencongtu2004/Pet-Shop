@@ -39,11 +39,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.petshop.R
 import com.example.petshop.model.Product
 
 @Composable
 fun HomeScreen(
+    navController: NavController? = null,
     bannerItems: List<Painter> = listOf(),
     products: List<Product> = listOf(),
     onProductClick: () -> Unit = {},
@@ -51,9 +53,7 @@ fun HomeScreen(
     secondTabProduct: List<Product> = listOf(),
     thirdTabProduct: List<Product> = listOf(),
 ) {
-
     var selectedTabIndex by remember { mutableStateOf(0) } // Chọn tab "Đang giao" hoặc "Đã giao"
-    //var searchText by remember { mutableStateOf("") }
 
     Column {
         HorizontalBanner(bannerItems = bannerItems)
@@ -69,6 +69,7 @@ fun HomeScreen(
         }
     }
 }
+
 
 @Composable
 fun ProductWithStar(

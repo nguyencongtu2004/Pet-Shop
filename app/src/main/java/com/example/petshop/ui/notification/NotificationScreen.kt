@@ -20,6 +20,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.petshop.R
 import com.example.petshop.model.Notification
 import com.example.petshop.ui.theme.PetShopTheme
@@ -28,6 +29,7 @@ import com.example.petshop.ui.theme.PetShopTheme
 @Composable
 fun NotificationScreen(
     modifier: Modifier = Modifier,
+    navController: NavController? = null,
     notifications: List<Notification> = emptyList()
 ) {
     LazyColumn(

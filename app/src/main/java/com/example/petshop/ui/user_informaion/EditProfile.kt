@@ -25,11 +25,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.petshop.R
 import com.example.petshop.model.User
 
 @Composable
 fun EditProfile(
+    navController: NavController? = null,
     modifier: Modifier = Modifier,
     user: User = User()
 ) {

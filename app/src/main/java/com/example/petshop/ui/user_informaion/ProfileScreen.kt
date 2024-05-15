@@ -36,12 +36,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.petshop.R
 import com.example.petshop.model.User
 
 
 @Composable
 fun ProfileScreen(
+    navController: NavController? = null,
     modifier: Modifier = Modifier,
     user: User = User(),
     onEditProfileClicked: () -> Unit = {},
@@ -115,7 +117,7 @@ fun ProfileScreen(
                                 modifier = Modifier.padding(vertical = 5.dp)
                             )
                             IconButton(
-                                onClick = { onEditProfileClicked() },
+                                onClick = { /*TODO*/ },
                                 modifier = Modifier.padding(all = 0.dp)
                             ) {
                                 Icon(
