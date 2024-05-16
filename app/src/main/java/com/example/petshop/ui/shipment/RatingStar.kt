@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.example.petshop.ui.theme.PetShopTheme
 
 @Composable
-fun RatingStar(maxStars: Int = 5, initialRating: Int = 0, onRatingChanged: (Int) -> Unit) {
+fun RatingStar2(maxStars: Int = 5, initialRating: Int = 0, onRatingChanged: (Int) -> Unit) {
     var rating by remember { mutableStateOf(initialRating) }
 
     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -47,7 +47,7 @@ fun RatingStar(maxStars: Int = 5, initialRating: Int = 0, onRatingChanged: (Int)
 @Composable
 fun RatingStarPreview() {
     PetShopTheme {
-        RatingStar(maxStars = 5, initialRating = 0) { rating ->
+        RatingStar2(maxStars = 5, initialRating = 0) { rating ->
             // Xử lý sự kiện khi rating thay đổi
             // Ví dụ: lưu rating vào ViewModel hoặc gửi rating lên server
             // Ở đây chỉ hiển thị rating ra màn hình để minh họa

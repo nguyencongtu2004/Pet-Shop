@@ -136,7 +136,9 @@ fun ProductWithStar(
         }
 
         Column(
-            modifier = Modifier.width(200.dp),
+            modifier = Modifier
+                //.width(200.dp)
+                .weight(1f),
         ) {
             Text(
                 text = product.name,
@@ -148,7 +150,10 @@ fun ProductWithStar(
             )
         }
         Column(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .width(100.dp)
+                .padding(end = 8.dp),
+            //.fillMaxWidth(),
             horizontalAlignment = Alignment.End,
         ) {
             Text(
@@ -178,7 +183,7 @@ fun ProductTabs(
     Column {
         TabRow(
             selectedTabIndex = selectedTabIndex,
-            contentColor = Color.Black,
+            contentColor = MaterialTheme.colorScheme.onBackground,
             indicator = { tabPositions ->
                 TabRowDefaults.Indicator(
                     modifier = Modifier
@@ -190,7 +195,7 @@ fun ProductTabs(
                 )
             },
             modifier = Modifier
-                .background(color = Color(0xFFFFFFFF))
+            //.background(color = Color(0xFFFFFFFF))
             //.height(56.dp)
         ) {
             val tabs = listOf("Thức ăn", "Dụng cụ", "Thời trang")
@@ -208,7 +213,7 @@ fun ProductTabs(
             }
         }
         Box(
-            modifier = Modifier.background(Color.White)
+            //modifier = Modifier.background(Color.White)
         ) {
             // Display tab content
             when (selectedTabIndex) {
@@ -255,6 +260,25 @@ fun HorizontalBanner(bannerItems: List<Painter>) {
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen()
+    HomeScreen(
+        firstTabProduct = listOf(
+            Product(
+                name = "Đồ ăn",
+                description = "Cho chó",
+                price = 12000.0,
+                oldPrice = 9999999.0,
+                star = 4.5,
+                quantity = 1,
+            ),
+            Product(
+                name = "Đồ ăn",
+                description = "Cho chó",
+                price = 12000.0,
+                oldPrice = 9999999.0,
+                star = 4.5,
+                quantity = 1,
+            ),
+        )
+    )
 }
 

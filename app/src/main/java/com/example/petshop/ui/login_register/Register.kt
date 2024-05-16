@@ -13,7 +13,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,65 +33,66 @@ import com.example.petshop.R
 import com.example.petshop.ui.theme.PetShopTheme
 
 @Composable
-fun Register(modifier: Modifier = Modifier) {
-    Scaffold(
+fun Register(
+    modifier: Modifier = Modifier,
+    onRegisterClick: () -> Unit = {}
+) {
+    Column(
         modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Column(
-            modifier = Modifier.padding(it),
             horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 100.dp)
+                .weight(1f)
+
         ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
+            var phoneText by remember { mutableStateOf("") }
+            var passwordText by remember { mutableStateOf("") }
+
+            Logo()
+            Spacer(modifier = Modifier.height(8.dp))
+            TypingSdtField(
+                title = "Số điện thoại",
+                placeholder = "Nhập số điện thoại của bạn",
+                value = phoneText,
+                onPhoneChange = { newText -> phoneText = newText }
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            TypingSdtField(
+                title = "Mật khẩu",
+                placeholder = "Mật khẩu",
+                value = passwordText,
+                onPhoneChange = { newText -> passwordText = newText }
+            )
+            Spacer(modifier = Modifier.height(28.dp))
+            Button(
+                title = "Đăng ký",
+                isDisable = if (phoneText == "" || passwordText == "") true else false,
+                onClick = onRegisterClick,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 100.dp)
-                    .weight(1f)
-
-            ) {
-                var sdtText by remember { mutableStateOf("") }
-                var nameText by remember { mutableStateOf("") }
-
-                Logo()
-                Spacer(modifier = Modifier.height(8.dp))
-                TypingNameField(
-                    value = nameText,
-                    onValueChange = { newText -> nameText = newText }
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                TypingSdtField(
-                    value = sdtText,
-                    onValueChange = { newText -> sdtText = newText }
-                )
-                Spacer(modifier = Modifier.height(28.dp))
-                Button(
-                    title = "Đăng ký",
-                    isDisable = if (sdtText == "" || nameText == "") true else false,
-                    onClick = {
-                        println(nameText)
-                        println(sdtText)
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp)
-                )
-            }
-            Row {
-                Text(
-                    text = "Đã có tài khoản?",
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                Text(
-                    text = " Đăng nhập",
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        fontFamily = FontFamily(Font(R.font.poppins_bold)),
-                    ),
-                    modifier = Modifier.clickable { }
-                )
-            }
-            Spacer(modifier = Modifier.height(24.dp))
+                    .padding(horizontal = 20.dp)
+            )
         }
+        Row {
+            Text(
+                text = "Đã có tài khoản?",
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Text(
+                text = " Đăng nhập",
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontFamily = FontFamily(Font(R.font.poppins_bold)),
+                ),
+                modifier = Modifier.clickable { /*TODO*/ }
+            )
+        }
+        Spacer(modifier = Modifier.height(24.dp))
     }
+
 }
 
 @OptIn(ExperimentalComposeUiApi::class)

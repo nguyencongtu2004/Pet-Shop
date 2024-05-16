@@ -20,7 +20,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -38,34 +37,31 @@ import com.example.petshop.model.Product
 
 @Composable
 fun FollowShippingScreen() {
-    Scaffold {
-        Column(
-            modifier = Modifier.padding(it)
-        ) {
-            ShippingProducts(
-                product = Product(
-                    name = "Đồ ăn",
-                    description = "Cho chó",
-                    price = 12000.0,
-                    quantity = 1,
-                ),
-            )
-            ShippingProducts(
-                product = Product(
-                    name = "Đồ ăn",
-                    description = "Cho chó",
-                    price = 12000.0,
-                    quantity = 1,
-                ),
-            )
-            Divider()
-            ShippingStatus()
-            ConfirmReceived(
-                enabled = false,
-                modifier = Modifier.padding(top = 30.dp),
-            )
-        }
+    Column{
+        ShippingProducts(
+            product = Product(
+                name = "Đồ ăn",
+                description = "Cho chó",
+                price = 12000.0,
+                quantity = 1,
+            ),
+        )
+        ShippingProducts(
+            product = Product(
+                name = "Đồ ăn",
+                description = "Cho chó",
+                price = 12000.0,
+                quantity = 12,
+            ),
+        )
+        Divider()
+        ShippingStatus()
+        ConfirmReceived(
+            enabled = false,
+            modifier = Modifier.padding(top = 30.dp),
+        )
     }
+
 }
 
 @Composable
@@ -79,7 +75,7 @@ fun ShippingProducts(
         modifier = modifier.padding(16.dp)
     ) {
         Image(
-            painter = painterResource(id = R.drawable.avt),
+            painter = product.image ?: painterResource(id = R.drawable.avt),
             contentDescription = "image description",
             contentScale = ContentScale.Fit,
             modifier = Modifier
@@ -113,7 +109,7 @@ fun ShippingProducts(
         )
 
         Column(
-            modifier = Modifier.width(200.dp),
+            modifier = Modifier.weight(1f),
         ) {
             Text(
                 text = product.name,
@@ -125,7 +121,7 @@ fun ShippingProducts(
             )
         }
         Column(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.width(100.dp),
             horizontalAlignment = Alignment.End,
         ) {
             Text(
@@ -186,8 +182,8 @@ fun StatusItem(
         ) {
             Box(
                 modifier = Modifier
-                    .width(if(isLast) 30.dp else 18.dp)
-                    .height(if(isLast) 30.dp else 18.dp)
+                    .width(if (isLast) 30.dp else 18.dp)
+                    .height(if (isLast) 30.dp else 18.dp)
                     .clip(CircleShape)
                     .background(
                         color = if (isCompleted) Color(0xFF43936C) else Color(0xFFCACACA)
@@ -211,7 +207,7 @@ fun StatusItem(
                     modifier = Modifier
                         .width(2.dp)
                         .height(40.dp)
-                        .background( if (isCompleted) Color(0xFF43936C) else Color(0xFFCACACA))
+                        .background(if (isCompleted) Color(0xFF43936C) else Color(0xFFCACACA))
                 )
             }
         }
@@ -274,5 +270,4 @@ fun ConfirmReceived(
 @Composable
 fun FollowShippingScreenPreview() {
     FollowShippingScreen()
-
 }

@@ -23,17 +23,25 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.petshop.R
+import com.example.petshop.model.Screen
 import kotlinx.coroutines.delay
 
 @Preview
 @Composable
-fun LoadingScreen() {
-    var isDone by remember { mutableStateOf(false) }
+fun LoadingScreen(
+    modifier: Modifier = Modifier,
+    navController: NavController? = null
+) {
+    var isPayDone by remember { mutableStateOf(false) }
+    var isNextScreen by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
         while (true) {
             delay(2000) // Đợi vài giây
-            isDone= true
+            isPayDone= true
+            delay(2000)
+            navController?.navigate(Screen.TransactionScreen.route)
         }
     }
 
@@ -41,7 +49,7 @@ fun LoadingScreen() {
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        if (!isDone)
+        if (!isPayDone)
             Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,

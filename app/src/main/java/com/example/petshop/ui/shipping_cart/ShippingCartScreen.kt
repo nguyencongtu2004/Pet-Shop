@@ -42,17 +42,24 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.petshop.R
+import com.example.petshop.model.CartViewModel
 import com.example.petshop.model.FoodProduct
 import com.example.petshop.model.Product
+import com.example.petshop.model.Screen
 import com.example.petshop.ui.CheckoutBottomBar
 import com.example.petshop.ui.theme.PetShopTheme
 
 @Composable
 fun ShoppingCartScreen(
     modifier: Modifier = Modifier,
+    navController: NavController? = null,
     products: List<Product> = emptyList(),
-    onBuyClicked: () -> Unit = { },
+
+    cartViewModel: CartViewModel = viewModel()
 ) {
     var totalAmount by remember { mutableStateOf(0.0) }
     val selectedItems = remember { mutableStateListOf<Product>() }
@@ -62,12 +69,18 @@ fun ShoppingCartScreen(
             if (selectedItems.isNotEmpty())
                 CheckoutBottomBar(
                     total = totalAmount,
-                    onBuyClicked = onBuyClicked
+                    onBuyClicked = {
+                        selectedItems.forEach() {
+                            print("product: ${it.name}")
+                        }
+                        cartViewModel.setSelectedProducts(selectedItems)
+                        navController?.navigate(Screen.CheckoutScreen.route)
+                    }
                 )
         }
     ) {
         LazyColumn(
-            modifier = Modifier.padding(it),
+            modifier = modifier.padding(it),
         ) {
             items(products) { product ->
                 BoughtItemCart(product = product, onQuantityChange = { isChecked, newQuantity ->
@@ -122,6 +135,7 @@ fun BoughtItemCart(
                 onCheckedChange = {
                     checkedState = it
                     onQuantityChange(checkedState, quantity)
+                    // TODO
                 },
                 modifier = Modifier
                     .padding(end = 14.dp)
@@ -191,7 +205,8 @@ fun BoughtItemCart(
                     horizontalArrangement = Arrangement.spacedBy(9.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
-                        .width(160.dp)
+                        //.width(160.dp)
+                        .weight(1f)
                 ) {
                     item {
                         if (product is FoodProduct)
@@ -237,8 +252,8 @@ fun BoughtItemCart(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Spacer(modifier = Modifier.weight(1f))
-                    IconButton(onClick = { /*TODO*/ }) {
+                    //Spacer(modifier = Modifier.weight(1f))
+                    IconButton(onClick = { /*TODO xoas*/ }) {
                         Icon(
                             imageVector = Icons.Default.Delete,
                             contentDescription = null
@@ -263,7 +278,9 @@ fun BoughtItemCart(
                     }
                     Text(
                         text = quantity.toString(),
-                        style = MaterialTheme.typography.bodyMedium,
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontSize = 18.sp
+                        ),
                         modifier = Modifier.width(36.dp),
                         textAlign = TextAlign.Center
                     )
@@ -301,6 +318,7 @@ fun BoughtItemCart(
 fun BoughtItemPreview() {
     PetShopTheme {
         ShoppingCartScreen(
+
             products = listOf(
                 FoodProduct(
                     name = "Thức ăn",
@@ -313,7 +331,7 @@ fun BoughtItemPreview() {
                     flavor = "Thức ăn khô",
                 ),
                 FoodProduct(
-                    name = "Thức ăn",
+                    name = "Thức ăn 2",
                     description = "Cho chó",
                     price = 12000.0,
                     oldPrice = 9999999.0,
@@ -322,36 +340,7 @@ fun BoughtItemPreview() {
                     weight = 1.5,
                     flavor = "Thức ăn khô",
                 ),
-                FoodProduct(
-                    name = "Thức ăn",
-                    description = "Cho chó",
-                    price = 12000.0,
-                    oldPrice = 9999999.0,
-                    star = 4.5,
-                    quantity = 1,
-                    weight = 1.5,
-                    flavor = "Thức ăn khô",
-                ),
-                FoodProduct(
-                    name = "Thức ăn",
-                    description = "Cho chó",
-                    price = 12000.0,
-                    oldPrice = 9999999.0,
-                    star = 4.5,
-                    quantity = 1,
-                    weight = 1.5,
-                    flavor = "Thức ăn khô",
-                ),
-                FoodProduct(
-                    name = "Thức ăn",
-                    description = "Cho chó",
-                    price = 12000.0,
-                    oldPrice = 9999999.0,
-                    star = 4.5,
-                    quantity = 1,
-                    weight = 1.5,
-                    flavor = "Thức ăn khô",
-                ),
+
             )
         )
     }

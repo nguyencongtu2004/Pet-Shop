@@ -1,7 +1,6 @@
 package com.example.petshop.ui.checkout
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,7 +13,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
@@ -29,50 +27,62 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.petshop.R
+import com.example.petshop.model.CartViewModel
 import com.example.petshop.model.FoodProduct
 import com.example.petshop.model.Product
+import com.example.petshop.model.Screen
 import com.example.petshop.ui.CheckoutEndBar
 import com.example.petshop.ui.theme.PetShopTheme
 
 @Composable
 fun CheckoutScreen(
     modifier: Modifier = Modifier,
-    products: List<Product> = listOf(),
+    navController: NavController? = null,
+    testProducts: List<Product> = listOf(),
+    cartViewModel: CartViewModel = viewModel()
 ) {
+    val products = cartViewModel.selectedProducts
+    print("products na: $products")
     Scaffold(
         modifier = modifier,
-        bottomBar = { CheckoutEndBar(total = 200000.0)}
+        bottomBar = {
+            CheckoutEndBar(
+                total = 200000.0,
+                onCheckoutClick = {
+                    navController?.navigate(Screen.LoadingCheckout.route)
+                }
+            )
+        }
     ) {
         LazyColumn(
             modifier = Modifier.padding(it)
         ) {
+            items(testProducts) { product ->
+                CheckoutItem(product = product)
+            }
             items(products) { product ->
                 CheckoutItem(product = product)
             }
             item {
-                Spacer(modifier = Modifier.height(10.dp))
-                Information(
-                    modifier.padding(10.dp)
-                )
-            }
+                Column {
+                    //Spacer(modifier = Modifier.height(10.dp))
+                    Information(modifier.padding(10.dp))
+                    Delivery(
+                        modifier = Modifier.padding(10.dp),
+                        onPaymentClick = {
+                            navController?.navigate(Screen.SelectPayMethod.route)
+                        },
+                        onVoucherClick = {
+                            navController?.navigate(Screen.SelectVoucher.route)
+                        }
 
-            item {
-                Divider(
-                    modifier = Modifier
-                        .height(4.dp)
-                        .background(color = Color(0xFFEFEBE9))
-                )
-            }
-
-            item {
-                Delivery(modifier = Modifier.padding(10.dp))
-            }
-
-            item {
-                PaymentDetail(
-                    modifier = Modifier.padding(10.dp)
-                )
+                    )
+                    PaymentDetail(modifier = Modifier.padding(10.dp))
+                    Spacer(modifier = Modifier.height(50.dp))
+                }
             }
         }
     }
@@ -237,6 +247,31 @@ fun CheckoutItem(
 @Composable
 fun CheckoutScreenPreview() {
     PetShopTheme {
-        CheckoutScreen()
+        CheckoutScreen(
+            testProducts = listOf(
+                FoodProduct(
+                    name = "Thức ăn hạt mềm Zenith",
+                    description = "Nổi tiếng với đồ ăn cho chó con được yêu thích",
+                    price = 90000.0,
+                    oldPrice = 0.0,
+                    quantity = 1,
+                    star = 0.0,
+                    image = painterResource(id = R.drawable.avt),
+                    flavor = "Cá hồi",
+                    weight = 0.5
+                ),
+                FoodProduct(
+                    name = "Thức ăn hạt mềm Zenith",
+                    description = "Nổi tiếng với đồ ăn cho chó con được yêu thích",
+                    price = 90000.0,
+                    oldPrice = 0.0,
+                    quantity = 1,
+                    star = 0.0,
+                    image = painterResource(id = R.drawable.avt),
+                    flavor = "Cá hồi",
+                    weight = 0.5
+                )
+            )
+        )
     }
 }

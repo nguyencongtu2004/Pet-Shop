@@ -35,6 +35,8 @@ fun EditProfile(
     modifier: Modifier = Modifier,
     user: User = User()
 ) {
+    val editedUser by remember { mutableStateOf(user) }
+
     var showEditDialog by remember { mutableStateOf(false) }
     var editField by remember { mutableStateOf("") }
     var editValue by remember { mutableStateOf("") }

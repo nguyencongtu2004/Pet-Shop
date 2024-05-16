@@ -44,7 +44,10 @@ import com.example.petshop.R
 import com.example.petshop.ui.theme.PetShopTheme
 
 @Composable
-fun Login(modifier: Modifier = Modifier) {
+fun Login(
+    modifier: Modifier = Modifier,
+    onLoginClick: () -> Unit = {}
+) {
     Scaffold(
         modifier = modifier,
     ) {
@@ -60,18 +63,28 @@ fun Login(modifier: Modifier = Modifier) {
                     .weight(1f)
 
             ) {
-                var sdtText by remember { mutableStateOf("") }
+                var phoneText by remember { mutableStateOf("") }
+                var passwordText by remember { mutableStateOf("") }
                 Logo()
                 Spacer(modifier = Modifier.height(8.dp))
                 TypingSdtField(
-                    value = sdtText,
-                    onValueChange = { newText -> sdtText = newText }
+                    title = "Số điện thoại",
+                    placeholder = "Nhập số điện thoại của bạn",
+                    value = phoneText,
+                    onPhoneChange = { newText -> phoneText = newText }
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                TypingSdtField(
+                    title = "Mật khẩu",
+                    placeholder = "Mật khẩu",
+                    value = passwordText,
+                    onPhoneChange = { newText -> passwordText = newText }
                 )
                 Spacer(modifier = Modifier.height(28.dp))
                 Button(
                     title = "Đăng nhập",
-                    isDisable = if (sdtText == "") true else false,
-                    onClick = { println(sdtText) },
+                    isDisable = if (phoneText == "" || passwordText == "") true else false,
+                    onClick = onLoginClick,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 20.dp)
@@ -87,7 +100,7 @@ fun Login(modifier: Modifier = Modifier) {
                     style = MaterialTheme.typography.bodyMedium.copy(
                         fontFamily = FontFamily(Font(R.font.poppins_bold)),
                     ),
-                    modifier = Modifier.clickable { }
+                    modifier = Modifier.clickable { /*TODO*/ }
                 )
             }
             Spacer(modifier = Modifier.height(24.dp))
@@ -121,33 +134,36 @@ fun Button(
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
+
 @Composable
 fun TypingSdtField(
     modifier: Modifier = Modifier,
+    title: String,
+    placeholder: String,
     value: String,
-    onValueChange: (String) -> Unit,
+    onPhoneChange: (String) -> Unit,
 ) {
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.Start,
+        modifier = modifier
     ) {
+        val keyboardController = LocalSoftwareKeyboardController.current // để ẩn bàn phím
         Text(
-            text = "Số điện thoại",
+            text = title,
             style = MaterialTheme.typography.titleSmall,
             modifier = Modifier
                 .padding(horizontal = 20.dp),
         )
         Spacer(modifier = Modifier.height(4.dp))
-        val keyboardController = LocalSoftwareKeyboardController.current // để ẩn bàn phím
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 20.dp),
             value = value,
-            onValueChange = onValueChange,
+            onValueChange = onPhoneChange,
             placeholder = {
-                Text(text = "Nhập số điện thoại của bạn")
+                Text(text = placeholder)
             },
             shape = RoundedCornerShape(16.dp),
             maxLines = 1,

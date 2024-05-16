@@ -64,14 +64,13 @@ fun ProfileScreen(
             // Thông tin cá nhân
             Row(
                 horizontalArrangement = Arrangement.spacedBy(20.dp, Alignment.Start),
-                //verticalAlignment = Alignment.,
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .padding(vertical = 5.dp)
                     .fillMaxWidth()
                     .padding(vertical = 10.dp, horizontal = 20.dp)
             ) {
                 Box(
-                    modifier = Modifier.padding(top = 20.dp)
+                    //modifier = Modifier.padding(top = 20.dp)
                 ) {
                     Image(
                         painter = if (user.password != null) user.avatar!! else painterResource(id = R.drawable.avatar_not_login),
@@ -117,7 +116,7 @@ fun ProfileScreen(
                                 modifier = Modifier.padding(vertical = 5.dp)
                             )
                             IconButton(
-                                onClick = { /*TODO*/ },
+                                onClick = { onEditProfileClicked() },
                                 modifier = Modifier.padding(all = 0.dp)
                             ) {
                                 Icon(
@@ -132,8 +131,9 @@ fun ProfileScreen(
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
-                            .padding(start = 20.dp)
+                            //.padding(start = 10.dp, top = 10.dp)
                             .clickable { onLoginClicked() }
+                            .align(Alignment.CenterVertically)
                     ) {
                         Text(
                             text = "Đăng nhập",
@@ -183,7 +183,8 @@ fun ProfileScreen(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
                             .background(
-                                color = Color(0xFFE5AE6D),
+                                //color = Color(0xFFE5AE6D),
+                                color = MaterialTheme.colorScheme.primaryContainer,
                                 shape = RoundedCornerShape(size = 30.dp)
                             )
                             .width(160.dp)
@@ -215,7 +216,8 @@ fun ProfileScreen(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
                             .background(
-                                color = Color(0xFF76EE89),
+                                //color = Color(0xFF76EE89),
+                                color = MaterialTheme.colorScheme.tertiaryContainer,
                                 shape = RoundedCornerShape(size = 30.dp)
                             )
                             .width(160.dp)
@@ -343,7 +345,7 @@ fun ProfileScreenPreview() {
         phone = "0123456789",
         avatar = painterResource(id = R.drawable.avatar),
         birthday = "01/01/2000",
-        password = "password",
+        password = null,
         address = "đâu đó",
     )
     val unLoginedUser = User()

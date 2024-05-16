@@ -1,12 +1,12 @@
 package com.example.petshop.ui.checkout
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -22,21 +22,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.petshop.R
 import com.example.petshop.model.User
 
 @Composable
 fun Information(
     modifier: Modifier = Modifier,
-    user: User = User()
+    user: User = User(),
+    onEditAddressClick: () -> Unit = { /*TODO*/ },
 ) {
     Column(
         horizontalAlignment = Alignment.Start,
@@ -85,7 +81,7 @@ fun Information(
             modifier = Modifier
                 .width(100.dp)
                 .height(25.dp)
-                .clickable { /*TODO*/ }
+                .clickable { onEditAddressClick() }
                 .align(Alignment.End)
         ) {
             Text(
@@ -109,381 +105,245 @@ fun Information(
 
 @Composable
 fun Delivery(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onPaymentClick: () -> Unit = {},
+    onVoucherClick: () -> Unit = {}
 ) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(6.dp, Alignment.Top),
-        horizontalAlignment = Alignment.Start, // Căn lề trái
+        //verticalArrangement = Arrangement.spacedBy(6.dp, Alignment.Top),
+        horizontalAlignment = Alignment.Start,
         modifier = modifier,
     ) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(6.dp, Alignment.Top),
-            horizontalAlignment = Alignment.Start,
-        ) {
+        Divider(
+            modifier = Modifier
+                .width(375.dp)
+                .height(4.dp)
+                .background(color = Color(0xFFEFEBE9))
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+        Text(
+            text = "Phương thức giao hàng",
+            style = MaterialTheme.typography.titleMedium,
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = "*Chúng tôi mở cửa từ 8:00 - 18:00",
+            style = MaterialTheme.typography.bodySmall.copy(
+                fontWeight = FontWeight(300),
+                color = Color(0xFF555555),
+            ),
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        DeliveryOption(
+            title = "Hỏa tốc",
+            description = "Khoảng 30 phút"
+        )
+        Divider()
+        DeliveryOption(
+            title = "Thường",
+            description = "Khoảng 1 đến 2 ngày"
+        )
+
+        Divider()
+
+        Spacer(modifier = Modifier.height(4.dp))
+        PaymentOption(
+            title = "Phương thức thanh toán",
+            description = "Thanh toán trực tiếp",
+            onClick = onPaymentClick
+        )
+        Divider()
+        PaymentOption(
+            title = "Voucher",
+            description = "Không có voucher nào được thêm",
+            onClick = onVoucherClick
+        )
+
+        Spacer(modifier = Modifier.height(10.dp))
+        Divider(
+            modifier = Modifier
+                .width(375.dp)
+                .height(4.dp)
+                .background(color = Color(0xFFEFEBE9))
+        )
+    }
+}
+
+@Composable
+fun DeliveryOption(
+    title: String,
+    description: String
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { /*TODO*/ }
+            .padding(vertical = 8.dp)
+    ) {
+        Column {
             Text(
-                text = "Phương thức giao hàng",
-                style = TextStyle(
-                    fontSize = 14.sp,
-                    lineHeight = 20.sp,
-                    //fontFamily = FontFamily(Font(R.font.poppins_medium)),
-                    fontWeight = FontWeight(600),
+                text = title,
+                style = MaterialTheme.typography.bodySmall.copy(
+                    fontWeight = FontWeight(500),
                     color = Color(0xFF3C3C3C),
-                )
+                ),
             )
-
             Text(
-                text = "*Chúng tôi mở cửa từ 8:00 - 18:00",
-
-                // Body/12/Regular
-                style = TextStyle(
-                    fontSize = 12.sp,
-                    lineHeight = 18.sp,
-                    //fontFamily = FontFamily(Font(R.font.poppins)),
-                    fontWeight = FontWeight(400),
+                text = description,
+                style = MaterialTheme.typography.bodySmall.copy(
+                    fontWeight = FontWeight(300),
                     color = Color(0xFF555555),
-                )
+                ),
             )
         }
+        RadioButton(
+            selected = false,
+            onClick = { /*TODO*/ }
+        )
+    }
+}
 
-        Column(
-            verticalArrangement = Arrangement.spacedBy(0.dp, Alignment.Top),
-            horizontalAlignment = Alignment.Start,
-        ) {
-            Row {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Top),
-                    horizontalAlignment = Alignment.Start,
-                ) {
-                    Text(
-                        text = "Hỏa tốc",
-
-                        // Body/14/Medium
-                        style = TextStyle(
-                            fontSize = 14.sp,
-                            lineHeight = 20.sp,
-                            //fontFamily = FontFamily(Font(R.font.poppins)),
-                            fontWeight = FontWeight(500),
-                            color = Color(0xFF3C3C3C),
-                        )
-                    )
-
-                    Text(
-                        text = "Khoảng 30 phút",
-
-                        // Body/12/Regular
-                        style = TextStyle(
-                            fontSize = 12.sp,
-                            lineHeight = 18.sp,
-                            //fontFamily = FontFamily(Font(R.font.poppins)),
-                            fontWeight = FontWeight(400),
-                            color = Color(0xFF555555),
-                        )
-                    )
-                }
-
-                Spacer(modifier = Modifier.weight(1f))
-
-                RadioButton(
-                    selected = false,
-
-                    onClick = { /*TODO*/
-                    }
+@Composable
+fun PaymentOption(
+    title: String,
+    description: String,
+    onClick: () -> Unit
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(vertical = 8.dp)
+    ) {
+        Column {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleMedium,
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            if (description.isNotEmpty()) {
+                Text(
+                    text = description,
+                    style = MaterialTheme.typography.bodySmall.copy(
+                        fontWeight = FontWeight(300),
+                        color = Color(0xFF555555),
+                    ),
                 )
             }
-
-            Divider()
-
-            Row {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Top),
-                    horizontalAlignment = Alignment.Start,
-                ) {
-                    Text(
-                        text = "Thường",
-
-                        // Body/14/Medium
-                        style = TextStyle(
-                            fontSize = 14.sp,
-                            lineHeight = 20.sp,
-                            //fontFamily = FontFamily(Font(R.font.poppins)),
-                            fontWeight = FontWeight(500),
-                            color = Color(0xFF3C3C3C),
-                        )
-                    )
-
-                    Text(
-                        text = "Khoảng 1 đến 2 ngày",
-
-                        // Body/12/Regular
-                        style = TextStyle(
-                            fontSize = 12.sp,
-                            lineHeight = 18.sp,
-                            //fontFamily = FontFamily(Font(R.font.poppins)),
-                            fontWeight = FontWeight(400),
-                            color = Color(0xFF555555),
-                        )
-                    )
-                }
-
-                Spacer(modifier = Modifier.weight(1f))
-
-                RadioButton(
-                    selected = false,
-                    onClick = {/*TO DO*/ }
-                )
-            }
-
-            Divider()
-
-
         }
-
-
-        Column(
-            verticalArrangement = Arrangement.spacedBy(0.dp, Alignment.Top),
-            horizontalAlignment = Alignment.Start,
+        IconButton(
+            onClick = onClick,
+            modifier = Modifier
+                .padding(all = 0.dp)
         ) {
-            Row {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Top),
-                    horizontalAlignment = Alignment.Start,
-                ) {
-                    Text(
-                        text = "Phương thức thanh toán",
-
-                        // Body/14/Medium
-                        style = TextStyle(
-                            fontSize = 14.sp,
-                            lineHeight = 20.sp,
-                            //fontFamily = FontFamily(Font(R.font.poppins)),
-                            fontWeight = FontWeight(500),
-                            color = Color(0xFF3C3C3C),
-                        )
-                    )
-
-                    Text(
-                        text = "Thanh toán trực tiếp",
-
-                        // Body/12/Regular
-                        style = TextStyle(
-                            fontSize = 12.sp,
-                            lineHeight = 18.sp,
-                            //fontFamily = FontFamily(Font(R.font.poppins)),
-                            fontWeight = FontWeight(400),
-                            color = Color(0xFF555555),
-                        )
-                    )
-                }
-
-                Spacer(modifier = Modifier.weight(1f))
-
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(
-                        imageVector = Icons.Default.KeyboardArrowRight,
-                        contentDescription = "Delete icon"
-                    )
-                }
-            }
-
-            Divider()
-
-            Row {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Top),
-                    horizontalAlignment = Alignment.Start,
-                ) {
-                    Text(
-                        text = "Voucher",
-
-                        // Body/14/Medium
-                        style = TextStyle(
-                            fontSize = 14.sp,
-                            lineHeight = 20.sp,
-                            //fontFamily = FontFamily(Font(R.font.poppins)),
-                            fontWeight = FontWeight(500),
-                            color = Color(0xFF3C3C3C),
-                        )
-                    )
-
-                    Text(
-                        text = "Không có voucher nào được thêm",
-
-                        // Body/12/Regular
-                        style = TextStyle(
-                            fontSize = 12.sp,
-                            lineHeight = 18.sp,
-                            //fontFamily = FontFamily(Font(R.font.poppins)),
-                            fontWeight = FontWeight(400),
-                            color = Color(0xFF555555),
-                        )
-                    )
-                }
-
-                Spacer(modifier = Modifier.weight(1f))
-
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(
-                        imageVector = Icons.Default.KeyboardArrowRight,
-                        contentDescription = "Delete icon"
-                    )
-                }
-            }
-
-            Divider()
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            Divider(
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowRight,
+                contentDescription = null,
                 modifier = Modifier
-                    .width(375.dp)
-                    .height(4.dp)
-                    .background(color = Color(0xFFEFEBE9))
-            )
+                    .padding(all = 0.dp)
 
+            )
         }
     }
 }
+
+
+
 
 @Composable
 fun PaymentDetail(modifier: Modifier = Modifier) {
     Column(
         verticalArrangement = Arrangement.spacedBy(6.dp, Alignment.Top),
-        horizontalAlignment = Alignment.Start, // Căn lề trái
+        horizontalAlignment = Alignment.Start,
         modifier = modifier
     ) {
         Text(
             text = "Chi tiết thanh toán",
-
-            // Body/14/Medium
-            style = TextStyle(
-                fontSize = 14.sp,
-                lineHeight = 20.sp,
-                //fontFamily = FontFamily(Font(R.font.poppins)),
-                fontWeight = FontWeight(500),
-                color = Color(0xFF3C3C3C),
-            )
+            style = MaterialTheme.typography.titleMedium,
         )
 
-        Column {
-            Row {
-                Column {
-                    Text(
-                        text = "Tổng tiền hàng",
+        PaymentDetailRow(
+            label = "Tổng tiền hàng",
+            value = "45.000 đ",
+            description = "(1 sản phẩm)",
+            isBold = true,
+        )
 
-                        // Body/14/Regular
-                        style = TextStyle(
-                            fontSize = 14.sp,
-                            lineHeight = 20.sp,
-                            //fontFamily = FontFamily(Font(R.font.poppins)),
-                            fontWeight = FontWeight(400),
-                            color = Color(0xFF555555),
-                        )
-                    )
+        PaymentDetailRow(
+            label = "Phí vận chuyển",
+            value = "12.000 đ",
+            isBold = true,
+        )
 
-                    Text(
-                        text = "(1 sản phẩm)",
-
-                        // Body/10/Regular
-                        style = TextStyle(
-                            fontSize = 10.sp,
-                            lineHeight = 14.sp,
-                            //fontFamily = FontFamily(Font(R.font.poppins)),
-                            fontWeight = FontWeight(400),
-                            color = Color(0xFF555555),
-                        )
-                    )
-                }
-
-                Spacer(modifier = Modifier.weight(1f))
-
-                Text(
-                    text = "45.000 đ",
-
-                    // Body/14/Regular
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        lineHeight = 20.sp,
-                        //fontFamily = FontFamily(Font(R.font.poppins)),
-                        fontWeight = FontWeight(400),
-                        color = Color(0xFF555555),
-                        textAlign = TextAlign.Right,
-                    )
-                )
-            }
-        }
-
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Top,
-        ) {
-            Text(
-                text = "Phí vận chuyển",
-
-                // Body/14/Regular
-                style = TextStyle(
-                    fontSize = 14.sp,
-                    lineHeight = 20.sp,
-                    //fontFamily = FontFamily(Font(R.font.poppins)),
-                    fontWeight = FontWeight(400),
-                    color = Color(0xFF555555),
-                )
-            )
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            Text(
-                text = "12.000 đ",
-
-                // Body/14/Regular
-                style = TextStyle(
-                    fontSize = 14.sp,
-                    lineHeight = 20.sp,
-                    //fontFamily = FontFamily(Font(R.font.poppins)),
-                    fontWeight = FontWeight(400),
-                    color = Color(0xFF555555),
-                    textAlign = TextAlign.Right,
-                )
-            )
-        }
-
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(138.dp, Alignment.Start),
-            verticalAlignment = Alignment.Top,
-        ) {
-            Text(
-                text = "Tổng cộng",
-
-                // Body/14/Medium
-                style = TextStyle(
-                    fontSize = 14.sp,
-                    lineHeight = 20.sp,
-                    //fontFamily = FontFamily(Font(R.font.poppins)),
-                    fontWeight = FontWeight(500),
-                    color = Color(0xFF3C3C3C),
-                )
-            )
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            Text(
-                text = "57.000 đ",
-
-                // Body/14/Medium
-                style = TextStyle(
-                    fontSize = 14.sp,
-                    lineHeight = 20.sp,
-                    //fontFamily = FontFamily(Font(R.font.poppins)),
-                    fontWeight = FontWeight(500),
-                    color = Color(0xFF3C3C3C),
-                    textAlign = TextAlign.Right,
-                )
-            )
-        }
+        PaymentDetailRow(
+            label = "Tổng cộng",
+            value = "57.000 đ",
+            isBold = true,
+        )
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun PaymentDetailRow(
+    label: String,
+    value: String,
+    description: String = "",
+    isBold: Boolean = false
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.bodySmall.copy(
+                    fontWeight = if (isBold) FontWeight(500) else FontWeight(400),
+                    color = Color(0xFF3C3C3C),
+                ),
+            )
+            if (description.isNotEmpty()) {
+                Text(
+                    text = description,
+                    style = MaterialTheme.typography.bodySmall.copy(
+                        fontWeight = FontWeight(300),
+                        color = Color(0xFF555555),
+                    ),
+                )
+            }
+        }
+        Text(
+            text = value,
+            style = MaterialTheme.typography.bodySmall.copy(
+                fontWeight = if (isBold) FontWeight(500) else FontWeight(400),
+                color = Color(0xFF3C3C3C),
+                textAlign = TextAlign.Right,
+            ),
+        )
+    }
+}
+
+
+@Preview(showBackground = true)
 @Composable
 fun InformationPreview() {
+    Information()
+
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DeliveryPreview() {
     Delivery()
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PaymentDetailPreview() {
+    PaymentDetail()
 }

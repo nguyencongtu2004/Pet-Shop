@@ -119,7 +119,7 @@ fun CheckoutBottomBar(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .height(70.dp)
-            .background(color = Color(0xFFFEFEFE))
+            .background(color = MaterialTheme.colorScheme.secondaryContainer)
             .padding(start = 14.dp, top = 8.dp, end = 8.dp, bottom = 8.dp)
     ) {
         Text(
@@ -184,7 +184,7 @@ fun PetShopNavigationBar(
 
     NavigationBar(
         modifier = modifier,
-        containerColor = Color.White
+        //containerColor = Color.White
         //contentColor = Color.Transparent
     ) {
         items.forEach { item ->
@@ -209,12 +209,13 @@ fun PetShopNavigationBar(
                     updateIndex(index)
                     item.onClick()
                 },
+                // Sửa màu sắc của NavigationBarItem
                 colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = Color(0xFF5D4037),
-                    unselectedIconColor = Color.Gray,
-                    selectedTextColor = Color(0xFF5D4037),
-                    unselectedTextColor = Color.Gray,
-                    indicatorColor = Color.White
+                    //selectedIconColor = Color(0xFF5D4037),
+                    //unselectedIconColor = Color.Gray,
+                    //selectedTextColor = Color(0xFF5D4037),
+                    //unselectedTextColor = Color.Gray,
+                    //indicatorColor = Color.White
                 )
             )
         }
@@ -237,12 +238,12 @@ fun TopAppBarWithSearch(
             .fillMaxWidth()
             .height(56.dp)
             .padding(horizontal = 8.dp)
-            .background(Color.White)
+            //.background(Color.White)
     ) {
         Box(
             modifier = Modifier
                 .weight(1f)
-                .background(Color.White, RoundedCornerShape(16.dp))
+                //.background(Color.White, RoundedCornerShape(16.dp))
                 //.border(1.dp, Color(0xFFCACACA), RoundedCornerShape(16.dp))
                 .padding(horizontal = 8.dp) // Padding inside the box
         ) {
@@ -252,7 +253,7 @@ fun TopAppBarWithSearch(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(36.dp)
-                        .background(Color.Transparent, RoundedCornerShape(16.dp))
+                        //.background(Color.Transparent, RoundedCornerShape(16.dp))
                         .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(16.dp))
 
                         // nền trong suốt
@@ -346,50 +347,53 @@ fun PetShopTopAppBarPreview() {
 
 
 @Composable
-fun CheckoutEndBar(total: Double = 0.0) {
+fun CheckoutEndBar(
+    total: Double = 0.0,
+    onCheckoutClick: () -> Unit = {}
+) {
     BottomAppBar(
         modifier = Modifier
-            .height(66.dp)
-            .background(color = Color(0xFFFEFEFE))
-            .shadow(
-                elevation = 10.dp,
-                spotColor = Color(0x26000000),
-                ambientColor = Color(0x26000000)
-            )
+            .height(70.dp)
+            .background(color = MaterialTheme.colorScheme.secondaryContainer)
+            .padding(start = 14.dp, top = 8.dp, end = 8.dp, bottom = 8.dp)
     ) {
         Row(
-            Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Spacer(modifier = Modifier.width(9.dp))
-
             Column {
                 Text(
                     text = "Tổng cộng",
                     style = MaterialTheme.typography.bodyMedium,
                 )
-
                 Text(
-                    text = total.toString().replace(".0", "") + "đ",
+                    text = "${total.toInt()}đ", // Format the total without .0
                     style = TextStyle(
                         fontSize = 18.sp,
                         lineHeight = 26.sp,
                         fontWeight = FontWeight(700),
-                        color = Color(0xFF3C3C3C),
+                        color = MaterialTheme.colorScheme.onSecondaryContainer, // Ensure color consistency
                     )
                 )
             }
-
             Spacer(modifier = Modifier.weight(1f))
             Button(
-                onClick = { /*TODO*/ },
                 title = "Thanh toán",
+                onClick = onCheckoutClick,
+                modifier = Modifier.padding(horizontal = 8.dp),
                 isDisable = false,
-                color = Color(0xFFEE2828),
+                color = Color(0xFFEE2828)
             )
         }
     }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun CheckoutEndBarPreview() {
+    CheckoutEndBar(total = 120000.0)
 }
 
 @Preview(showBackground = true)

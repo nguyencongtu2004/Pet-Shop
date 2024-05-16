@@ -1,5 +1,7 @@
 package com.example.petshop
 
+
+
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -12,41 +14,74 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavController
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.petshop.model.CartViewModel
 import com.example.petshop.model.FoodProduct
 import com.example.petshop.model.Notification
-import com.example.petshop.model.Screen
 import com.example.petshop.model.Product
+import com.example.petshop.model.Screen
 import com.example.petshop.model.User
 import com.example.petshop.ui.PetShopNavigationBar
 import com.example.petshop.ui.TopAppBarNoSearch
 import com.example.petshop.ui.TopAppBarWithSearch
 import com.example.petshop.ui.checkout.CheckoutScreen
+import com.example.petshop.ui.checkout.LoadingScreen
+import com.example.petshop.ui.checkout.SelectPayMethod
+import com.example.petshop.ui.checkout.SelectVoucher
+import com.example.petshop.ui.checkout.TransactionScreen
 import com.example.petshop.ui.home.HomeScreen
 import com.example.petshop.ui.notification.NotificationScreen
+import com.example.petshop.ui.shipment.FollowShippingScreen
+import com.example.petshop.ui.shipment.ShipmentStateScreen
 import com.example.petshop.ui.shipping_cart.ShoppingCartScreen
 import com.example.petshop.ui.user_informaion.EditProfile
 import com.example.petshop.ui.user_informaion.ProfileScreen
 
-// Hàm điều hướng tới màn hình mới và loại bỏ màn hình hiện tại khỏi ngăn xếp
-fun navigateAndReplace(navController: NavController, route: String) {
-    navController.navigate(route) {
-        popUpTo(navController.graph.startDestinationId) {
-            inclusive = true
-        }
-    }
-}
+//import com.google.common.reflect.TypeToken
+//import com.google.gson.Gson
 
 @Composable
 fun PetShopApp(
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    cartViewModel: CartViewModel = viewModel()
 ) {
     // DỮ LIỆU GIẢ CỦA ỨNG DỤNG tại đây
+    val shippingProducts = listOf(
+        FoodProduct(
+            name = "Thức ăn hạt mềm Zenith",
+            description = "Nổi tiếng với đồ ăn cho chó con được yêu thích",
+            price = 90000.0,
+            quantity = 1,
+            image = painterResource(id = R.drawable.avt),
+            flavor = "Cá hồi",
+            weight = 0.5
+        ),
+        FoodProduct(
+            name = "Thức ăn hạt mềm Zenith",
+            description = "Nổi tiếng với đồ ăn cho chó con được yêu thích",
+            price = 90000.0,
+            quantity = 1,
+            image = painterResource(id = R.drawable.avt),
+            flavor = "Cá hồi",
+            weight = 0.5
+        )
+    )
+    val shippedProducts = listOf(
+        FoodProduct(
+            name = "Thức ăn hạt mềm Zenith",
+            description = "Nổi tiếng với đồ ăn cho chó con được yêu thích",
+            price = 90000.0,
+            quantity = 1,
+            image = painterResource(id = R.drawable.avt),
+            flavor = "Cá hồi",
+            weight = 0.5
+        )
+    )
     val products = listOf(
         Product(
             name = "Đồ ăn",
@@ -56,6 +91,31 @@ fun PetShopApp(
             star = 4.5,
             quantity = 1,
         ),
+        Product(
+            name = "Đồ ăn",
+            description = "Cho chó",
+            price = 12000.0,
+            oldPrice = 9999999.0,
+            star = 4.5,
+            quantity = 1,
+        ),
+        Product(
+            name = "Đồ ăn",
+            description = "Cho chó",
+            price = 12000.0,
+            oldPrice = 9999999.0,
+            star = 4.5,
+            quantity = 1,
+        ),
+        Product(
+            name = "Đồ ăn",
+            description = "Cho chó",
+            price = 12000.0,
+            oldPrice = 9999999.0,
+            star = 4.5,
+            quantity = 1,
+        ),
+
         // Thêm các sản phẩm khác ở đây...
     )
     val bannerItems = listOf(
@@ -82,10 +142,20 @@ fun PetShopApp(
             weight = 1.5,
             flavor = "Thức ăn khô",
         ),
+        FoodProduct(
+            name = "Thức ăn 2",
+            description = "Cho chó nhỏ",
+            price = 2000.0,
+            oldPrice = 9399.0,
+            star = 4.5,
+            quantity = 2,
+            weight = 3.0,
+            flavor = "Thức ăn khô",
+        ),
         // Thêm các sản phẩm khác ở đây...
     )
     val loginedUser = User(
-        name = "Võ Hoàng Tuấn",
+        name = "Nguyễn Công Tú",
         role = "Khách hàng thân thiết",
         favoriteProducts = listOf(),
         sex = "Nam",
@@ -93,7 +163,7 @@ fun PetShopApp(
         phone = "0123456789",
         avatar = painterResource(id = R.drawable.avatar),
         birthday = "01/01/2000",
-        password = "password",
+        password = "null",
         address = "đâu đó",
     )
     val productsToBuy: List<Product> = mutableListOf<Product>()
@@ -106,20 +176,37 @@ fun PetShopApp(
     var searchText by rememberSaveable { mutableStateOf("") }
 
     var isSearchBarVisible by rememberSaveable { mutableStateOf(true) }
+    var isNoSearchBarVisible by rememberSaveable { mutableStateOf(true) }
     var isNavigationBarVisible by rememberSaveable { mutableStateOf(true) }
-    val selectedIndex = remember { mutableStateOf(0) }
-
+    var selectedIndex = remember { mutableStateOf(0) }
 
 
     // Cập nhật trạng thái khi currentScreen thay đổi (chạy đoạn code dưới sau mỗi lần currentScreen thay đổi)
     LaunchedEffect(currentScreen) {
         when (currentScreen) {
+            Screen.HomePage.route -> selectedIndex.value = 0
+            Screen.ProfileScreen.route -> selectedIndex.value = 2
+        }
+
+        when (currentScreen) {
             Screen.HomePage.route, Screen.ProfileScreen.route -> {
                 isSearchBarVisible = true
+                isNoSearchBarVisible = false
+
                 isNavigationBarVisible = true
             }
+
+            Screen.LoadingCheckout.route, Screen.TransactionScreen.route -> {
+                isSearchBarVisible = false
+                isNoSearchBarVisible = false
+
+                isNavigationBarVisible = false
+            }
+
             else -> {
                 isSearchBarVisible = false
+                isNoSearchBarVisible = true
+
                 isNavigationBarVisible = false
             }
         }
@@ -140,7 +227,7 @@ fun PetShopApp(
                     },
                     searchText = searchText,
                 )
-            else
+            if (isNoSearchBarVisible)
                 TopAppBarNoSearch(
                     title = currentScreen,
                     onBackClick = {
@@ -155,6 +242,7 @@ fun PetShopApp(
                     updateIndex = { selectedIndex.value = it },
                     onHomeClick = {
                         if (currentScreen != Screen.HomePage.route) {
+                            // Xóa hết ngăn xếp chừa HomePage
                             navController.navigate(Screen.HomePage.route) {
                                 popUpTo(Screen.HomePage.route) { inclusive = true }
                             }
@@ -184,7 +272,27 @@ fun PetShopApp(
                     bannerItems = bannerItems,
                     onProductClick = { /*TODO*/ },
                     firstTabProduct = products,
-                    secondTabProduct = products,
+                    secondTabProduct = listOf(
+                        Product(
+                            name = "Đồ ăn",
+                            description = "Cho chó",
+                            price = 12000.0,
+                            oldPrice = 9999999.0,
+                            star = 4.5,
+                            quantity = 1,
+                        ),
+                        Product(
+                            name = "Đồ ăn",
+                            description = "Cho chó",
+                            price = 12000.0,
+                            oldPrice = 9999999.0,
+                            star = 4.5,
+                            quantity = 1,
+                        ),
+
+
+                        // Thêm các sản phẩm khác ở đây...
+                    ),
                 )
             }
 
@@ -195,13 +303,15 @@ fun PetShopApp(
                     user = loginedUser,
                     onEditProfileClicked = {
                         navController.navigate(Screen.EditProfileScreen.route)
-
                     },
+                    onShippingClicked = {
+                        navController.navigate(Screen.ShipmentStateScreen1.route)
+                    },
+                    onShippedClicked = {
+                        navController.navigate(Screen.ShipmentStateScreen2.route)
+                    }
                 )
             }
-
-
-
 
 
             // Màn hình thông báo
@@ -215,21 +325,18 @@ fun PetShopApp(
             // Màn hình giỏ hàng
             composable(route = Screen.ShoppingCartScreen.route) {
                 ShoppingCartScreen(
+                    navController = navController, // Để điều hướng sang màn hình thanh toán
                     products = productsInCart,
-                    onBuyClicked = {
-                        navController.navigate(Screen.CheckoutScreen.route)
-                    },
-
                 )
             }
 
-            // Các màn hình thanh toán
-            composable(route = Screen.CheckoutScreen.route) {
+            // Màn hình thanh toán
+            composable(route = Screen.CheckoutScreen.route,) { //backStackEntry ->
                 CheckoutScreen(
-                    products = productsInCart
-                )
+                    cartViewModel = cartViewModel,
+                    navController = navController,
+                    )
             }
-
 
 
             // Các màn hình trong trang Profile
@@ -239,8 +346,44 @@ fun PetShopApp(
                 )
             }
 
+            composable ( route = Screen.ShipmentStateScreen1.route) {
+                ShipmentStateScreen(
+                    selectTabIndex = 0,
+                    shippingProducts = shippingProducts,
+                    shippedProducts = shippedProducts
+                )
+            }
 
+            composable ( route = Screen.ShipmentStateScreen2.route) {
+                ShipmentStateScreen(
+                    selectTabIndex = 1,
+                    shippingProducts = shippingProducts,
+                    shippedProducts = shippedProducts
+                )
+            }
 
+            composable ( route = Screen.LoadingCheckout.route) {
+                LoadingScreen(navController = navController)
+            }
+
+            composable(route = Screen.TransactionScreen.route) {
+                TransactionScreen(navController = navController)
+            }
+
+            composable(route = Screen.FollowShipping.route) {
+                FollowShippingScreen()
+            }
+
+            composable(route = Screen.SelectPayMethod.route) {
+                SelectPayMethod(navController = navController)
+            }
+
+            composable(route = Screen.SelectVoucher.route) {
+                SelectVoucher(
+                    navController = navController,
+                    onSearchVoucher = { /*TODO*/ }
+                )
+            }
 
         }
     }

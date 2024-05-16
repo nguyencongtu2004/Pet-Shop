@@ -2,6 +2,7 @@ package com.example.petshop.ui.checkout
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,11 +16,16 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,50 +34,65 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.petshop.R
 import com.example.petshop.ui.PetShopAppBar
 import com.example.petshop.ui.theme.PetShopTheme
+import kotlinx.coroutines.launch
 
 @Composable
-fun SelectPayMethod(modifier: Modifier = Modifier) {
+fun SelectPayMethod(
+    modifier: Modifier = Modifier,
+    navController: NavController? = null,
+) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
+
     Scaffold(
-        modifier = modifier,
-        topBar = { PetShopAppBar(title = "Phương thức thanh toán") }
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) {
-        Box(
-            modifier = Modifier.padding(it),
+        Column(
+            modifier = modifier
+                .padding(20.dp)
+                .padding(it),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Column(
-                modifier = Modifier.padding(20.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                var isSelect1 by remember { mutableStateOf(false) }
-                var isSelect2 by remember { mutableStateOf(false) }
+            var isSelect1 by remember { mutableStateOf(false) }
+            var isSelect2 by remember { mutableStateOf(false) }
 
-                PayMethod(
-                    imageId = R.drawable.cash,
-                    title = "Thanh toán khi nhận hàng",
-                    description = "Miễn phí thu hộ",
-                    isSelected = isSelect1,
-                    onClick = {
-                        isSelect1 = !isSelect1
-                        isSelect2 = false
-                    })
-                PayMethod(
-                    imageId = R.drawable.transfer,
-                    title = "Chuyển khoản ngân hàng",
-                    description = "(Tự động kiểm tra)",
-                    isSelected = isSelect2,
-                    onClick = {
-                        isSelect2 = !isSelect2
-                        isSelect1 = false
-                    })
-                Divider(color = Color(0xFFD9D9D9))
-                AddPayMethod(onClick = { println("Thêm thẻ hehe") })
-            }
-
+            PayMethod(
+                imageId = R.drawable.cash,
+                title = "Thanh toán khi nhận hàng",
+                description = "Miễn phí thu hộ",
+                isSelected = isSelect1,
+                onClick = {
+                    isSelect1 = !isSelect1
+                    isSelect2 = false
+                })
+            PayMethod(
+                imageId = R.drawable.transfer,
+                title = "Chuyển khoản ngân hàng",
+                description = "(Tự động kiểm tra)",
+                isSelected = isSelect2,
+                onClick = {
+                    isSelect2 = !isSelect2
+                    isSelect1 = false
+                })
+            Divider(color = Color(0xFFD9D9D9))
+            AddPayMethod(
+                onClick = {
+                    coroutineScope.launch {
+                        snackbarHostState.showSnackbar(
+                            message = "Đang phát triển",
+                            actionLabel = "Đóng",
+                            duration = SnackbarDuration.Short,
+                        )
+                    }
+                }
+            )
         }
     }
+
 }
 
 @Composable
@@ -88,6 +109,7 @@ fun PayMethod(
         verticalAlignment = Alignment.Top,
         modifier = modifier
             .fillMaxWidth()
+            .clickable { onClick() }
     ) {
         Image(
             painter = painterResource(id = imageId),

@@ -29,35 +29,52 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.petshop.R
+import com.example.petshop.model.Screen
 import com.example.petshop.ui.PetShopAppBar
 import com.example.petshop.ui.login_register.Button
 import com.example.petshop.ui.theme.PetShopTheme
 
 @Composable
-fun Transaction(modifier: Modifier = Modifier) {
+fun TransactionScreen(
+    modifier: Modifier = Modifier,
+    navController: NavController? = null
+) {
     Scaffold(
         modifier = modifier,
-        topBar = { PetShopAppBar(title = "Chi tiết đơn hàng") /* Được định nghĩa trong SelectPayMethod.kt */ },
         bottomBar = {
-            ActionBottomBar(modifier = Modifier
-                .padding(16.dp)
+            ActionBottomBar(
+                modifier = Modifier.padding(16.dp),
+                onGoHome = {
+                    navController?.navigate(Screen.HomePage.route) {
+                        popUpTo(Screen.HomePage.route) { inclusive = true }
+                    }
+                },
+                onTrackOrder = {
+                    navController?.navigate(Screen.HomePage.route) {
+                        popUpTo(Screen.HomePage.route) { inclusive = true }
+                    }
+
+                    navController?.navigate(Screen.ProfileScreen.route)
+                    navController?.navigate(Screen.ShipmentStateScreen1.route)
+                    navController?.navigate(Screen.FollowShipping.route)
+                }
             )
         }
     ) {
-        // Lấy kích thước màn hình
-        val configuration = LocalConfiguration.current
-        val screenSize = with(LocalDensity.current) {
-            Pair(configuration.screenWidthDp.dp, configuration.screenHeightDp.dp)
-        }
         LazyColumn(
             modifier = Modifier
                 .padding(it)
                 .fillMaxSize(),
         ) {
             item {
+                Spacer(modifier = Modifier.height(60.dp))
+            }
+            item {
                 Box(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth(),
                     contentAlignment = Alignment.TopCenter
                 ) {
                     Column(
@@ -222,13 +239,14 @@ fun ItemMedium(
 @Composable
 fun ActionBottomBar(
     modifier: Modifier = Modifier,
-    onGoHome: () -> Unit = {}
+    onGoHome: () -> Unit = {},
+    onTrackOrder: () -> Unit = {}
 ) {
         Row(
             modifier = modifier
         ) {
             Button(
-                onClick = { /*TODO*/ },
+                onClick = onGoHome,
                 title = "Trở về trang chủ",
                 isDisable = false,
                 color = Color(0xFFA1887F),
@@ -237,7 +255,7 @@ fun ActionBottomBar(
             )
             Spacer(modifier = Modifier.width(20.dp))
             Button(
-                onClick = { /*TODO*/ },
+                onClick = onTrackOrder,
                 title = "Theo dõi đơn hàng",
                 isDisable = false,
                 color = Color(0xFF46AE7C),
@@ -251,7 +269,7 @@ fun ActionBottomBar(
 @Composable
 fun TransactionPreview() {
     PetShopTheme {
-        Transaction()
+        TransactionScreen()
         //Action()
     }
 }

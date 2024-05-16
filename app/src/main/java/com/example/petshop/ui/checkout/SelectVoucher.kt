@@ -2,6 +2,7 @@ package com.example.petshop.ui.checkout
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -36,77 +38,83 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.petshop.R
-import com.example.petshop.ui.PetShopAppBar
 import com.example.petshop.ui.theme.PetShopTheme
 
 
 @Composable
-fun SelectVoucher(modifier: Modifier = Modifier) {
-    var isSelect1 by remember { mutableStateOf(true) }
+fun SelectVoucher(
+    modifier: Modifier = Modifier,
+    navController: NavController? = null,
+    onSearchVoucher: (String) -> Unit = {},
+) {
+    var isSelect1 by remember { mutableStateOf(false) }
     var isSelect2 by remember { mutableStateOf(false) }
 
     Scaffold(
         modifier = modifier,
-        topBar = { PetShopAppBar(title = "Voucher") /* Được định nghĩa trong SelectPayMethod.kt */ },
         bottomBar = {
             if (isSelect1 || isSelect2) {
                 VoucherStatus(
-                    onClick = { println("Đã dùng voucher") },
+                    onClick = { navController?.popBackStack()                    },
                     numVoucherSelected = if (isSelect1 || isSelect2) 1 else 0
                 )
             }
         }
     ) {
-        Box(
+        Column(
             modifier = Modifier.padding(it),
         ) {
-            Column(
+            var searchText by remember { mutableStateOf("") }
+            SearchBox(
+                value = searchText,
+                onValueChange = { newText ->
+                    searchText = newText
+                },
+                onDone = onSearchVoucher
+            )
+            LazyColumn(
                 modifier = Modifier.padding(horizontal = 20.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                var searchText by remember { mutableStateOf("") }
-                SearchBox(
-                    value = searchText,
-                    onValueChange = { newText ->
-                        searchText = newText
-                    },
-                    onDone = { voucherCode ->
-                        // Xử lý mã voucher ở đây
-                        println(voucherCode)
+                // Voucher list ở đây
+                item {
+                    Column (
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ){
+                        Voucher(
+                            imageId = R.drawable.voucher,
+                            title = "Giảm 10% tối đa 20.000 đ",
+                            description = "Không yêu cầu giá trị đơn hàng",
+                            isSelected = isSelect1,
+                            onClick = {
+                                isSelect1 = !isSelect1
+                                isSelect2 = false
+                            }
+                        )
+                        Divider(color = Color(0xFFD9D9D9))
+                        Voucher(
+                            imageId = R.drawable.voucher,
+                            title = "Giảm 15% tối đa 35.000 đ",
+                            description = "Đơn tối thiểu 20.000 đ",
+                            isSelected = isSelect2,
+                            onClick = {
+                                isSelect2 = !isSelect2
+                                isSelect1 = false
+                            }
+                        )
+                        Divider(color = Color(0xFFD9D9D9))
+                        Voucher(
+                            imageId = R.drawable.bca,
+                            title = "Giảm 75.000 đ",
+                            description = "Đơn tối thiểu 280.000 đ",
+                            isDisable = true,
+                            warning = "Mua thêm 223.000 đ để sử dụng voucher",
+                            onClick = { }
+                        )
                     }
-                )
-
-                Voucher(
-                    imageId = R.drawable.voucher,
-                    title = "Giảm 10% tối đa 20.000 đ",
-                    description = "Không yêu cầu giá trị đơn hàng",
-                    isSelected = isSelect1,
-                    onClick = {
-                        isSelect1 = !isSelect1
-                        isSelect2 = false
-                    }
-                )
-                Divider(color = Color(0xFFD9D9D9))
-                Voucher(
-                    imageId = R.drawable.voucher,
-                    title = "Giảm 15% tối đa 35.000 đ",
-                    description = "Đơn tối thiểu 20.000 đ",
-                    isSelected = isSelect2,
-                    onClick = {
-                        isSelect2 = !isSelect2
-                        isSelect1 = false
-                    }
-                )
-                Divider(color = Color(0xFFD9D9D9))
-                Voucher(
-                    imageId = R.drawable.bca,
-                    title = "Giảm 75.000 đ",
-                    description = "Đơn tối thiểu 280.000 đ",
-                    isDisable = true,
-                    warning = "Mua thêm 223.000 đ để sử dụng voucher",
-                    onClick = { }
-                )
+                }
             }
         }
     }
@@ -126,8 +134,13 @@ fun Voucher(
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.Top,
-        modifier = modifier
-            .fillMaxWidth()
+        modifier =
+        if (!isDisable)
+            modifier
+                .fillMaxWidth()
+                .clickable { onClick() }
+        else
+            modifier.fillMaxWidth()
     ) {
         Image(
             painter = painterResource(id = imageId),
