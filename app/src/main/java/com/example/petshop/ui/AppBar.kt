@@ -185,6 +185,7 @@ fun PetShopNavigationBar(
     NavigationBar(
         modifier = modifier,
         containerColor = Color.White
+        //contentColor = Color.Transparent
     ) {
         items.forEach { item ->
             val index = items.indexOf(item)
