@@ -8,7 +8,7 @@ sealed class Screen(val route: String) {
 
     object Checkout : Screen(route = "checkout")
     object EditProfileScreen : Screen(route = "edit_profile")
-    object CheckoutScreen : Screen(route = "check_out")
+    object CheckoutScreen: Screen(route = "check_out")
 
 
 }
