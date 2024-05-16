@@ -345,7 +345,7 @@ fun PetShopTopAppBarPreview() {
 
 
 @Composable
-fun EndBar() {
+fun CheckoutEndBar(total: Double = 0.0) {
     BottomAppBar(
         modifier = Modifier
             .height(66.dp)
@@ -370,7 +370,7 @@ fun EndBar() {
                 )
 
                 Text(
-                    text = "57.000 đ",
+                    text = total.toString().replace(".0", "") + "đ",
                     style = TextStyle(
                         fontSize = 18.sp,
                         lineHeight = 26.sp,
@@ -381,9 +381,12 @@ fun EndBar() {
             }
 
             Spacer(modifier = Modifier.weight(1f))
-            TextButton(onClick = { /*TODO*/ }) {
-                Text("Thanh toán")
-            }
+            Button(
+                onClick = { /*TODO*/ },
+                title = "Thanh toán",
+                isDisable = false,
+                color = Color(0xFFEE2828),
+            )
         }
     }
 }

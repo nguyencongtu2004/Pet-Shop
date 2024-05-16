@@ -186,7 +186,8 @@ fun Delivery(
                 RadioButton(
                     selected = false,
 
-                    onClick = { /*TODO*/ }
+                    onClick = { /*TODO*/
+                    }
                 )
             }
 
@@ -341,11 +342,14 @@ fun Delivery(
 
         }
     }
+}
 
+@Composable
+fun PaymentDetail(modifier: Modifier = Modifier) {
     Column(
         verticalArrangement = Arrangement.spacedBy(6.dp, Alignment.Top),
         horizontalAlignment = Alignment.Start, // Căn lề trái
-        modifier = Modifier.padding(horizontal = 12.dp)
+        modifier = modifier
     ) {
         Text(
             text = "Chi tiết thanh toán",

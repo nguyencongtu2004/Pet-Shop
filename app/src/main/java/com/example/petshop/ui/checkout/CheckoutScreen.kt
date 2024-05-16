@@ -19,6 +19,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -31,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import com.example.petshop.R
 import com.example.petshop.model.FoodProduct
 import com.example.petshop.model.Product
+import com.example.petshop.ui.CheckoutEndBar
 import com.example.petshop.ui.theme.PetShopTheme
 
 @Composable
@@ -38,27 +40,40 @@ fun CheckoutScreen(
     modifier: Modifier = Modifier,
     products: List<Product> = listOf(),
 ) {
-    LazyColumn {
-        items(products) { product ->
-            CheckoutItem(product = product)
-        }
-        item {
-            Spacer(modifier = Modifier.height(10.dp))
-            Information(
-                modifier.padding(10.dp)
-            )
-        }
+    Scaffold(
+        modifier = modifier,
+        bottomBar = { CheckoutEndBar(total = 200000.0)}
+    ) {
+        LazyColumn(
+            modifier = Modifier.padding(it)
+        ) {
+            items(products) { product ->
+                CheckoutItem(product = product)
+            }
+            item {
+                Spacer(modifier = Modifier.height(10.dp))
+                Information(
+                    modifier.padding(10.dp)
+                )
+            }
 
-        item {
-            Divider(
-                modifier = Modifier
-                    .height(4.dp)
-                    .background(color = Color(0xFFEFEBE9))
-            )
-        }
+            item {
+                Divider(
+                    modifier = Modifier
+                        .height(4.dp)
+                        .background(color = Color(0xFFEFEBE9))
+                )
+            }
 
-        item {
-            Delivery()
+            item {
+                Delivery(modifier = Modifier.padding(10.dp))
+            }
+
+            item {
+                PaymentDetail(
+                    modifier = Modifier.padding(10.dp)
+                )
+            }
         }
     }
 }
