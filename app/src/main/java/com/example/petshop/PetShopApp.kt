@@ -1,6 +1,8 @@
 package com.example.petshop
 
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -11,15 +13,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.petshop.model.FoodProduct
+import androidx.navigation.navArgument
 import com.example.petshop.model.Screen
 import com.example.petshop.ui.PetShopNavigationBar
 import com.example.petshop.ui.TopAppBarNoSearch
@@ -47,45 +49,11 @@ import com.example.petshop.view_model.UserViewModel
 //import com.google.common.reflect.TypeToken
 //import com.google.gson.Gson
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun PetShopApp(
     navController: NavHostController = rememberNavController(),
-    cartViewModel: CartViewModel = viewModel()
 ) {
-    // DỮ LIỆU GIẢ CỦA ỨNG DỤNG tại đây
-    val shippingProducts = listOf(
-        FoodProduct(
-            name = "Thức ăn hạt mềm Zenith",
-            description = "Nổi tiếng với đồ ăn cho chó con được yêu thích",
-            price = 90000.0,
-            quantity = 1,
-            image = painterResource(id = R.drawable.avt),
-            flavor = "Cá hồi",
-            weight = 0.5
-        ),
-        FoodProduct(
-            name = "Thức ăn hạt mềm Zenith",
-            description = "Nổi tiếng với đồ ăn cho chó con được yêu thích",
-            price = 90000.0,
-            quantity = 1,
-            image = painterResource(id = R.drawable.avt),
-            flavor = "Cá hồi",
-            weight = 0.5
-        )
-    )
-    val shippedProducts = listOf(
-        FoodProduct(
-            name = "Thức ăn hạt mềm Zenith",
-            description = "Nổi tiếng với đồ ăn cho chó con được yêu thích",
-            price = 90000.0,
-            quantity = 1,
-            image = painterResource(id = R.drawable.avt),
-            flavor = "Cá hồi",
-            weight = 0.5
-        )
-    )
-
-
     // VIEW MODEL Ở ĐÂY
     val userViewModel = viewModel<UserViewModel>()
     val cartViewModel = viewModel<CartViewModel>()
@@ -95,12 +63,15 @@ fun PetShopApp(
     val orderViewModel = viewModel<OrderViewModel>()
 
     // TRẠNG THÁI CỦA MÀN HÌNH Ở ĐÂY
+
+    // Lấy màn hình hiện tại
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = backStackEntry?.destination?.route ?: Screen.HomePage.route
 
-    var selectedTabIndex by rememberSaveable { mutableStateOf(0) } // Chọn tab "Đang giao" hoặc "Đã giao"
+    // Tìm kiếm
     var searchText by rememberSaveable { mutableStateOf("") }
 
+    // Các trạng thái của các phần tử giao diện
     var isSearchBarVisible by rememberSaveable { mutableStateOf(true) }
     var isNoSearchBarVisible by rememberSaveable { mutableStateOf(true) }
     var isNavigationBarVisible by rememberSaveable { mutableStateOf(true) }
@@ -219,7 +190,6 @@ fun PetShopApp(
                 )
             }
 
-
             // Màn hình thông báo
             composable(route = Screen.NotificationScreen.route) {
                 NotificationScreen(notificationViewModel = notificationViewModel)
@@ -243,7 +213,6 @@ fun PetShopApp(
                 )
             }
 
-
             // Các màn hình trong trang Profile
             composable(route = Screen.EditProfileScreen.route) {
                 EditProfile(
@@ -255,16 +224,16 @@ fun PetShopApp(
             composable(route = Screen.ShipmentStateScreen1.route) {
                 ShipmentStateScreen(
                     selectTabIndex = 0,
-                    shippingProducts = shippingProducts,
-                    shippedProducts = shippedProducts
+                    navController = navController,
+                    orderViewModel = orderViewModel,
                 )
             }
 
             composable(route = Screen.ShipmentStateScreen2.route) {
                 ShipmentStateScreen(
                     selectTabIndex = 1,
-                    shippingProducts = shippingProducts,
-                    shippedProducts = shippedProducts
+                    navController = navController,
+                    orderViewModel = orderViewModel,
                 )
             }
 
@@ -279,15 +248,28 @@ fun PetShopApp(
                 )
             }
 
-            composable(route = Screen.FollowShipping.route) {
-                FollowShippingScreen()
+            composable(
+                route = Screen.FollowShipping.route,
+                arguments = listOf(navArgument("orderId") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val orderId = backStackEntry.arguments?.getString("orderId")
+                FollowShippingScreen(
+                    orderViewModel = orderViewModel,
+                    orderId = orderId ?: "no_id_huhu"
+                )
             }
+
+            /* cũ không có tham số
+            composable(route = Screen.FollowShipping.route) {
+                FollowShippingScreen(
+                    orderViewModel = orderViewModel,
+                )
+            }
+            */
 
             composable(route = Screen.SelectPayMethod.route) {
                 SelectPayMethod(
-
                     orderViewModel = orderViewModel,
-
                 )
             }
 
@@ -297,16 +279,17 @@ fun PetShopApp(
                     onSearchVoucher = { /*TODO*/ }
                 )
             }
+
             composable(route = Screen.ProDuctDetail.route) {
                 ProDuctDetail(
                     navController = navController,
                 )
             }
-
         }
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
 fun PetShopAppPreview() {

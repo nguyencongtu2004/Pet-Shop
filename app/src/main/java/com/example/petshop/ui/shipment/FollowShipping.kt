@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -22,6 +24,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,34 +36,45 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.petshop.R
+import com.example.petshop.model.DeliveryMethod
+import com.example.petshop.model.Order
+import com.example.petshop.model.OrderStatus
 import com.example.petshop.model.Product
+import com.example.petshop.view_model.OrderViewModel
 
 @Composable
-fun FollowShippingScreen() {
-    Column{
-        ShippingProducts(
-            product = Product(
-                name = "Đồ ăn",
-                description = "Cho chó",
-                price = 12000.0,
-                quantity = 1,
-            ),
-        )
-        ShippingProducts(
-            product = Product(
-                name = "Đồ ăn",
-                description = "Cho chó",
-                price = 12000.0,
-                quantity = 12,
-            ),
-        )
-        Divider()
-        ShippingStatus()
-        ConfirmReceived(
-            enabled = false,
-            modifier = Modifier.padding(top = 30.dp),
-        )
+fun FollowShippingScreen(
+    modifier: Modifier = Modifier,
+    navController: NavController? = null,
+    orderViewModel: OrderViewModel,
+    orderId: String = ""
+) {
+    val allOrders by orderViewModel.allOrders.collectAsState()
+    val order = allOrders.find { it.id == orderId }
+
+    LazyColumn {
+        items (order?.products ?: listOf()) { product ->
+            ShippingProducts(
+                product = product,
+            )
+        }
+        item {
+            Column {
+                Divider()
+                ShippingStatus()
+                ConfirmReceived(
+                    enabled = order?.status == OrderStatus.DELIVERED,
+                    modifier = Modifier.padding(top = 30.dp),
+                    onClick = {
+                        //navController?.popBackStack()
+                        // TODO
+                    }
+                )
+            }
+            Spacer(modifier = Modifier.height(100.dp))
+        }
     }
 
 }
@@ -142,6 +157,7 @@ fun ShippingProducts(
 @Composable
 fun ShippingStatus(
     modifier: Modifier = Modifier,
+    orderStatus: OrderStatus = OrderStatus.PREPARE
 ) {
     Column(
         modifier = modifier
@@ -150,15 +166,15 @@ fun ShippingStatus(
     ) {
         StatusItem(
             text = "Shop đang chuẩn bị hàng",
-            isCompleted = true,
+            isCompleted = orderStatus == OrderStatus.PREPARE || orderStatus == OrderStatus.SHIPPING || orderStatus == OrderStatus.DELIVERED,
         )
         StatusItem(
             text = "Đơn vị vận chuyển đang giao hàng",
-            isCompleted = true,
+            isCompleted = orderStatus == OrderStatus.SHIPPING || orderStatus == OrderStatus.DELIVERED,
         )
         StatusItem(
             text = "Shipper đang trên đường đến",
-            isCompleted = false,
+            isCompleted = orderStatus == OrderStatus.DELIVERED,
             isLast = true,
             additionalText = "Hãy chú ý điện thoại, shipper sẽ gọi cho bạn"
         )
@@ -230,7 +246,8 @@ fun StatusItem(
 @Composable
 fun ConfirmReceived(
     modifier: Modifier = Modifier,
-    enabled: Boolean = true
+    enabled: Boolean = true,
+    onClick: () -> Unit = {}
 ) {
     Column(
         modifier = modifier
@@ -239,7 +256,7 @@ fun ConfirmReceived(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Button(
-            onClick = { /* TODO: Handle click */ },
+            onClick = onClick,
             shape = RoundedCornerShape(20.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xFF5D4037) // Màu nâu cho button
@@ -265,9 +282,10 @@ fun ConfirmReceived(
     }
 }
 
-
 @Preview
 @Composable
 fun FollowShippingScreenPreview() {
-    FollowShippingScreen()
+    FollowShippingScreen(
+        orderViewModel = OrderViewModel(),
+    )
 }

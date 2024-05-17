@@ -15,21 +15,38 @@ class CartViewModel : ViewModel() {
 
     var productInCart: List<Product> = listOf(
         Product(
-            name = "Đồ ăn",
-            description = "Cho chó",
-            price = 12000.0,
+            name = "Đồ ăn cho chó cao cấp",
+            description = "Đây là sản phẩm thức ăn cho chó cao cấp",
+            price = 19000.0,
             oldPrice = 9999999.0,
             star = 4.5,
             quantity = 1,
         ),
         Product(
-            name = "Đồ ăn",
-            description = "Cho chó",
-            price = 12000.0,
+            name = "Đồ ăn cho mèo",
+            description = "Đây là sản phẩm thức ăn cho mèo",
+            price = 14500.0,
             oldPrice = 9999999.0,
             star = 4.5,
             quantity = 1,
         ),
+        Product(
+            name = "Đồ chơi cho chó",
+            description = "Đây là sản phẩm đồ chơi cho chó",
+            price = 25000.0,
+            oldPrice = 9999999.0,
+            star = 4.5,
+            quantity = 1,
+        ),
+        Product(
+            name = "Quần áo cho chó",
+            description = "Đây là sản phẩm quần áo cho chó",
+            price = 35000.0,
+            oldPrice = 9999999.0,
+            star = 4.5,
+            quantity = 1,
+        ),
+
     )
         private set
 

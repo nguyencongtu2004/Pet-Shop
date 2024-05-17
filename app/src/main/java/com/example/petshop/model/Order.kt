@@ -1,5 +1,9 @@
 package com.example.petshop.model
 
+import kotlin.random.Random
+
+val random: Random = Random(0)
+
 enum class OrderStatus {
     PREPARE,
     SHIPPING,
@@ -17,6 +21,8 @@ enum class PaymentMethod {
 }
 
 data class Order(
+    var id: String = random.nextLong(999999999999).toString(),
+
     var user: User = User(),
     var products: List<Product> = listOf(),
 

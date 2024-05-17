@@ -20,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -50,7 +51,6 @@ fun CheckoutScreen(
     orderViewModel: OrderViewModel,
     userViewModel: UserViewModel,
 ) {
-
     val user by userViewModel.currentUser.collectAsState()
     val order by orderViewModel.order.collectAsState()
 
@@ -66,6 +66,8 @@ fun CheckoutScreen(
             CheckoutEndBar(
                 total = order.total,
                 onCheckoutClick = {
+
+                    orderViewModel.addOrder(order)
                     navController?.navigate(Screen.LoadingCheckout.route)
                 }
             )
@@ -115,17 +117,7 @@ fun CheckoutScreen(
 @Composable
 fun CheckoutItem(
     modifier: Modifier = Modifier,
-    product: Product = FoodProduct(
-        name = "Thức ăn hạt mềm Zenith",
-        description = "Nổi tiếng với đồ ăn cho chó con được yêu thích",
-        price = 90000.0,
-        oldPrice = 0.0,
-        quantity = 1,
-        star = 0.0,
-        image = painterResource(id = R.drawable.avt),
-        flavor = "Cá hồi",
-        weight = 0.5
-    ),
+    product: Product = FoodProduct(),
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(0.dp, Alignment.Top),

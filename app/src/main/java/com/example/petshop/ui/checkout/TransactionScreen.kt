@@ -50,7 +50,8 @@ fun TransactionScreen(
     navController: NavController? = null,
     orderViewModel: OrderViewModel,
 ) {
-    val order by orderViewModel.order.collectAsState()
+    val allOrders by orderViewModel.allOrders.collectAsState()
+    val order = allOrders.last()
 
     Scaffold(
         modifier = modifier,
@@ -69,7 +70,8 @@ fun TransactionScreen(
 
                     navController?.navigate(Screen.ProfileScreen.route)
                     navController?.navigate(Screen.ShipmentStateScreen1.route)
-                    navController?.navigate(Screen.FollowShipping.route)
+                    navController?.navigate(Screen.FollowShipping.createRoute(order.id))
+
                 }
             )
         }
@@ -138,7 +140,7 @@ fun TransactionScreen(
 
                                     val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
                                     val timeText = currentDateTime.format(timeFormatter)
-                                    ItemBold(title = "Mã đơn hàng:", detail = "D123456789ABC")
+                                    ItemBold(title = "Mã đơn hàng:", detail = order.id)
                                     ItemBold(title = "Ngày:", detail = dateText)
                                     ItemBold(title = "Thời gian:", detail = timeText)
 

@@ -10,6 +10,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlin.random.Random
+
+
 
 class OrderViewModel : ViewModel() {
     private val _order = MutableStateFlow<Order>(Order())
@@ -22,6 +25,7 @@ class OrderViewModel : ViewModel() {
     private fun calculateProductTotal() {
         _order.update { order ->
             val productTotal = order.products.sumOf { it.price * it.quantity }
+
             order.copy(
                 productTotal = productTotal,
                 total = productTotal + order.shippingFee
@@ -75,6 +79,22 @@ class OrderViewModel : ViewModel() {
     fun resetOrder() {
         _order.update { _ ->
             Order()
+        }
+    }
+
+
+    private val _allOrders = MutableStateFlow<List<Order>>(listOf())
+    val allOrders: StateFlow<List<Order>> = _allOrders.asStateFlow()
+
+    fun addOrder(order: Order) {
+        _allOrders.update { orders ->
+            orders.toMutableList().apply { add(order) }
+        }
+
+        _allOrders.value.forEach {
+            println("Order ID: ${it.id}")
+            println("Products count: ${it.products.size}")
+            println("Shipping status: ${it.status}")
         }
     }
 }
