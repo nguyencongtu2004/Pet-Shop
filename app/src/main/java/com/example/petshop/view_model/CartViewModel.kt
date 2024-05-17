@@ -13,4 +13,24 @@ class CartViewModel : ViewModel() {
         selectedProducts = products
     }
 
+    var productInCart: List<Product> = listOf(
+        Product(
+            name = "Đồ ăn",
+            description = "Cho chó",
+            price = 12000.0,
+            oldPrice = 9999999.0,
+            star = 4.5,
+            quantity = 1,
+        ),
+        Product(
+            name = "Đồ ăn",
+            description = "Cho chó",
+            price = 12000.0,
+            oldPrice = 9999999.0,
+            star = 4.5,
+            quantity = 1,
+        ),
+    )
+        private set
+
 }

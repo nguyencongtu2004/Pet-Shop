@@ -43,6 +43,13 @@ import androidx.navigation.NavController
 import com.example.petshop.R
 import com.example.petshop.view_model.UserViewModel
 
+/*
+fun isValidEmail(email: String): Boolean {
+    val emailRegex = Regex("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")
+    return emailRegex.matches(email)
+}
+*/
+
 @Composable
 fun EditProfile(
     navController: NavController? = null,
@@ -69,7 +76,7 @@ fun EditProfile(
                 TextField(
                     value = editValue,
                     onValueChange = { editValue = it },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
             },
             confirmButton = {

@@ -11,11 +11,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,14 +26,15 @@ import androidx.navigation.NavController
 import com.example.petshop.R
 import com.example.petshop.model.Notification
 import com.example.petshop.ui.theme.PetShopTheme
+import com.example.petshop.view_model.NotificationViewModel
 
 
 @Composable
 fun NotificationScreen(
     modifier: Modifier = Modifier,
-    navController: NavController? = null,
-    notifications: List<Notification> = emptyList()
+    notificationViewModel: NotificationViewModel,
 ) {
+    val notifications = notificationViewModel.allNotifications
     LazyColumn(
         modifier = modifier.fillMaxWidth()
     ) {
@@ -44,11 +47,7 @@ fun NotificationScreen(
 
 @Composable
 fun Notification(
-    notification: Notification = Notification(
-        title = "JACK",
-        description = "5 củ",
-        image = painterResource(id = R.drawable.notiication_bell)
-    )
+    notification: Notification,
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(14.dp, Alignment.Start),
@@ -60,12 +59,13 @@ fun Notification(
     ) {
         Column {
             Image(
-                painter = notification.image!!,
-                contentDescription = "image description",
+                painter = painterResource(id = notification.image),
+                contentDescription = notification.title,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .width(52.dp)
-                    .height(52.dp)
+                    .width(60.dp)
+                    .height(60.dp)
+                    .clip( shape = CircleShape)
             )
         }
         Column {
@@ -76,7 +76,7 @@ fun Notification(
             Spacer(modifier = Modifier.height(6.dp))
             Text(
                 text = notification.description,
-                style = MaterialTheme.typography.bodySmall
+                style = MaterialTheme.typography.bodyMedium
             )
 
         }
@@ -88,38 +88,7 @@ fun Notification(
 fun NotificationDemo() {
     PetShopTheme {
         NotificationScreen(
-            notifications = listOf(
-                Notification(
-                    title = "JACK",
-                    description = "5 củ",
-                    image = painterResource(id = R.drawable.notiication_bell)
-                ),
-                Notification(
-                    title = "JACK",
-                    description = "5 củ",
-                    image = painterResource(id = R.drawable.notiication_bell)
-                ),
-                Notification(
-                    title = "JACK",
-                    description = "5 củ",
-                    image = painterResource(id = R.drawable.notiication_bell)
-                ),
-                Notification(
-                    title = "JACK",
-                    description = "5 củ",
-                    image = painterResource(id = R.drawable.notiication_bell)
-                ),
-                Notification(
-                    title = "JACK",
-                    description = "5 củ",
-                    image = painterResource(id = R.drawable.notiication_bell)
-                ),
-                Notification(
-                    title = "JACK",
-                    description = "5 củ",
-                    image = painterResource(id = R.drawable.notiication_bell)
-                ),
-            )
+            notificationViewModel = NotificationViewModel()
         )
     }
 }

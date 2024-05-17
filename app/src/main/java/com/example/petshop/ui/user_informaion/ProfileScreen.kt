@@ -167,13 +167,14 @@ fun ProfileScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 20.dp, end = 10.dp)
+                    .padding(start = 10.dp, end = 10.dp)
             ) {
                 Text(
                     text = "Đơn hàng",
                     style = MaterialTheme.typography.displaySmall.copy(
                         fontSize = 28.sp,
                     ),
+                    modifier = Modifier.padding(start = 10.dp)
                 )
                 Row(
                     horizontalArrangement = Arrangement.SpaceEvenly,

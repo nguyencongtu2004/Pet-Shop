@@ -56,12 +56,14 @@ import com.example.petshop.ui.theme.PetShopTheme
 fun ShoppingCartScreen(
     modifier: Modifier = Modifier,
     navController: NavController? = null,
-    products: List<Product> = emptyList(),
+    cartViewModel: CartViewModel,
+    //products: List<Product> = emptyList(),
 
-    cartViewModel: CartViewModel
 ) {
     var totalAmount by remember { mutableStateOf(0.0) }
     val selectedItems = remember { mutableStateListOf<Product>() }
+
+    val productsInCart = cartViewModel.productInCart
 
     Scaffold(
         bottomBar = {
@@ -69,12 +71,7 @@ fun ShoppingCartScreen(
                 CheckoutBottomBar(
                     total = totalAmount,
                     onBuyClicked = {
-                        selectedItems.forEach() {
-                            println("product: ${it.name}")
-                        }
                         cartViewModel.setSelectedProducts(selectedItems)
-
-
                         navController?.navigate(Screen.CheckoutScreen.route)
                     }
                 )
@@ -83,7 +80,7 @@ fun ShoppingCartScreen(
         LazyColumn(
             modifier = modifier.padding(it),
         ) {
-            items(products) { product ->
+            items(productsInCart) { product ->
                 BoughtItemCart(product = product, onQuantityChange = { isChecked, newQuantity ->
                     if (isChecked) {
                         if (!selectedItems.contains(product)) {
@@ -320,29 +317,6 @@ fun BoughtItemPreview() {
     PetShopTheme {
         ShoppingCartScreen(
             cartViewModel = CartViewModel(),
-            products = listOf(
-                FoodProduct(
-                    name = "Thức ăn",
-                    description = "Cho chó",
-                    price = 12000.0,
-                    oldPrice = 9999999.0,
-                    star = 4.5,
-                    quantity = 1,
-                    weight = 1.5,
-                    flavor = "Thức ăn khô",
-                ),
-                FoodProduct(
-                    name = "Thức ăn 2",
-                    description = "Cho chó",
-                    price = 12000.0,
-                    oldPrice = 9999999.0,
-                    star = 4.5,
-                    quantity = 1,
-                    weight = 1.5,
-                    flavor = "Thức ăn khô",
-                ),
-
-            )
         )
     }
 }
