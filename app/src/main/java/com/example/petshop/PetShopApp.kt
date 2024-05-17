@@ -40,6 +40,7 @@ import com.example.petshop.ui.user_informaion.ProfileScreen
 import com.example.petshop.view_model.BannerViewModel
 import com.example.petshop.view_model.CartViewModel
 import com.example.petshop.view_model.NotificationViewModel
+import com.example.petshop.view_model.OrderViewModel
 import com.example.petshop.view_model.ProductViewModel
 import com.example.petshop.view_model.UserViewModel
 
@@ -83,34 +84,7 @@ fun PetShopApp(
             weight = 0.5
         )
     )
-    val bannerItems = listOf(
-        painterResource(id = R.drawable.banner),
-        painterResource(id = R.drawable.banner),
-        painterResource(id = R.drawable.banner),
-    )
-    val productsInCart = listOf(
-        FoodProduct(
-            name = "Thức ăn",
-            description = "Cho chó",
-            price = 12000.0,
-            oldPrice = 9999999.0,
-            star = 4.5,
-            quantity = 1,
-            weight = 1.5,
-            flavor = "Thức ăn khô",
-        ),
-        FoodProduct(
-            name = "Thức ăn 2",
-            description = "Cho chó nhỏ",
-            price = 2000.0,
-            oldPrice = 9399.0,
-            star = 4.5,
-            quantity = 2,
-            weight = 3.0,
-            flavor = "Thức ăn khô",
-        ),
-        // Thêm các sản phẩm khác ở đây...
-    )
+
 
     // VIEW MODEL Ở ĐÂY
     val userViewModel = viewModel<UserViewModel>()
@@ -118,6 +92,7 @@ fun PetShopApp(
     val productViewModel = viewModel<ProductViewModel>()
     val notificationViewModel = viewModel<NotificationViewModel>()
     val bannerViewModel = viewModel<BannerViewModel>()
+    val orderViewModel = viewModel<OrderViewModel>()
 
     // TRẠNG THÁI CỦA MÀN HÌNH Ở ĐÂY
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -261,8 +236,10 @@ fun PetShopApp(
             // Màn hình thanh toán
             composable(route = Screen.CheckoutScreen.route) { //backStackEntry ->
                 CheckoutScreen(
-                    cartViewModel = cartViewModel,
                     navController = navController,
+                    cartViewModel = cartViewModel,
+                    orderViewModel = orderViewModel,
+                    userViewModel = userViewModel
                 )
             }
 
@@ -296,7 +273,10 @@ fun PetShopApp(
             }
 
             composable(route = Screen.TransactionScreen.route) {
-                TransactionScreen(navController = navController)
+                TransactionScreen(
+                    navController = navController,
+                    orderViewModel = orderViewModel
+                )
             }
 
             composable(route = Screen.FollowShipping.route) {
@@ -304,7 +284,11 @@ fun PetShopApp(
             }
 
             composable(route = Screen.SelectPayMethod.route) {
-                SelectPayMethod(navController = navController)
+                SelectPayMethod(
+
+                    orderViewModel = orderViewModel,
+
+                )
             }
 
             composable(route = Screen.SelectVoucher.route) {

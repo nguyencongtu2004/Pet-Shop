@@ -22,6 +22,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,15 +37,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.petshop.R
+import com.example.petshop.model.PaymentMethod
 import com.example.petshop.ui.PetShopAppBar
 import com.example.petshop.ui.theme.PetShopTheme
+import com.example.petshop.view_model.OrderViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 fun SelectPayMethod(
     modifier: Modifier = Modifier,
-    navController: NavController? = null,
+    orderViewModel: OrderViewModel,
 ) {
+    val order by orderViewModel.order.collectAsState()
+
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
 
@@ -57,26 +62,21 @@ fun SelectPayMethod(
                 .padding(it),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            var isSelect1 by remember { mutableStateOf(false) }
-            var isSelect2 by remember { mutableStateOf(false) }
-
             PayMethod(
                 imageId = R.drawable.cash,
                 title = "Thanh toán khi nhận hàng",
                 description = "Miễn phí thu hộ",
-                isSelected = isSelect1,
+                isSelected = order.paymentMethod == PaymentMethod.CASH,
                 onClick = {
-                    isSelect1 = !isSelect1
-                    isSelect2 = false
+                    orderViewModel.updateOrderPaymentMethod(PaymentMethod.CASH)
                 })
             PayMethod(
                 imageId = R.drawable.transfer,
                 title = "Chuyển khoản ngân hàng",
                 description = "(Tự động kiểm tra)",
-                isSelected = isSelect2,
+                isSelected = order.paymentMethod == PaymentMethod.BANK,
                 onClick = {
-                    isSelect2 = !isSelect2
-                    isSelect1 = false
+                    orderViewModel.updateOrderPaymentMethod(PaymentMethod.BANK)
                 })
             Divider(color = Color(0xFFD9D9D9))
             AddPayMethod(
@@ -190,8 +190,8 @@ fun AddPayMethod(
 @Composable
 fun SelectPayMethodPreview() {
     PetShopTheme {
-        SelectPayMethod()
+        SelectPayMethod(
+            orderViewModel = OrderViewModel()
+        )
     }
-    //PayMethod()
-    //AddPayMethod()
 }

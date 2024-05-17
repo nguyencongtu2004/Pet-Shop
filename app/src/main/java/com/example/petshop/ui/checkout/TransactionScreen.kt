@@ -1,5 +1,7 @@
 package com.example.petshop.ui.checkout
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -19,28 +21,37 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.petshop.R
+import com.example.petshop.model.PaymentMethod
+import com.example.petshop.model.Product
 import com.example.petshop.model.Screen
-import com.example.petshop.ui.PetShopAppBar
 import com.example.petshop.ui.login_register.Button
 import com.example.petshop.ui.theme.PetShopTheme
+import com.example.petshop.view_model.OrderViewModel
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TransactionScreen(
     modifier: Modifier = Modifier,
-    navController: NavController? = null
+    navController: NavController? = null,
+    orderViewModel: OrderViewModel,
 ) {
+    val order by orderViewModel.order.collectAsState()
+
     Scaffold(
         modifier = modifier,
         bottomBar = {
@@ -73,8 +84,7 @@ fun TransactionScreen(
             }
             item {
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     contentAlignment = Alignment.TopCenter
                 ) {
                     Column(
@@ -119,9 +129,18 @@ fun TransactionScreen(
                                             bottom = 5.dp
                                         )
                                 ) {
-                                    ItemBold(title = "Mã đơn hàng", detail = "D123456789ABC")
-                                    ItemBold(title = "Ngày", detail = "10 July’22")
-                                    ItemBold(title = "Thời gian", detail = "04:13 PM")
+
+
+                                    val currentDateTime = LocalDateTime.now()
+
+                                    val dateFormatter = DateTimeFormatter.ofPattern("dd MMMM yyyy")
+                                    val dateText = currentDateTime.format(dateFormatter)
+
+                                    val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+                                    val timeText = currentDateTime.format(timeFormatter)
+                                    ItemBold(title = "Mã đơn hàng:", detail = "D123456789ABC")
+                                    ItemBold(title = "Ngày:", detail = dateText)
+                                    ItemBold(title = "Thời gian:", detail = timeText)
 
                                 }
                                 Divider()
@@ -135,12 +154,9 @@ fun TransactionScreen(
                                         modifier = Modifier.fillMaxWidth()
                                     )
                                     Spacer(modifier = Modifier.height(8.dp))
-                                    ItemBold(title = "Thức ăn hạt mềm Zenith", detail = "x1")
-                                    Text(
-                                        text = "Phân loại: Cá hồi - 0.5kg",
-                                        style = MaterialTheme.typography.bodySmall,
-                                        modifier = Modifier.fillMaxWidth()
-                                    )
+                                    order.products.forEach { product ->
+                                        ProductItem(product = product)
+                                    }
                                 }
                                 Column(
                                     horizontalAlignment = Alignment.Start,
@@ -152,15 +168,18 @@ fun TransactionScreen(
                                         modifier = Modifier.fillMaxWidth()
                                     )
                                     Spacer(modifier = Modifier.height(8.dp))
-                                    ItemMedium(title = "Tổng tiền hàng:", detail = "45.000 đ")
-                                    ItemMedium(title = "Phí vận chuyển:", detail = "12.000 đ")
-                                    ItemMedium(title = "Voucher:", detail = "- 0 đ")
-                                    ItemBold(title = "Tổng cộng:", detail = "57.000 đ")
+                                    ItemMedium(title = "Tổng tiền hàng:", detail = order.productTotal.toInt().toString() + " đ")
+                                    ItemMedium(title = "Phí vận chuyển:", detail = order.shippingFee.toInt().toString() + " đ")
+                                    ItemMedium(title = "Voucher:", detail = "- ?? đ")
+                                    ItemBold(title = "Tổng cộng:", detail = order.total.toInt().toString() + " đ")
                                 }
                                 Divider()
                                 ItemMedium(
                                     title = "Phương thức thanh toán:",
-                                    detail = "Khi nhận hàng",
+                                    detail = when (order.paymentMethod) {
+                                        PaymentMethod.CASH -> "Tiền mặt"
+                                        PaymentMethod.BANK -> "Chuyển khoản"
+                                    },
                                     modifier = Modifier.padding(horizontal = 8.dp),
                                 )
                                 ItemMedium(
@@ -193,7 +212,7 @@ fun TransactionScreen(
 fun ItemBold(
     modifier: Modifier = Modifier,
     title: String,
-    detail: String = "",
+    detail: String? = null,
 ) {
     Row(
         modifier = modifier
@@ -202,22 +221,63 @@ fun ItemBold(
         Text(
             text = title,
             style = MaterialTheme.typography.titleMedium.copy(
-                fontSize = 14.sp
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold
             )
         )
         Spacer(modifier = Modifier.weight(1f))
-        Text(
-            text = detail,
-            style = MaterialTheme.typography.bodyMedium
-        )
+        if (detail != null)
+            Text(
+                text = detail,
+                style = MaterialTheme.typography.bodyMedium
+            )
     }
 }
+
+@Composable
+fun ProductItem(
+    product: Product,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+    ) {
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+        ) {
+            Text(
+                text = product.name,
+                style = MaterialTheme.typography.titleMedium.copy(
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            Text(
+                text = "x${product.quantity}",
+                style = MaterialTheme.typography.titleMedium.copy(
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold
+                ),
+            )
+        }
+        Text(
+            text = "Phân loại: ??",
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier
+        )
+
+    }
+}
+
 
 @Composable
 fun ItemMedium(
     modifier: Modifier = Modifier,
     title: String,
-    detail: String = "",
+    detail: String? = null,
 ) {
     Row(
         modifier = modifier
@@ -228,11 +288,12 @@ fun ItemMedium(
             style = MaterialTheme.typography.bodyMedium,
         )
         Spacer(modifier = Modifier.weight(1f))
-        Text(
-            text = detail,
-            style = MaterialTheme.typography.bodyMedium,
-            textAlign = TextAlign.Right
-        )
+        if (detail != null)
+            Text(
+                text = detail,
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = TextAlign.Right
+            )
     }
 }
 
@@ -242,34 +303,51 @@ fun ActionBottomBar(
     onGoHome: () -> Unit = {},
     onTrackOrder: () -> Unit = {}
 ) {
-        Row(
-            modifier = modifier
-        ) {
-            Button(
-                onClick = onGoHome,
-                title = "Trở về trang chủ",
-                isDisable = false,
-                color = Color(0xFFA1887F),
-                modifier = Modifier
-                    .weight(1f)
-            )
-            Spacer(modifier = Modifier.width(20.dp))
-            Button(
-                onClick = onTrackOrder,
-                title = "Theo dõi đơn hàng",
-                isDisable = false,
-                color = Color(0xFF46AE7C),
-                modifier = Modifier
-                    .weight(1f)
-            )
-        }
+    Row(
+        modifier = modifier
+    ) {
+        Button(
+            onClick = onGoHome,
+            title = "Trở về trang chủ",
+            isDisable = false,
+            color = Color(0xFFA1887F),
+            modifier = Modifier
+                .weight(1f)
+        )
+        Spacer(modifier = Modifier.width(20.dp))
+        Button(
+            onClick = onTrackOrder,
+            title = "Theo dõi đơn hàng",
+            isDisable = false,
+            color = Color(0xFF46AE7C),
+            modifier = Modifier
+                .weight(1f)
+        )
+    }
 }
 
 @Preview
 @Composable
+fun ProductItemPreview() {
+    PetShopTheme {
+        ProductItem(
+            product = Product(
+                name = "Thức ăn hạt mềm Zenith",
+                price = 45000.0,
+                description = "Thức ăn hạt mềm Zenith dành cho chó",
+                quantity = 1
+            )
+        )
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Preview
+@Composable
 fun TransactionPreview() {
     PetShopTheme {
-        TransactionScreen()
-        //Action()
+        TransactionScreen(
+            orderViewModel = OrderViewModel()
+        )
     }
 }

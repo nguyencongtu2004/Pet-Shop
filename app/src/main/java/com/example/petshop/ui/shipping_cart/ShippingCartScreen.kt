@@ -2,6 +2,7 @@ package com.example.petshop.ui.shipping_cart
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -102,38 +103,31 @@ fun ShoppingCartScreen(
 @Composable
 fun BoughtItemCart(
     modifier: Modifier = Modifier,
-    product: Product = FoodProduct(
-        name = "Thức ăn hạt mềm Zenith",
-        description = "Nổi tiếng với đồ ăn cho chó con được yêu thích",
-        price = 90000.0,
-        oldPrice = 0.0,
-        quantity = 1,
-        star = 0.0,
-        image = painterResource(id = R.drawable.avt),
-        flavor = "Cá hồi",
-        weight = 0.5
-    ),
-    onQuantityChange: (Boolean, Int) -> Unit
+    product: Product = FoodProduct(),
+    onQuantityChange: (Boolean, Int) -> Unit,
+    onItemClick: () -> Unit = {},
 ) {
     var quantity by remember { mutableStateOf(product.quantity) }
     var checkedState by remember { mutableStateOf(false) }
 
     Column(
-        verticalArrangement = Arrangement.spacedBy(0.dp, Alignment.Top),
         horizontalAlignment = Alignment.Start,
         modifier = modifier
             .padding(start = 8.dp, end = 8.dp, bottom = 6.dp)
+            .clickable {
+                checkedState = !checkedState
+                onQuantityChange(checkedState, quantity)
+            }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(start = 10.dp, top = 5.dp, end = 10.dp, bottom = 13.dp)
+            modifier = Modifier.padding(start = 10.dp, top = 5.dp, end = 10.dp)
         ) {
             Checkbox(
                 checked = checkedState,
                 onCheckedChange = {
                     checkedState = it
                     onQuantityChange(checkedState, quantity)
-                    // TODO
                 },
                 modifier = Modifier
                     .padding(end = 14.dp)

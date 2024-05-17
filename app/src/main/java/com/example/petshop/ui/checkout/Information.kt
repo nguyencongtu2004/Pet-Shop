@@ -19,6 +19,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,14 +28,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.petshop.model.DeliveryMethod
+import com.example.petshop.model.Order
+import com.example.petshop.model.PaymentMethod
 import com.example.petshop.model.User
+import com.example.petshop.view_model.OrderViewModel
+import com.example.petshop.view_model.UserViewModel
 
 @Composable
 fun Information(
     modifier: Modifier = Modifier,
-    user: User = User(),
+    userViewModel: UserViewModel,
+    //user: User = User(),
     onEditAddressClick: () -> Unit = { /*TODO*/ },
 ) {
+    val user by userViewModel.currentUser.collectAsState()
+
     Column(
         horizontalAlignment = Alignment.Start,
         modifier = modifier
@@ -67,15 +77,12 @@ fun Information(
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
-            text = user.name,
+            text = user.address,
             style = MaterialTheme.typography.bodySmall.copy(
                 fontWeight = FontWeight(300),
                 color = Color(0xFF3C3C3C),
             ),
         )
-
-
-
 
         Row(
             modifier = Modifier
@@ -90,7 +97,7 @@ fun Information(
                 modifier = Modifier.padding(vertical = 5.dp)
             )
             IconButton(
-                onClick = { /*TODO*/ },
+                onClick = onEditAddressClick,
                 modifier = Modifier.padding(all = 0.dp)
             ) {
                 Icon(
@@ -106,17 +113,19 @@ fun Information(
 @Composable
 fun Delivery(
     modifier: Modifier = Modifier,
+    orderViewModel: OrderViewModel,
     onPaymentClick: () -> Unit = {},
     onVoucherClick: () -> Unit = {}
 ) {
+    val order by orderViewModel.order.collectAsState()
+
     Column(
-        //verticalArrangement = Arrangement.spacedBy(6.dp, Alignment.Top),
         horizontalAlignment = Alignment.Start,
         modifier = modifier,
     ) {
         Divider(
             modifier = Modifier
-                .width(375.dp)
+                .fillMaxWidth()
                 .height(4.dp)
                 .background(color = Color(0xFFEFEBE9))
         )
@@ -135,13 +144,19 @@ fun Delivery(
         )
         Spacer(modifier = Modifier.height(4.dp))
         DeliveryOption(
-            title = "Hỏa tốc",
-            description = "Khoảng 30 phút"
+            deliveryMethod = DeliveryMethod.NORMAL,
+            selected = order.deliveryMethod == DeliveryMethod.NORMAL,
+            onClick = {
+                orderViewModel.updateOrderDeliveryMethod(DeliveryMethod.NORMAL)
+            }
         )
         Divider()
         DeliveryOption(
-            title = "Thường",
-            description = "Khoảng 1 đến 2 ngày"
+            deliveryMethod = DeliveryMethod.FAST,
+            selected = order.deliveryMethod == DeliveryMethod.FAST,
+            onClick = {
+                orderViewModel.updateOrderDeliveryMethod(DeliveryMethod.FAST)
+            }
         )
 
         Divider()
@@ -149,8 +164,11 @@ fun Delivery(
         Spacer(modifier = Modifier.height(4.dp))
         PaymentOption(
             title = "Phương thức thanh toán",
-            description = "Thanh toán trực tiếp",
-            onClick = onPaymentClick
+            description = when (order.paymentMethod) {
+                PaymentMethod.CASH -> "Thanh toán khi nhận hàng"
+                PaymentMethod.BANK -> "Chuyển khoản ngân hàng"
+            },
+            onClick = onPaymentClick,
         )
         Divider()
         PaymentOption(
@@ -162,7 +180,7 @@ fun Delivery(
         Spacer(modifier = Modifier.height(10.dp))
         Divider(
             modifier = Modifier
-                .width(375.dp)
+                .fillMaxWidth()
                 .height(4.dp)
                 .background(color = Color(0xFFEFEBE9))
         )
@@ -171,27 +189,34 @@ fun Delivery(
 
 @Composable
 fun DeliveryOption(
-    title: String,
-    description: String
+    deliveryMethod: DeliveryMethod,
+    selected: Boolean,
+    onClick: () -> Unit = {}
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { /*TODO*/ }
+            .clickable { onClick() }
             .padding(vertical = 8.dp)
     ) {
         Column {
             Text(
-                text = title,
+                text = when (deliveryMethod) {
+                    DeliveryMethod.FAST -> "Hỏa tốc"
+                    DeliveryMethod.NORMAL -> "Thường"
+                },
                 style = MaterialTheme.typography.bodySmall.copy(
                     fontWeight = FontWeight(500),
                     color = Color(0xFF3C3C3C),
                 ),
             )
             Text(
-                text = description,
+                text = when (deliveryMethod) {
+                    DeliveryMethod.FAST -> "Khoảng 30 phút"
+                    DeliveryMethod.NORMAL -> "Khoảng 1 đến 2 ngày"
+                },
                 style = MaterialTheme.typography.bodySmall.copy(
                     fontWeight = FontWeight(300),
                     color = Color(0xFF555555),
@@ -199,8 +224,8 @@ fun DeliveryOption(
             )
         }
         RadioButton(
-            selected = false,
-            onClick = { /*TODO*/ }
+            selected = selected,
+            onClick = onClick
         )
     }
 }
@@ -251,11 +276,13 @@ fun PaymentOption(
     }
 }
 
-
-
-
 @Composable
-fun PaymentDetail(modifier: Modifier = Modifier) {
+fun PaymentDetail(
+    modifier: Modifier = Modifier,
+    orderViewModel: OrderViewModel,
+) {
+    val order by orderViewModel.order.collectAsState()
+
     Column(
         verticalArrangement = Arrangement.spacedBy(6.dp, Alignment.Top),
         horizontalAlignment = Alignment.Start,
@@ -268,20 +295,20 @@ fun PaymentDetail(modifier: Modifier = Modifier) {
 
         PaymentDetailRow(
             label = "Tổng tiền hàng",
-            value = "45.000 đ",
-            description = "(1 sản phẩm)",
+            value = "${order.productTotal.toInt()} đ",
+            description = "(${order.products.size} sản phẩm)",
             isBold = true,
         )
 
         PaymentDetailRow(
             label = "Phí vận chuyển",
-            value = "12.000 đ",
+            value = "${order.shippingFee.toInt()} đ",
             isBold = true,
         )
 
         PaymentDetailRow(
             label = "Tổng cộng",
-            value = "57.000 đ",
+            value = "${(order.productTotal + order.shippingFee).toInt()} đ",
             isBold = true,
         )
     }
@@ -332,18 +359,23 @@ fun PaymentDetailRow(
 @Preview(showBackground = true)
 @Composable
 fun InformationPreview() {
-    Information()
-
+    Information(
+        userViewModel = UserViewModel()
+    )
 }
 
 @Preview(showBackground = true)
 @Composable
 fun DeliveryPreview() {
-    Delivery()
+    Delivery(
+        orderViewModel = OrderViewModel()
+    )
 }
 
 @Preview(showBackground = true)
 @Composable
 fun PaymentDetailPreview() {
-    PaymentDetail()
+    PaymentDetail(
+        orderViewModel = OrderViewModel()
+    )
 }

@@ -66,6 +66,10 @@ fun SelectVoucher(
         Column(
             modifier = Modifier.padding(it),
         ) {
+
+            /// TODO
+            Text(text = "Chưa làm, sẽ làm sau")
+            ///
             var searchText by remember { mutableStateOf("") }
             SearchBox(
                 value = searchText,

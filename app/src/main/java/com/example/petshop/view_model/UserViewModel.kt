@@ -1,27 +1,40 @@
 package com.example.petshop.view_model
 
-import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.ViewModel
 import com.example.petshop.R
 import com.example.petshop.model.User
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 class UserViewModel : ViewModel() {
-    var currentUser = User(
-        name = "Nguyễn Công Tú",
-        role = "Khách hàng thân thiết",
-        favoriteProducts = listOf(),
-        sex = "Nam",
-        email = "asdfsaf@asadfs.fff",
-        phone = "0123456789",
-        avatar = R.drawable.avatar,
-        birthday = "01/01/2000",
-        password = "null",
-        address = "đâu đó",
+    private val _currentUser = MutableStateFlow<User>(
+        User(
+            name = "Nguyễn Công Tú",
+            role = "Khách hàng thân thiết",
+            favoriteProducts = listOf(),
+            sex = "Nam",
+            email = "asdfsaf@asadfs.fff",
+            phone = "0123456789",
+            avatar = R.drawable.avatar,
+            birthday = "01/01/2000",
+            password = "null",
+            address = "đâu đó",
+        )
     )
-        private set
+    val currentUser: StateFlow<User> = _currentUser.asStateFlow()
 
-    fun updateUserInfo(user: User) {
-        currentUser = user
+    fun updateUserAddress(user: User) {
+        _currentUser.update {
+            it.copy(
+                address = it.address
+            )
+        }
+    }
+
+    fun updateUser(user: User) {
+        _currentUser.value = user
     }
 
 }

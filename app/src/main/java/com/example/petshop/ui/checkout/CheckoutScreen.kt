@@ -20,6 +20,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -30,26 +32,39 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.petshop.R
-import com.example.petshop.view_model.CartViewModel
 import com.example.petshop.model.FoodProduct
+import com.example.petshop.model.Order
 import com.example.petshop.model.Product
 import com.example.petshop.model.Screen
 import com.example.petshop.ui.CheckoutEndBar
 import com.example.petshop.ui.theme.PetShopTheme
+import com.example.petshop.view_model.CartViewModel
+import com.example.petshop.view_model.OrderViewModel
+import com.example.petshop.view_model.UserViewModel
 
 @Composable
 fun CheckoutScreen(
     modifier: Modifier = Modifier,
     navController: NavController? = null,
-    cartViewModel: CartViewModel
+    cartViewModel: CartViewModel,
+    orderViewModel: OrderViewModel,
+    userViewModel: UserViewModel,
 ) {
-    val products = cartViewModel.selectedProducts
+
+    val user by userViewModel.currentUser.collectAsState()
+    val order by orderViewModel.order.collectAsState()
+
+    // Create a new order with the selected products and the current user
+    orderViewModel.updateOrder(Order(
+        products = cartViewModel.selectedProducts,
+        user = user,
+    ))
 
     Scaffold(
         modifier = modifier,
         bottomBar = {
             CheckoutEndBar(
-                total = 200000.0,
+                total = order.total,
                 onCheckoutClick = {
                     navController?.navigate(Screen.LoadingCheckout.route)
                 }
@@ -59,15 +74,23 @@ fun CheckoutScreen(
         LazyColumn(
             modifier = Modifier.padding(it)
         ) {
-            items(products) { product ->
+            items(order.products) { product ->
                 CheckoutItem(product = product)
             }
             item {
                 Column {
                     //Spacer(modifier = Modifier.height(10.dp))
-                    Information(modifier.padding(10.dp))
+                    Information(
+                        modifier.padding(10.dp),
+                        //user = order.user,
+                        userViewModel = userViewModel,
+                        onEditAddressClick = {
+                            navController?.navigate(Screen.EditProfileScreen.route)
+                        },
+                    )
                     Delivery(
                         modifier = Modifier.padding(10.dp),
+                        orderViewModel = orderViewModel,
                         onPaymentClick = {
                             navController?.navigate(Screen.SelectPayMethod.route)
                         },
@@ -76,7 +99,11 @@ fun CheckoutScreen(
                         }
 
                     )
-                    PaymentDetail(modifier = Modifier.padding(10.dp))
+                    PaymentDetail(
+                        modifier = Modifier.padding(10.dp),
+                        //order = order,
+                        orderViewModel = orderViewModel,
+                    )
                     Spacer(modifier = Modifier.height(50.dp))
                 }
             }
@@ -245,6 +272,8 @@ fun CheckoutScreenPreview() {
     PetShopTheme {
         CheckoutScreen(
             cartViewModel = viewModel(),
+            orderViewModel = viewModel(),
+            userViewModel = viewModel(),
         )
     }
 }

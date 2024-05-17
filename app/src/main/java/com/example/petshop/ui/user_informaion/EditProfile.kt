@@ -6,11 +6,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -23,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,6 +38,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -56,7 +60,7 @@ fun EditProfile(
     userViewModel: UserViewModel,
     modifier: Modifier = Modifier,
 ) {
-    val user = userViewModel.currentUser
+    val user by userViewModel.currentUser.collectAsState()
 
     var showEditDialog by remember { mutableStateOf(false) }
     var editField by remember { mutableStateOf("") }
@@ -83,7 +87,7 @@ fun EditProfile(
                 TextButton(
                     onClick = {
                         showEditDialog = false
-                        userViewModel.updateUserInfo(
+                        userViewModel.updateUser(
                             user.copy(
                                 name = if (editField == "Tên") editValue else user.name,
                                 sex = if (editField == "Giới tính") editValue else user.sex,
@@ -110,7 +114,6 @@ fun EditProfile(
 
     Column(
         modifier = Modifier
-            //.background(Color.Transparent)
             .fillMaxSize()
     ) {
         LazyColumn(
@@ -132,8 +135,7 @@ fun EditProfile(
                             .clip(CircleShape)
                     ) {
                         Image(
-                            painter = painterResource(id = user.avatar)
-                                ?: painterResource(id = R.drawable.avatar),
+                            painter = painterResource(id = user.avatar),
                             contentDescription = "User Avatar",
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.fillMaxSize()
@@ -210,8 +212,9 @@ fun ProfileItem(label: String, value: String, onEdit: (String, String) -> Unit) 
                 fontWeight = FontWeight.Medium,
                 color = Color.Black
             ),
-            modifier = Modifier.weight(1f)
+            //modifier = Modifier.weight(1f)
         )
+        Spacer(modifier = Modifier.width(10.dp))
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
@@ -222,8 +225,10 @@ fun ProfileItem(label: String, value: String, onEdit: (String, String) -> Unit) 
                     fontSize = 16.sp,
                     color = Color.Gray
                 ),
+                textAlign = TextAlign.End,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f)
             )
             Icon(
                 imageVector = Icons.Default.KeyboardArrowRight,
