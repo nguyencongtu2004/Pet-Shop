@@ -1,6 +1,5 @@
 package com.example.petshop.ui.home
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -25,6 +24,7 @@ import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,7 +33,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -43,18 +42,26 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.petshop.R
 import com.example.petshop.model.Product
-import com.example.petshop.model.Screen
+import com.example.petshop.view_model.BannerViewModel
+import com.example.petshop.view_model.ProductViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.yield
 
 @Composable
 fun HomeScreen(
     navController: NavController? = null,
-    bannerItems: List<Painter> = listOf(),
-    products: List<Product> = listOf(),
+    //: List<Painter> = listOf(),
+    productViewModel: ProductViewModel,
+    bannerViewModel: BannerViewModel,
+    //products: List<Product> = listOf(),
     onProductClick: () -> Unit = {},
-    firstTabProduct: List<Product> = listOf(),
-    secondTabProduct: List<Product> = listOf(),
-    thirdTabProduct: List<Product> = listOf(),
 ) {
+    val firstTabProduct: List<Product> = productViewModel.allProducts
+    val secondTabProduct: List<Product> = listOf()
+    val thirdTabProduct: List<Product> = listOf()
+
+    val bannerItems = bannerViewModel.allBanners
+
     var selectedTabIndex by remember { mutableStateOf(0) } // Chọn tab "Đang giao" hoặc "Đã giao"
 
     Column {
@@ -68,9 +75,7 @@ fun HomeScreen(
                 onTabSelected = { tab ->
                     selectedTabIndex = tab
                 },
-                onProductClick = {
-                    navController?.navigate(Screen.ProDuctDetail.route)
-                }
+                onProductClick = onProductClick
 
             )
         }
@@ -261,24 +266,46 @@ fun TabContent(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HorizontalBanner(bannerItems: List<Painter>) {
+fun HorizontalBanner(bannerItems: List<Int>) {
     val pagerState = rememberPagerState(pageCount = { bannerItems.size })
+    var isAutoScrollEnabled by remember { mutableStateOf(true) }
+    var lastInteractionTime by remember { mutableStateOf(System.currentTimeMillis()) }
+
+    // Tạo hiệu ứng tự động cuộn banner sau mỗi 3 giây
+    LaunchedEffect(pagerState) {
+        while (true) {
+            yield() // Nhường cho các thành phần khác để tránh khối lệnh bị treo
+            delay(5000)
+            if (isAutoScrollEnabled) {
+                val nextPage = (pagerState.currentPage + 1) % bannerItems.size
+                pagerState.animateScrollToPage(nextPage)
+            }
+        }
+    }
+
+    // Theo dõi sự thay đổi của trang hiện tại để kích hoạt lại tự động cuộn
+    LaunchedEffect(pagerState.currentPage) {
+        isAutoScrollEnabled = false
+        lastInteractionTime = System.currentTimeMillis()
+        delay(5000)
+        if (System.currentTimeMillis() - lastInteractionTime >= 5000) {
+            isAutoScrollEnabled = true
+        }
+    }
 
     HorizontalPager(
         state = pagerState,
         modifier = Modifier
             .fillMaxWidth()
             .height(160.dp)
-    ) {
-        val bannerItem = bannerItems[it]
-        // Hiển thị nội dung của mỗi mục trong banner ở đây
+    ) { page ->
+        val bannerItem = bannerItems[page]
         Image(
-            painter = bannerItem,
+            painter = painterResource(id = bannerItem),
             contentDescription = null,
-            contentScale = ContentScale.FillBounds, // Lấp đầy hình ảnh trong kích thước đã cho
-            modifier = Modifier.fillMaxSize() // Lấp đầy kích thước của Parent
+            contentScale = ContentScale.FillWidth,
+            modifier = Modifier.fillMaxSize()
         )
     }
 }
@@ -288,24 +315,8 @@ fun HorizontalBanner(bannerItems: List<Painter>) {
 @Composable
 fun HomeScreenPreview() {
     HomeScreen(
-        firstTabProduct = listOf(
-            Product(
-                name = "Đồ ăn",
-                description = "Cho chó",
-                price = 12000.0,
-                oldPrice = 9999999.0,
-                star = 4.5,
-                quantity = 1,
-            ),
-            Product(
-                name = "Đồ ăn",
-                description = "Cho chó",
-                price = 12000.0,
-                oldPrice = 9999999.0,
-                star = 4.5,
-                quantity = 1,
-            ),
-        )
+        productViewModel = ProductViewModel(),
+        bannerViewModel = BannerViewModel(),
     )
 }
 
