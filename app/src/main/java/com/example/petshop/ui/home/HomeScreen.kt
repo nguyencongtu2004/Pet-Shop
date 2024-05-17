@@ -3,6 +3,7 @@ package com.example.petshop.ui.home
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.petshop.R
 import com.example.petshop.model.Product
+import com.example.petshop.model.Screen
 
 @Composable
 fun HomeScreen(
@@ -63,9 +65,14 @@ fun HomeScreen(
                 firstTabProduct = firstTabProduct,
                 secondTabProduct = secondTabProduct,
                 thirdTabProduct = thirdTabProduct,
-            ) { tab ->
-                selectedTabIndex = tab
-            }
+                onTabSelected = { tab ->
+                    selectedTabIndex = tab
+                },
+                onProductClick = {
+                    navController?.navigate(Screen.ProDuctDetail.route)
+                }
+
+            )
         }
     }
 }
@@ -75,11 +82,14 @@ fun HomeScreen(
 fun ProductWithStar(
     modifier: Modifier = Modifier,
     product: Product,
+    onProductClick: () -> Unit = {},
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier.padding(8.dp)
+        modifier = modifier
+            .padding(8.dp)
+            .clickable { onProductClick() }
     ) {
         Box(
             contentAlignment = Alignment.BottomCenter,
@@ -134,7 +144,6 @@ fun ProductWithStar(
                 }
             }
         }
-
         Column(
             modifier = Modifier
                 //.width(200.dp)
@@ -179,6 +188,7 @@ fun ProductTabs(
     secondTabProduct: List<Product> = listOf(),
     thirdTabProduct: List<Product> = listOf(),
     onTabSelected: (Int) -> Unit,
+    onProductClick: () -> Unit = {},
 ) {
     Column {
         TabRow(
@@ -217,19 +227,36 @@ fun ProductTabs(
         ) {
             // Display tab content
             when (selectedTabIndex) {
-                0 -> TabContent(products = firstTabProduct)
-                1 -> TabContent(products = secondTabProduct)
-                2 -> TabContent(products = thirdTabProduct)
+                0 -> TabContent(
+                    products = firstTabProduct,
+                    onProductClick = onProductClick
+                )
+
+                1 -> TabContent(
+                    products = secondTabProduct,
+                    onProductClick = onProductClick
+                )
+
+                2 -> TabContent(
+                    products = thirdTabProduct,
+                    onProductClick = onProductClick
+                )
             }
         }
     }
 }
 
 @Composable
-fun TabContent(products: List<Product>) {
+fun TabContent(
+    products: List<Product>,
+    onProductClick: () -> Unit = {},
+) {
     LazyColumn {
         items(products.size) { index ->
-            ProductWithStar(product = products[index])
+            ProductWithStar(
+                product = products[index],
+                onProductClick = onProductClick
+            )
         }
     }
 }

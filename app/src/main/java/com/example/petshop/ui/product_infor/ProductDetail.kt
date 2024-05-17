@@ -1,8 +1,6 @@
 package com.example.petshop.ui.product_infor
 
 import android.annotation.SuppressLint
-import android.graphics.drawable.Icon
-import android.widget.RatingBar
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -21,10 +19,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -45,19 +43,27 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.min
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.petshop.R
 import com.example.petshop.ui.PetShopAppBar
-import com.example.petshop.ui.shipment.RatingStar
-import kotlin.math.max
-import kotlin.math.min
+import com.example.petshop.ui.TopAppBarNoSearch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun ProDuctDetail() {
+fun ProDuctDetail(
+    navController: NavController? = null,
+    onBackClick: () -> Unit = {}
+) {
     Scaffold(
-        topBar = { PetShopAppBar(title = "") }
+        topBar = {
+            TopAppBarNoSearch(
+                title = "",
+                onBackClick = {
+                    navController?.popBackStack()
+                }
+            )
+        }
     ) {
         val scrollState = rememberScrollState()
         val roundedSize = 10.dp
@@ -1190,10 +1196,16 @@ fun ProDuctDetail() {
                 .graphicsLayer {
                     alpha = (scrollState.value.toFloat() / scrollState.maxValue) * 2
                 }
-                .background(color = Color.White)
+                //.background(color = Color.White)
+                .background(MaterialTheme.colorScheme.surface)
         )
         {
-            PetShopAppBar(title = "Thức ăn hạt mầm Zenith")
+            TopAppBarNoSearch(
+                title = "Thức ăn hạt mềm Zenith",
+                onBackClick = {
+                    navController?.popBackStack()
+                }
+            )
         }
     }
 }
@@ -1201,6 +1213,6 @@ fun ProDuctDetail() {
 
 @Preview
 @Composable
-fun ProductDettailPreview() {
+fun ProductDetailPreview() {
     ProDuctDetail()
 }

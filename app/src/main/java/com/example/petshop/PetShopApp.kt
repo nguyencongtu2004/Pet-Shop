@@ -1,7 +1,6 @@
 package com.example.petshop
 
 
-
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -36,6 +35,7 @@ import com.example.petshop.ui.checkout.SelectVoucher
 import com.example.petshop.ui.checkout.TransactionScreen
 import com.example.petshop.ui.home.HomeScreen
 import com.example.petshop.ui.notification.NotificationScreen
+import com.example.petshop.ui.product_infor.ProDuctDetail
 import com.example.petshop.ui.shipment.FollowShippingScreen
 import com.example.petshop.ui.shipment.ShipmentStateScreen
 import com.example.petshop.ui.shipping_cart.ShoppingCartScreen
@@ -196,7 +196,7 @@ fun PetShopApp(
                 isNavigationBarVisible = true
             }
 
-            Screen.LoadingCheckout.route, Screen.TransactionScreen.route -> {
+            Screen.LoadingCheckout.route, Screen.TransactionScreen.route, Screen.ProDuctDetail.route -> {
                 isSearchBarVisible = false
                 isNoSearchBarVisible = false
 
@@ -270,7 +270,6 @@ fun PetShopApp(
                     navController = navController,
                     products = products,
                     bannerItems = bannerItems,
-                    onProductClick = { /*TODO*/ },
                     firstTabProduct = products,
                     secondTabProduct = listOf(
                         Product(
@@ -331,11 +330,11 @@ fun PetShopApp(
             }
 
             // Màn hình thanh toán
-            composable(route = Screen.CheckoutScreen.route,) { //backStackEntry ->
+            composable(route = Screen.CheckoutScreen.route) { //backStackEntry ->
                 CheckoutScreen(
                     cartViewModel = cartViewModel,
                     navController = navController,
-                    )
+                )
             }
 
 
@@ -346,7 +345,7 @@ fun PetShopApp(
                 )
             }
 
-            composable ( route = Screen.ShipmentStateScreen1.route) {
+            composable(route = Screen.ShipmentStateScreen1.route) {
                 ShipmentStateScreen(
                     selectTabIndex = 0,
                     shippingProducts = shippingProducts,
@@ -354,7 +353,7 @@ fun PetShopApp(
                 )
             }
 
-            composable ( route = Screen.ShipmentStateScreen2.route) {
+            composable(route = Screen.ShipmentStateScreen2.route) {
                 ShipmentStateScreen(
                     selectTabIndex = 1,
                     shippingProducts = shippingProducts,
@@ -362,7 +361,7 @@ fun PetShopApp(
                 )
             }
 
-            composable ( route = Screen.LoadingCheckout.route) {
+            composable(route = Screen.LoadingCheckout.route) {
                 LoadingScreen(navController = navController)
             }
 
@@ -382,6 +381,11 @@ fun PetShopApp(
                 SelectVoucher(
                     navController = navController,
                     onSearchVoucher = { /*TODO*/ }
+                )
+            }
+            composable(route = Screen.ProDuctDetail.route) {
+                ProDuctDetail(
+                    navController = navController,
                 )
             }
 

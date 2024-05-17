@@ -21,6 +21,7 @@ sealed class Screen(val route: String) {
 
     object SelectPayMethod: Screen(route = "select_pay_method")
     object SelectVoucher: Screen(route = "select_voucher")
+    object ProDuctDetail: Screen(route = "product_detail")
 
 
 }
