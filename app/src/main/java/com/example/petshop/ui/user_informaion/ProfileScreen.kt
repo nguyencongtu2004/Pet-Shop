@@ -39,13 +39,15 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.petshop.R
 import com.example.petshop.model.User
+import com.example.petshop.view_model.UserViewModel
 
 
 @Composable
 fun ProfileScreen(
     navController: NavController? = null,
+    userViewModel: UserViewModel,
     modifier: Modifier = Modifier,
-    user: User = User(),
+    //user: User = User(),
     onEditProfileClicked: () -> Unit = {},
     onLoginClicked: () -> Unit = {},
     onShippingClicked: () -> Unit = {},
@@ -57,6 +59,8 @@ fun ProfileScreen(
     onAppInforClicked: () -> Unit = {},
     onLogoutClicked: () -> Unit = {},
 ) {
+    val user = userViewModel.currentUser
+
     LazyColumn(
         modifier = modifier.fillMaxWidth()
     ) {
@@ -73,7 +77,7 @@ fun ProfileScreen(
                     //modifier = Modifier.padding(top = 20.dp)
                 ) {
                     Image(
-                        painter = if (user.password != null) user.avatar!! else painterResource(id = R.drawable.avatar_not_login),
+                        painter = painterResource(id = user.avatar),
                         contentDescription = null,
                         contentScale = ContentScale.FillBounds,
                         modifier = Modifier
@@ -343,11 +347,11 @@ fun ProfileScreenPreview() {
         sex = "Nam",
         email = "asdfsaf@asadfs.fff",
         phone = "0123456789",
-        avatar = painterResource(id = R.drawable.avatar),
+        avatar = R.drawable.avatar,
         birthday = "01/01/2000",
         password = null,
         address = "đâu đó",
     )
     val unLoginedUser = User()
-    ProfileScreen(user = loginedUser)
+    ProfileScreen(userViewModel = UserViewModel())
 }

@@ -41,6 +41,7 @@ import com.example.petshop.ui.shipment.ShipmentStateScreen
 import com.example.petshop.ui.shipping_cart.ShoppingCartScreen
 import com.example.petshop.ui.user_informaion.EditProfile
 import com.example.petshop.ui.user_informaion.ProfileScreen
+import com.example.petshop.view_model.UserViewModel
 
 //import com.google.common.reflect.TypeToken
 //import com.google.gson.Gson
@@ -154,34 +155,10 @@ fun PetShopApp(
         ),
         // Thêm các sản phẩm khác ở đây...
     )
-    val loginedUser = User(
-        name = "Nguyễn Công Tú",
-        role = "Khách hàng thân thiết",
-        favoriteProducts = listOf(),
-        sex = "Nam",
-        email = "asdfsaf@asadfs.fff",
-        phone = "0123456789",
-        avatar = painterResource(id = R.drawable.avatar),
-        birthday = "01/01/2000",
-        password = "null",
-        address = "đâu đó",
-    )
-    val productsToBuy: List<Product> = mutableListOf<Product>(
-        Product(
-            name = "Thức ăn hạt mềm Zenith",
-            description = "Nổi tiếng với đồ ăn cho chó con được yêu thích",
-            price = 90000.0,
-            quantity = 1,
-            image = painterResource(id = R.drawable.avt),
-        ),
-        Product(
-            name = "Thức ăn hạt mềm Zenith",
-            description = "Nổi tiếng với đồ ăn cho chó con được yêu thích",
-            price = 90000.0,
-            quantity = 1,
-            image = painterResource(id = R.drawable.avt),
-        )
-    )
+
+    // VIEW MODEL Ở ĐÂY
+    val userViewModel = viewModel<UserViewModel>()
+    val cartViewModel = viewModel<CartViewModel>()
 
     // TRẠNG THÁI CỦA MÀN HÌNH Ở ĐÂY
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -314,7 +291,8 @@ fun PetShopApp(
             composable(route = Screen.ProfileScreen.route) {
                 ProfileScreen(
                     navController = navController,
-                    user = loginedUser,
+                    userViewModel = userViewModel,
+                    //user = loginedUser,
                     onEditProfileClicked = {
                         navController.navigate(Screen.EditProfileScreen.route)
                     },
@@ -357,7 +335,8 @@ fun PetShopApp(
             // Các màn hình trong trang Profile
             composable(route = Screen.EditProfileScreen.route) {
                 EditProfile(
-                    user = loginedUser,
+                    navController = navController,
+                    userViewModel = userViewModel,
                 )
             }
 

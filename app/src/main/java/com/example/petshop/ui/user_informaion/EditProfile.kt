@@ -1,18 +1,32 @@
 package com.example.petshop.ui.user_informaion
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.KeyboardArrowRight
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,15 +41,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.petshop.R
-import com.example.petshop.model.User
+import com.example.petshop.view_model.UserViewModel
 
 @Composable
 fun EditProfile(
     navController: NavController? = null,
+    userViewModel: UserViewModel,
     modifier: Modifier = Modifier,
-    user: User = User()
 ) {
-    val editedUser by remember { mutableStateOf(user) }
+    val user = userViewModel.currentUser
 
     var showEditDialog by remember { mutableStateOf(false) }
     var editField by remember { mutableStateOf("") }
@@ -60,7 +74,19 @@ fun EditProfile(
             },
             confirmButton = {
                 TextButton(
-                    onClick = { showEditDialog = false }
+                    onClick = {
+                        showEditDialog = false
+                        userViewModel.updateUserInfo(
+                            user.copy(
+                                name = if (editField == "Tên") editValue else user.name,
+                                sex = if (editField == "Giới tính") editValue else user.sex,
+                                birthday = if (editField == "Ngày sinh") editValue else user.birthday,
+                                phone = if (editField == "Số điện thoại") editValue else user.phone,
+                                email = if (editField == "Email") editValue else user.email,
+                                address = if (editField == "Địa chỉ") editValue else user.address
+                            )
+                        )
+                    }
                 ) {
                     Text("Lưu")
                 }
@@ -99,7 +125,8 @@ fun EditProfile(
                             .clip(CircleShape)
                     ) {
                         Image(
-                            painter = user.avatar ?: painterResource(id = R.drawable.avatar),
+                            painter = painterResource(id = user.avatar)
+                                ?: painterResource(id = R.drawable.avatar),
                             contentDescription = "User Avatar",
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.fillMaxSize()
@@ -127,14 +154,16 @@ fun EditProfile(
                 }
             }
 
-            items(listOf(
-                "Tên" to user.name,
-                "Giới tính" to user.sex,
-                "Ngày sinh" to user.birthday,
-                "Số điện thoại" to user.phone,
-                "Email" to user.email,
-                "Địa chỉ" to user.address
-            )) { (label, value) ->
+            items(
+                listOf(
+                    "Tên" to user.name,
+                    "Giới tính" to user.sex,
+                    "Ngày sinh" to user.birthday,
+                    "Số điện thoại" to user.phone,
+                    "Email" to user.email,
+                    "Địa chỉ" to user.address
+                )
+            ) { (label, value) ->
                 ProfileItem(label, value, openEditDialog)
             }
         }
@@ -144,7 +173,9 @@ fun EditProfile(
                 .padding(16.dp)
                 .fillMaxWidth()
                 .height(48.dp),
-            onClick = { /*TODO*/ },
+            onClick = {
+                navController?.popBackStack()
+            },
             title = "Xong",
             isDisable = false,
             color = Color(0xFF4CAF50)
@@ -200,5 +231,5 @@ fun ProfileItem(label: String, value: String, onEdit: (String, String) -> Unit) 
 @Preview
 @Composable
 fun EditProfilePreview() {
-    EditProfile()
+    EditProfile(userViewModel = UserViewModel())
 }
