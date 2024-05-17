@@ -19,7 +19,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.petshop.model.CartViewModel
+import com.example.petshop.view_model.CartViewModel
 import com.example.petshop.model.FoodProduct
 import com.example.petshop.model.Notification
 import com.example.petshop.model.Product
@@ -166,7 +166,22 @@ fun PetShopApp(
         password = "null",
         address = "đâu đó",
     )
-    val productsToBuy: List<Product> = mutableListOf<Product>()
+    val productsToBuy: List<Product> = mutableListOf<Product>(
+        Product(
+            name = "Thức ăn hạt mềm Zenith",
+            description = "Nổi tiếng với đồ ăn cho chó con được yêu thích",
+            price = 90000.0,
+            quantity = 1,
+            image = painterResource(id = R.drawable.avt),
+        ),
+        Product(
+            name = "Thức ăn hạt mềm Zenith",
+            description = "Nổi tiếng với đồ ăn cho chó con được yêu thích",
+            price = 90000.0,
+            quantity = 1,
+            image = painterResource(id = R.drawable.avt),
+        )
+    )
 
     // TRẠNG THÁI CỦA MÀN HÌNH Ở ĐÂY
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -326,6 +341,7 @@ fun PetShopApp(
                 ShoppingCartScreen(
                     navController = navController, // Để điều hướng sang màn hình thanh toán
                     products = productsInCart,
+                    cartViewModel = cartViewModel
                 )
             }
 

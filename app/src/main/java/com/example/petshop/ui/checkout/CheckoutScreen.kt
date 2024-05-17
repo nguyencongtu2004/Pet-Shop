@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.petshop.R
-import com.example.petshop.model.CartViewModel
+import com.example.petshop.view_model.CartViewModel
 import com.example.petshop.model.FoodProduct
 import com.example.petshop.model.Product
 import com.example.petshop.model.Screen
@@ -41,11 +41,10 @@ import com.example.petshop.ui.theme.PetShopTheme
 fun CheckoutScreen(
     modifier: Modifier = Modifier,
     navController: NavController? = null,
-    testProducts: List<Product> = listOf(),
-    cartViewModel: CartViewModel = viewModel()
+    cartViewModel: CartViewModel
 ) {
     val products = cartViewModel.selectedProducts
-    print("products na: $products")
+
     Scaffold(
         modifier = modifier,
         bottomBar = {
@@ -60,9 +59,6 @@ fun CheckoutScreen(
         LazyColumn(
             modifier = Modifier.padding(it)
         ) {
-            items(testProducts) { product ->
-                CheckoutItem(product = product)
-            }
             items(products) { product ->
                 CheckoutItem(product = product)
             }
@@ -248,30 +244,7 @@ fun CheckoutItem(
 fun CheckoutScreenPreview() {
     PetShopTheme {
         CheckoutScreen(
-            testProducts = listOf(
-                FoodProduct(
-                    name = "Thức ăn hạt mềm Zenith",
-                    description = "Nổi tiếng với đồ ăn cho chó con được yêu thích",
-                    price = 90000.0,
-                    oldPrice = 0.0,
-                    quantity = 1,
-                    star = 0.0,
-                    image = painterResource(id = R.drawable.avt),
-                    flavor = "Cá hồi",
-                    weight = 0.5
-                ),
-                FoodProduct(
-                    name = "Thức ăn hạt mềm Zenith",
-                    description = "Nổi tiếng với đồ ăn cho chó con được yêu thích",
-                    price = 90000.0,
-                    oldPrice = 0.0,
-                    quantity = 1,
-                    star = 0.0,
-                    image = painterResource(id = R.drawable.avt),
-                    flavor = "Cá hồi",
-                    weight = 0.5
-                )
-            )
+            cartViewModel = viewModel(),
         )
     }
 }

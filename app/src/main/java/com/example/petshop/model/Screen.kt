@@ -1,7 +1,5 @@
 package com.example.petshop.model
 
-import androidx.lifecycle.ViewModel
-
 sealed class Screen(val route: String) {
     object HomePage : Screen(route = "home_page")
     object NotificationScreen : Screen(route = "notification")
@@ -23,24 +21,5 @@ sealed class Screen(val route: String) {
     object SelectVoucher: Screen(route = "select_voucher")
     object ProDuctDetail: Screen(route = "product_detail")
 
-
-}
-
-class CartViewModel : ViewModel() {
-    var selectedProducts: List<Product> = listOf()
-        private set
-
-    fun setSelectedProducts(products: List<Product>) {
-        print("setSelectedProducts")
-        selectedProducts = products
-    }
-
-    fun addProduct(product: Product) {
-        selectedProducts = selectedProducts + product
-    }
-
-    fun removeProduct(product: Product) {
-        selectedProducts = selectedProducts - product
-    }
 
 }

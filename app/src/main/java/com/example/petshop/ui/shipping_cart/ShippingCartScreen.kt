@@ -43,10 +43,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.petshop.R
-import com.example.petshop.model.CartViewModel
+import com.example.petshop.view_model.CartViewModel
 import com.example.petshop.model.FoodProduct
 import com.example.petshop.model.Product
 import com.example.petshop.model.Screen
@@ -59,7 +58,7 @@ fun ShoppingCartScreen(
     navController: NavController? = null,
     products: List<Product> = emptyList(),
 
-    cartViewModel: CartViewModel = viewModel()
+    cartViewModel: CartViewModel
 ) {
     var totalAmount by remember { mutableStateOf(0.0) }
     val selectedItems = remember { mutableStateListOf<Product>() }
@@ -71,9 +70,11 @@ fun ShoppingCartScreen(
                     total = totalAmount,
                     onBuyClicked = {
                         selectedItems.forEach() {
-                            print("product: ${it.name}")
+                            println("product: ${it.name}")
                         }
                         cartViewModel.setSelectedProducts(selectedItems)
+
+
                         navController?.navigate(Screen.CheckoutScreen.route)
                     }
                 )
@@ -318,7 +319,7 @@ fun BoughtItemCart(
 fun BoughtItemPreview() {
     PetShopTheme {
         ShoppingCartScreen(
-
+            cartViewModel = CartViewModel(),
             products = listOf(
                 FoodProduct(
                     name = "Thức ăn",
