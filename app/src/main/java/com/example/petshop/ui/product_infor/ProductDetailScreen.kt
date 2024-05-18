@@ -62,7 +62,9 @@ import com.example.petshop.model.ToyProduct
 import com.example.petshop.model.Weight
 import com.example.petshop.ui.DetailProductBottomBar
 import com.example.petshop.ui.TopAppBarNoSearch
+import com.example.petshop.view_model.CartViewModel
 import com.example.petshop.view_model.ProductViewModel
+import com.example.petshop.view_model.UserViewModel
 
 @Composable
 fun getScreenWidth(): Int {
@@ -75,13 +77,16 @@ fun ProductDetail(
     productId: String,
     navController: NavController? = null,
     productViewModel: ProductViewModel,
+    userViewModel: UserViewModel,
+    cartViewModel: CartViewModel,
     onBackClick: () -> Unit = {}
 ) {
     val allProducts by productViewModel.allProducts.collectAsState()
     val product by productViewModel.selectedProduct.collectAsState()
+    val user by userViewModel.currentUser.collectAsState()
 
     productViewModel.setSelectedProduct(allProducts.find { it.id == productId }!!)
-    //val product = allProducts.find { it.id == productId }!!
+
 
     Scaffold(
         topBar = {
@@ -102,8 +107,13 @@ fun ProductDetail(
             // TODO
             DetailProductBottomBar(
                 onChatClicked = {},
-                onAddToCartClicked = {},
-                onBuyClicked = {},
+                onAddToCartClicked = {
+                    cartViewModel.addProductToCart(product!!)
+                    // TODO: Show notification "Đã thêm vào giỏ hàng"
+                },
+                onBuyClicked = {
+                    // TODO: Navigate to Checkout screen with the selected product
+                },
             )
         }
     ) { padding ->
@@ -124,8 +134,14 @@ fun ProductDetail(
                     onRateClick = { /*TODO*/ },
                     onFavoriteClick = {
                         productViewModel.toggleFavorite()
+                        if (product.isFavorite)
+                            userViewModel.removeFavoriteProduct(product.id)
+                        else
+                            userViewModel.addFavoriteProduct(product.id)
                     },
-                    isFavorite = product.isFavorite
+                    isFavorite = user.favoriteProducts.contains(product.id),
+                    onMinusClick = { productViewModel.decreaseQuantity() },
+                    onPlusClick = { productViewModel.increaseQuantity() }
                 )
                 ProductCustomizationSection(
                     productViewModel = productViewModel
@@ -169,7 +185,9 @@ private fun ProductInfoSection(
     product: Product,
     onRateClick: () -> Unit,
     onFavoriteClick: () -> Unit,
-    isFavorite: Boolean
+    isFavorite: Boolean,
+    onMinusClick: () -> Unit,
+    onPlusClick: () -> Unit
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -181,7 +199,9 @@ private fun ProductInfoSection(
             product = product,
             onRateClick = onRateClick,
             onFavoriteClick = onFavoriteClick,
-            isFavorite = isFavorite
+            isFavorite = isFavorite,
+            onMinusClick = onMinusClick,
+            onPlusClick = onPlusClick
         )
     }
 }
@@ -192,7 +212,9 @@ private fun ProductInfoCard(
     product: Product,
     onRateClick: () -> Unit,
     onFavoriteClick: () -> Unit,
-    isFavorite: Boolean
+    isFavorite: Boolean,
+    onMinusClick: () -> Unit,
+    onPlusClick: () -> Unit
 ) {
     val roundedSize = 10.dp
     Box(
@@ -208,7 +230,12 @@ private fun ProductInfoCard(
         ) {
             ProductTags(tags = product.tags)
             ProductTitleAndPrice(title = product.name, price = product.price)
-            ProductDescription(description = product.description)
+            ProductDescription(
+                description = product.description,
+                quantity = product.quantity,
+                onMinusClick = onMinusClick,
+                onPlusClick = onPlusClick
+            )
             ProductRatingAndFavorite(
                 rating = product.star,
                 onRateClick = onRateClick,
@@ -302,7 +329,10 @@ private fun ProductTitleAndPrice(
 @Composable
 private fun ProductDescription(
     modifier: Modifier = Modifier,
-    description: String
+    description: String,
+    quantity: Int,
+    onMinusClick: () -> Unit,
+    onPlusClick: () -> Unit
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -319,16 +349,20 @@ private fun ProductDescription(
             modifier = Modifier.weight(1f)
         )
         Spacer(modifier = Modifier.width(10.dp))
-        ProductQuantitySelector()// TODO: Add quantity selector
+        ProductQuantitySelector(
+            quantity = quantity,
+            onMinusClick = onMinusClick,
+            onPlusClick = onPlusClick
+        )
     }
 }
 
 @Composable
 private fun ProductQuantitySelector(
     modifier: Modifier = Modifier,
-    quantity: Int = 1,
-    onMinusClick: () -> Unit = {},
-    onPlusClick: () -> Unit = {}
+    quantity: Int,
+    onMinusClick: () -> Unit,
+    onPlusClick: () -> Unit
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -704,6 +738,8 @@ private fun ProductDescriptionText(description: String) {
 fun ProductDetailPreview() {
     ProductDetail(
         productViewModel = ProductViewModel(),
+        userViewModel = UserViewModel(),
+        cartViewModel = CartViewModel(),
         productId = "1"
     )
 }

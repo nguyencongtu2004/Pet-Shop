@@ -80,10 +80,10 @@ class CartViewModel : ViewModel() {
     var productsInCart: StateFlow<List<Product>> = _productsInCart.asStateFlow()
 
     fun addProductToCart(product: Product) {
-        val products = _productsInCart.value.toMutableList()
-        products.add(product)
-        _productsInCart.update { products }
-    }
+    val products = _productsInCart.value.toMutableList()
+    products.add(0, product) // thêm sản phẩm vào đầu danh sách
+    _productsInCart.update { products }
+}
 
     fun removeProductFromCart(product: Product) {
         val products = _productsInCart.value.toMutableList()

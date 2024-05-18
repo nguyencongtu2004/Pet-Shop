@@ -37,4 +37,19 @@ class UserViewModel : ViewModel() {
         _currentUser.value = user
     }
 
+    fun addFavoriteProduct(productId: String) {
+        _currentUser.update {
+            it.copy(
+                favoriteProducts = it.favoriteProducts + productId
+            )
+        }
+    }
+
+    fun removeFavoriteProduct(productId: String) {
+        _currentUser.update {
+            it.copy(
+                favoriteProducts = it.favoriteProducts - productId
+            )
+        }
+    }
 }

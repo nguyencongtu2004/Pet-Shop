@@ -301,7 +301,8 @@ fun PetShopApp(
                     navController = navController,
                     productId = productId!!,
                     productViewModel = productViewModel,
-
+                    userViewModel = userViewModel,
+                    cartViewModel = cartViewModel
                 )
             }
         }

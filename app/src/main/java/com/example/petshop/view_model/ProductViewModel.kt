@@ -103,4 +103,28 @@ class ProductViewModel : ViewModel() {
             }
         }
     }
+
+    fun decreaseQuantity() {
+        _selectedProduct.update {
+            it?.let { product ->
+                when (product) {
+                    is FoodProduct -> product.copy(quantity = product.quantity - 1)
+                    is ToyProduct -> product.copy(quantity = product.quantity - 1)
+                    is ClothesProduct -> product.copy(quantity = product.quantity - 1)
+                }
+            }
+        }
+    }
+
+    fun increaseQuantity() {
+        _selectedProduct.update {
+            it?.let { product ->
+                when (product) {
+                    is FoodProduct -> product.copy(quantity = product.quantity + 1)
+                    is ToyProduct -> product.copy(quantity = product.quantity + 1)
+                    is ClothesProduct -> product.copy(quantity = product.quantity + 1)
+                }
+            }
+        }
+    }
 }
