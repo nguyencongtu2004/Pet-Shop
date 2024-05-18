@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
 
     alias(libs.plugins.kotlin.serialization)
+    id("com.google.gms.google-services")
 }
 android {
     namespace = "com.example.petshop"
@@ -51,7 +52,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -63,6 +63,7 @@ dependencies {
     implementation(libs.androidx.ui.text.google.fonts)
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.firebase.database)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -81,9 +82,4 @@ dependencies {
     implementation ("androidx.compose.material3:material3:1.0.1")
 
     implementation(kotlin("reflect"))
-
-    // Không tìm thấy thư viện này
-    //implementation ("androidx.sqlite:sqlite:3.4.4")
-    //implementation ("androidx.sqlite:sqlite-framework:3.4.4")
-
 }
