@@ -4,7 +4,6 @@ plugins {
 
     alias(libs.plugins.kotlin.serialization)
 }
-
 android {
     namespace = "com.example.petshop"
     compileSdk = 34
@@ -82,5 +81,8 @@ dependencies {
     implementation ("androidx.compose.material3:material3:1.0.1")
 
     implementation(kotlin("reflect"))
+
+    implementation ("androidx.sqlite:sqlite:3.4.4")
+    implementation ("androidx.sqlite:sqlite-framework:3.4.4")
 
 }
