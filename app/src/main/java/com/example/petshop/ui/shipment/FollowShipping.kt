@@ -90,7 +90,7 @@ fun ShippingProducts(
         modifier = modifier.padding(16.dp)
     ) {
         Image(
-            painter = product.image ?: painterResource(id = R.drawable.avt),
+            painter = painterResource(id = product.image),
             contentDescription = "image description",
             contentScale = ContentScale.Fit,
             modifier = Modifier

@@ -133,7 +133,7 @@ fun CheckoutItem(
                 verticalArrangement = Arrangement.Center,
             ) {
                 Image(
-                    painter = product.image ?: painterResource(id = R.drawable.avt),
+                    painter = painterResource(id =  product.image),
                     contentDescription = null,
                     modifier = Modifier
                         .shadow(

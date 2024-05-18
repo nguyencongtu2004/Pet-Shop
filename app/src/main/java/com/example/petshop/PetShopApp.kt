@@ -46,9 +46,6 @@ import com.example.petshop.view_model.OrderViewModel
 import com.example.petshop.view_model.ProductViewModel
 import com.example.petshop.view_model.UserViewModel
 
-//import com.google.common.reflect.TypeToken
-//import com.google.gson.Gson
-
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun PetShopApp(
@@ -68,6 +65,11 @@ fun PetShopApp(
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = backStackEntry?.destination?.route ?: Screen.HomePage.route
 
+    // Get the current screen object based on the route
+    val currentScreenObject = Screen::class.sealedSubclasses
+        .mapNotNull { it.objectInstance }
+        .find { it.route == currentScreen }
+
     // Tìm kiếm
     var searchText by rememberSaveable { mutableStateOf("") }
 
@@ -76,7 +78,6 @@ fun PetShopApp(
     var isNoSearchBarVisible by rememberSaveable { mutableStateOf(true) }
     var isNavigationBarVisible by rememberSaveable { mutableStateOf(true) }
     var selectedIndex = remember { mutableStateOf(0) }
-
 
     // Cập nhật trạng thái khi currentScreen thay đổi (chạy đoạn code dưới sau mỗi lần currentScreen thay đổi)
     LaunchedEffect(currentScreen) {
@@ -89,21 +90,16 @@ fun PetShopApp(
             Screen.HomePage.route, Screen.ProfileScreen.route -> {
                 isSearchBarVisible = true
                 isNoSearchBarVisible = false
-
                 isNavigationBarVisible = true
             }
-
             Screen.LoadingCheckout.route, Screen.TransactionScreen.route, Screen.ProDuctDetail.route -> {
                 isSearchBarVisible = false
                 isNoSearchBarVisible = false
-
                 isNavigationBarVisible = false
             }
-
             else -> {
                 isSearchBarVisible = false
                 isNoSearchBarVisible = true
-
                 isNavigationBarVisible = false
             }
         }
@@ -126,7 +122,7 @@ fun PetShopApp(
                 )
             if (isNoSearchBarVisible)
                 TopAppBarNoSearch(
-                    title = currentScreen,
+                    title = currentScreenObject?.title ?: "",
                     onBackClick = {
                         navController.popBackStack()
                     }
@@ -259,14 +255,6 @@ fun PetShopApp(
                 )
             }
 
-            /* cũ không có tham số
-            composable(route = Screen.FollowShipping.route) {
-                FollowShippingScreen(
-                    orderViewModel = orderViewModel,
-                )
-            }
-            */
-
             composable(route = Screen.SelectPayMethod.route) {
                 SelectPayMethod(
                     orderViewModel = orderViewModel,
@@ -295,3 +283,4 @@ fun PetShopApp(
 fun PetShopAppPreview() {
     PetShopApp()
 }
+
