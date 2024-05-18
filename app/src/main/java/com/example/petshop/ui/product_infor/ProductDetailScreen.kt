@@ -122,7 +122,10 @@ fun ProductDetail(
                 ProductInfoSection(
                     product = product,
                     onRateClick = { /*TODO*/ },
-                    onFavoriteClick = { /*TODO*/ },
+                    onFavoriteClick = {
+                        productViewModel.toggleFavorite()
+                    },
+                    isFavorite = product.isFavorite
                 )
                 ProductCustomizationSection(
                     productViewModel = productViewModel
@@ -165,7 +168,8 @@ private fun ProductImageSection(
 private fun ProductInfoSection(
     product: Product,
     onRateClick: () -> Unit,
-    onFavoriteClick: () -> Unit
+    onFavoriteClick: () -> Unit,
+    isFavorite: Boolean
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -176,7 +180,8 @@ private fun ProductInfoSection(
         ProductInfoCard(
             product = product,
             onRateClick = onRateClick,
-            onFavoriteClick = onFavoriteClick
+            onFavoriteClick = onFavoriteClick,
+            isFavorite = isFavorite
         )
     }
 }
@@ -186,7 +191,8 @@ private fun ProductInfoCard(
     modifier: Modifier = Modifier,
     product: Product,
     onRateClick: () -> Unit,
-    onFavoriteClick: () -> Unit
+    onFavoriteClick: () -> Unit,
+    isFavorite: Boolean
 ) {
     val roundedSize = 10.dp
     Box(
@@ -207,7 +213,7 @@ private fun ProductInfoCard(
                 rating = product.star,
                 onRateClick = onRateClick,
                 onFavoriteClick = onFavoriteClick,
-                isFavorite = false
+                isFavorite = isFavorite
             )
         }
     }
@@ -242,12 +248,6 @@ private fun ProductTags(
             )
         }
     }
-}
-
-@Preview
-@Composable
-fun ProductTagsPreview() {
-    ProductTag(text = "Thức ăn", color = Color(0xFF008000))
 }
 
 @Composable

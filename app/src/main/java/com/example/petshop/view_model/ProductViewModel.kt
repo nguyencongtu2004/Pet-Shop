@@ -91,4 +91,16 @@ class ProductViewModel : ViewModel() {
             null -> TODO()
         }
     }
+
+    fun toggleFavorite() {
+        _selectedProduct.update {
+            it?.let { product ->
+                when (product) {
+                    is FoodProduct -> product.copy(isFavorite = !product.isFavorite)
+                    is ToyProduct -> product.copy(isFavorite = !product.isFavorite)
+                    is ClothesProduct -> product.copy(isFavorite = !product.isFavorite)
+                }
+            }
+        }
+    }
 }

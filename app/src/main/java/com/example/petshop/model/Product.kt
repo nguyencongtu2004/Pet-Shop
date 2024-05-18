@@ -26,6 +26,7 @@ sealed class Product {
     abstract var oldPrice: Double
     abstract var star: Double
     abstract var quantity: Int
+    abstract var isFavorite: Boolean
 }
 
 data class FoodProduct(
@@ -39,6 +40,7 @@ data class FoodProduct(
     override var oldPrice: Double,
     override var star: Double,
     override var quantity: Int,
+    override var isFavorite: Boolean = false,
     var selectedFlavor: Flavor = Flavor.BEEF,
     var selectedWeight: Weight = Weight._0_5KG
 ) : Product()
@@ -54,6 +56,7 @@ data class ToyProduct(
     override var oldPrice: Double,
     override var star: Double,
     override var quantity: Int,
+    override var isFavorite: Boolean = false,
     var selectedSize: Size = Size.S
 ) : Product()
 
@@ -68,5 +71,6 @@ data class ClothesProduct(
     override var oldPrice: Double,
     override var star: Double,
     override var quantity: Int,
+    override var isFavorite: Boolean = false,
     var selectedSize: Size = Size.S
 ) : Product()
