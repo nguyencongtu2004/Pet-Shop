@@ -19,4 +19,6 @@ sealed class Screen(val route: String, val title: String) {
     object ProductDetailScreen : Screen(route = "product_detail/{productId}", title = "Chi tiết sản phẩm") {
         fun createRoute(productId: String) = "product_detail/$productId"
     }
+    object LoginScreen : Screen(route = "login", title = "Đăng nhập")
+    object RegisterScreen : Screen(route = "register", title = "Đăng ký")
 }

@@ -106,7 +106,7 @@ fun PetShopApp(
                 isNavigationBarVisible = true
             }
 
-            Screen.LoadingCheckout.route, Screen.TransactionScreen.route, Screen.ProductDetailScreen.route -> {
+            Screen.LoadingCheckout.route, Screen.TransactionScreen.route, Screen.ProductDetailScreen.route, Screen.LoginScreen.route, Screen.RegisterScreen.route -> {
                 isSearchBarVisible = false
                 isNoSearchBarVisible = false
                 isNavigationBarVisible = false

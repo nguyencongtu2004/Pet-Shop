@@ -9,6 +9,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import com.example.petshop.model.Screen
+import com.example.petshop.ui.login_register.Login
+import com.example.petshop.ui.login_register.Register
 import com.example.petshop.ui.theme.PetShopTheme
 
 class MainActivity : ComponentActivity() {
@@ -26,6 +29,10 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     PetShopApp()
+
+                    // Sửa chỗ này để chuyển giữa các màn hình
+                    //Login()
+                    //Register()
                 }
             }
         }
