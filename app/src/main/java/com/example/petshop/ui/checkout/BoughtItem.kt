@@ -33,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.petshop.R
+import com.example.petshop.model.FoodProduct
 import com.example.petshop.model.Product
 import com.example.petshop.ui.theme.PetShopTheme
 
@@ -243,6 +244,17 @@ fun BoughtItem(
 @Composable
 fun BoughtItemPreview() {
     PetShopTheme {
-        BoughtItem(p = Product("Thức an", description = "Cho chó", price = 45000.0, quantity = 2))
+        BoughtItem(p = FoodProduct(
+            id = "1",
+            name = "Đồ ăn cho chó",
+            description = "Chó rất thích ăn nó",
+            price = 10000.0,
+            oldPrice = 15000.0,
+            star = 4.0,
+            quantity = 1,
+            image = R.drawable.avt,
+            detailDescription = "Chi tiết sản phẩm"
+        )
+        )
     }
 }

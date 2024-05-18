@@ -1,20 +1,23 @@
 package com.example.petshop.view_model
 
 import androidx.lifecycle.ViewModel
+import com.example.petshop.R
 import com.example.petshop.model.ClothesProduct
+import com.example.petshop.model.Flavor
 import com.example.petshop.model.FoodProduct
 import com.example.petshop.model.Product
+import com.example.petshop.model.Size
 import com.example.petshop.model.ToyProduct
+import com.example.petshop.model.Weight
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-
+import kotlinx.coroutines.flow.update
 class ProductViewModel : ViewModel() {
-    private var _selectedProduct = MutableStateFlow<Product?>(null)
-    var selectedProduct: StateFlow<Product?> = _selectedProduct.asStateFlow()
+    private val _selectedProduct = MutableStateFlow<Product?>(null)
+    val selectedProduct: StateFlow<Product?> = _selectedProduct.asStateFlow()
 
-
-    private var _allProducts = MutableStateFlow<List<Product>>(listOf(
+    private val _allProducts = MutableStateFlow<List<Product>>(listOf(
         FoodProduct(
             id = "1",
             name = "Đồ ăn cho chó",
@@ -23,6 +26,8 @@ class ProductViewModel : ViewModel() {
             oldPrice = 20000.0,
             star = 4.8,
             quantity = 1,
+            image = R.drawable.avt,
+            detailDescription = "Chi tiết sản phẩm"
         ),
         FoodProduct(
             id = "2",
@@ -32,6 +37,8 @@ class ProductViewModel : ViewModel() {
             oldPrice = 16000.0,
             star = 4.5,
             quantity = 1,
+            image = R.drawable.avt,
+            detailDescription = "Chi tiết sản phẩm"
         ),
         ToyProduct(
             id = "3",
@@ -41,6 +48,8 @@ class ProductViewModel : ViewModel() {
             oldPrice = 60000.0,
             star = 4.7,
             quantity = 1,
+            image = R.drawable.avt,
+            detailDescription = "Chi tiết sản phẩm"
         ),
         ClothesProduct(
             id = "4",
@@ -50,9 +59,36 @@ class ProductViewModel : ViewModel() {
             oldPrice = 100000.0,
             star = 5.0,
             quantity = 1,
-        ),
+            image = R.drawable.avt,
+            detailDescription = "Chi tiết sản phẩm"
+        )
     ))
-    var allProducts: StateFlow<List<Product>> = _allProducts.asStateFlow()
+    val allProducts: StateFlow<List<Product>> = _allProducts.asStateFlow()
 
+    fun setSelectedProduct(product: Product) {
+        _selectedProduct.value = product
+    }
 
+    fun setFlavor(flavor: Flavor) {
+        val currentProduct = _selectedProduct.value
+        if (currentProduct is FoodProduct) {
+            _selectedProduct.value = currentProduct.copy(selectedFlavor = flavor)
+        }
+    }
+
+    fun setWeight(weight: Weight) {
+        val currentProduct = _selectedProduct.value
+        if (currentProduct is FoodProduct) {
+            _selectedProduct.value = currentProduct.copy(selectedWeight = weight)
+        }
+    }
+
+    fun setSize(size: Size) {
+        when (val currentProduct = _selectedProduct.value) {
+            is ToyProduct -> _selectedProduct.value = currentProduct.copy(selectedSize = size)
+            is ClothesProduct -> _selectedProduct.value = currentProduct.copy(selectedSize = size)
+            is FoodProduct -> TODO()
+            null -> TODO()
+        }
+    }
 }

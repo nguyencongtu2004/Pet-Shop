@@ -49,10 +49,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.petshop.R
+import com.example.petshop.model.ClothesProduct
 import com.example.petshop.view_model.CartViewModel
 import com.example.petshop.model.FoodProduct
 import com.example.petshop.model.Product
 import com.example.petshop.model.Screen
+import com.example.petshop.model.ToyProduct
 import com.example.petshop.ui.CheckoutBottomBar
 import com.example.petshop.ui.theme.PetShopTheme
 
@@ -119,7 +121,17 @@ fun ShoppingCartScreen(
 @Composable
 fun BoughtItemCart(
     modifier: Modifier = Modifier,
-    product: Product = FoodProduct(),
+    product: Product = FoodProduct(
+        id = "1",
+        name = "Đồ ăn cho chó",
+        description = "Chó rất thích ăn nó",
+        price = 10000.0,
+        oldPrice = 15000.0,
+        star = 4.0,
+        quantity = 1,
+        image = R.drawable.avt,
+        detailDescription = "Chi tiết sản phẩm"
+    ),
     onQuantityChange: (Boolean, Int) -> Unit,
     onDeleteClick: () -> Unit = {},
 ) {
@@ -251,45 +263,90 @@ fun BoughtItemCart(
                         //.width(160.dp)
                         .weight(1f)
                 ) {
-                    item {
-                        if (product is FoodProduct)
-                            FilterChip(
-                                label = {
-                                    Text(
-                                        text = product.selectedFlavor.value,
-                                        style = MaterialTheme.typography.labelSmall
-                                    )
-                                },
-                                onClick = { /*TODO*/ },
-                                selected = true,
-                                colors = FilterChipDefaults.filterChipColors(
-                                    labelColor = Color(0xFF000000),
-                                    selectedLabelColor = Color.White,
-                                    selectedContainerColor = Color(0xFF5D4037),
-                                ),
-                                shape = RoundedCornerShape(8.dp),
-                                modifier = Modifier.height(28.dp)
-                            )
-                    }
-                    item {
-                        if (product is FoodProduct)
-                            FilterChip(
-                                label = {
-                                    Text(
-                                        text = "${product.selectedWeight}kg",
-                                        style = MaterialTheme.typography.labelSmall
-                                    )
-                                },
-                                onClick = { /*TODO*/ },
-                                selected = true,
-                                colors = FilterChipDefaults.filterChipColors(
-                                    labelColor = Color(0xFF000000),
-                                    selectedLabelColor = Color.White,
-                                    selectedContainerColor = Color(0xFF5D4037),
-                                ),
-                                shape = RoundedCornerShape(8.dp),
-                                modifier = Modifier.height(28.dp)
-                            )
+                    // Hiển thị các thông số của sản phẩm theo loại sản phẩm
+                    when (product) {
+                        is FoodProduct -> {
+                            item {
+                                FilterChip(
+                                    label = {
+                                        Text(
+                                            text = product.selectedFlavor.value,
+                                            style = MaterialTheme.typography.labelSmall
+                                        )
+                                    },
+                                    onClick = { /*TODO*/ },
+                                    selected = true,
+                                    colors = FilterChipDefaults.filterChipColors(
+                                        labelColor = Color(0xFF000000),
+                                        selectedLabelColor = Color.White,
+                                        selectedContainerColor = Color(0xFF5D4037),
+                                    ),
+                                    shape = RoundedCornerShape(8.dp),
+                                    modifier = Modifier.height(28.dp)
+                                )
+                            }
+                            item {
+                                FilterChip(
+                                    label = {
+                                        Text(
+                                            text = "${product.selectedWeight.value}",
+                                            style = MaterialTheme.typography.labelSmall
+                                        )
+                                    },
+                                    onClick = { /*TODO*/ },
+                                    selected = true,
+                                    colors = FilterChipDefaults.filterChipColors(
+                                        labelColor = Color(0xFF000000),
+                                        selectedLabelColor = Color.White,
+                                        selectedContainerColor = Color(0xFF5D4037),
+                                    ),
+                                    shape = RoundedCornerShape(8.dp),
+                                    modifier = Modifier.height(28.dp)
+                                )
+                            }
+                        }
+                        is ToyProduct -> {
+                            item {
+                                FilterChip(
+                                    label = {
+                                        Text(
+                                            text = product.selectedSize.value,
+                                            style = MaterialTheme.typography.labelSmall
+                                        )
+                                    },
+                                    onClick = { /*TODO*/ },
+                                    selected = true,
+                                    colors = FilterChipDefaults.filterChipColors(
+                                        labelColor = Color(0xFF000000),
+                                        selectedLabelColor = Color.White,
+                                        selectedContainerColor = Color(0xFF5D4037),
+                                    ),
+                                    shape = RoundedCornerShape(8.dp),
+                                    modifier = Modifier.height(28.dp)
+                                )
+                            }
+                        }
+                        is ClothesProduct -> {
+                            item {
+                                FilterChip(
+                                    label = {
+                                        Text(
+                                            text = product.selectedSize.value,
+                                            style = MaterialTheme.typography.labelSmall
+                                        )
+                                    },
+                                    onClick = { /*TODO*/ },
+                                    selected = true,
+                                    colors = FilterChipDefaults.filterChipColors(
+                                        labelColor = Color(0xFF000000),
+                                        selectedLabelColor = Color.White,
+                                        selectedContainerColor = Color(0xFF5D4037),
+                                    ),
+                                    shape = RoundedCornerShape(8.dp),
+                                    modifier = Modifier.height(28.dp)
+                                )
+                            }
+                        }
                     }
                 }
                 Row(

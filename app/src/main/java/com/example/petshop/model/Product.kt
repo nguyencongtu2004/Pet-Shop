@@ -15,64 +15,58 @@ enum class Size(val value: String) {
 }
 
 
-open class Product(
-    var id : String = "nothing",
-    var name:String = "Sản phẩm",
-    var tag: List<String> = listOf(),
-    var description: String = "",
-    var detailDescription: String = "",
-    var image: Int = R.drawable.avt,
-    var price: Double = 0.0,
-    var oldPrice: Double = 0.0,
-    var quantity: Int = 0,
-    var star: Double = 0.0,
-)
+sealed class Product {
+    abstract var id: String
+    abstract var name: String
+    abstract var description: String
+    abstract var detailDescription: String
+    abstract var tags: List<String>
+    abstract var image: Int
+    abstract var price: Double
+    abstract var oldPrice: Double
+    abstract var star: Double
+    abstract var quantity: Int
+}
 
-class FoodProduct(
-    id: String = "nothing",
-    name: String = "Thức ăn",
-    tag: List<String> = listOf("Thức ăn"),
-    description: String = "",
-    detailDescription: String = "",
-    image: Int = R.drawable.avt,
-    price: Double = 0.0,
-    oldPrice: Double = 0.0,
-    quantity: Int = 0,
-    star: Double = 0.0,
-
-    // Phân loại để chọn mua (ví dụ 1kg, 2kg, vị thịt, vị cá...)
-    var selectedWeight: Weight = Weight._0_5KG,
+data class FoodProduct(
+    override var id: String,
+    override var name: String,
+    override var description: String,
+    override var detailDescription: String,
+    override var tags: List<String> = listOf("food", "dog"),
+    override var image: Int,
+    override var price: Double,
+    override var oldPrice: Double,
+    override var star: Double,
+    override var quantity: Int,
     var selectedFlavor: Flavor = Flavor.BEEF,
-) : Product(id, name, tag, description, detailDescription, image, price, oldPrice, quantity, star)
+    var selectedWeight: Weight = Weight._0_5KG
+) : Product()
 
-class ToyProduct(
-    id: String = "nothing",
-    name: String = "Dụng cụ chơi",
-    tag: List<String> = listOf("Đồ chơi"),
-    description: String = "",
-    detailDescription: String = "",
-    image: Int = R.drawable.avt,
-    price: Double = 0.0,
-    oldPrice: Double = 0.0,
-    quantity: Int = 0,
-    star: Double = 0.0,
+data class ToyProduct(
+    override var id: String,
+    override var name: String,
+    override var description: String,
+    override var detailDescription: String,
+    override var tags: List<String> = listOf("toy", "game"),
+    override var image: Int,
+    override var price: Double,
+    override var oldPrice: Double,
+    override var star: Double,
+    override var quantity: Int,
+    var selectedSize: Size = Size.S
+) : Product()
 
-    // Phân loại để chọn mua
-    var selectedSize: Size = Size.S,
-) : Product(id, name, tag, description, detailDescription, image, price, oldPrice, quantity, star)
-
-class ClothesProduct(
-    id: String = "nothing",
-    name: String = "Quần áo",
-    tag: List<String> = listOf("Quần áo"),
-    description: String = "",
-    detailDescription: String = "",
-    image: Int = R.drawable.avt,
-    price: Double = 0.0,
-    oldPrice: Double = 0.0,
-    quantity: Int = 0,
-    star: Double = 0.0,
-
-    // Phân loại để chọn mua
-    var selectedSize: Size = Size.S,
-) : Product(id, name, tag, description, detailDescription, image, price, oldPrice, quantity, star)
+data class ClothesProduct(
+    override var id: String,
+    override var name: String,
+    override var description: String,
+    override var detailDescription: String,
+    override var tags: List<String> = listOf("clothes", "cat"),
+    override var image: Int,
+    override var price: Double,
+    override var oldPrice: Double,
+    override var star: Double,
+    override var quantity: Int,
+    var selectedSize: Size = Size.S
+) : Product()

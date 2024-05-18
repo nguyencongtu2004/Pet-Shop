@@ -36,9 +36,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -47,11 +44,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -85,20 +78,25 @@ fun ProductDetail(
     onBackClick: () -> Unit = {}
 ) {
     val allProducts by productViewModel.allProducts.collectAsState()
-    val product = allProducts.find { it.id == productId }!!
+    val product by productViewModel.selectedProduct.collectAsState()
+
+    productViewModel.setSelectedProduct(allProducts.find { it.id == productId }!!)
+    //val product = allProducts.find { it.id == productId }!!
 
     Scaffold(
         topBar = {
-            TopAppBarNoSearch(
-                title = product.name,
-                isCartEnable = true,
-                onCartClick = {
-                    navController?.navigate(Screen.ShoppingCartScreen.route)
-                },
-                onBackClick = {
-                    navController?.popBackStack()
-                }
-            )
+            product?.let {
+                TopAppBarNoSearch(
+                    title = it.name,
+                    isCartEnable = true,
+                    onCartClick = {
+                        navController?.navigate(Screen.ShoppingCartScreen.route)
+                    },
+                    onBackClick = {
+                        navController?.popBackStack()
+                    }
+                )
+            }
         },
         bottomBar = {
             // TODO
@@ -108,25 +106,31 @@ fun ProductDetail(
                 onBuyClicked = {},
             )
         }
-    ) {
+    ) { padding ->
         val scrollState = rememberScrollState()
-        Column(
-            verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.Top),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxWidth()
-                .verticalScroll(scrollState)
-                .padding(it)
-        ) {
-            ProductImageSection(product.image, scrollState)
-            ProductInfoSection(
-                product = product,
-                onRateClick = { /*TODO*/ },
-                onFavoriteClick = { /*TODO*/ },
-            )
-            ProductCustomizationSection(product)
-            ProductDescriptionSection(product.detailDescription)
-            Spacer(modifier = Modifier.height(500.dp))
+        product?.let { product ->
+            Column(
+                verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.Top),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(scrollState)
+                    .padding(padding)
+            ) {
+
+                ProductImageSection(product.image, scrollState)
+                ProductInfoSection(
+                    product = product,
+                    onRateClick = { /*TODO*/ },
+                    onFavoriteClick = { /*TODO*/ },
+                )
+                ProductCustomizationSection(
+                    productViewModel = productViewModel
+                )
+                ProductDescriptionSection(product.detailDescription)
+
+                Spacer(modifier = Modifier.height(500.dp))
+            }
         }
     }
 }
@@ -196,7 +200,7 @@ private fun ProductInfoCard(
                 .fillMaxWidth()
                 .background(color = Color.White)
         ) {
-            ProductTags(tags = product.tag)
+            ProductTags(tags = product.tags)
             ProductTitleAndPrice(title = product.name, price = product.price)
             ProductDescription(description = product.description)
             ProductRatingAndFavorite(
@@ -447,7 +451,11 @@ private fun ProductRatingAndFavorite(
 }
 
 @Composable
-private fun ProductCustomizationSection(product: Product) {
+private fun ProductCustomizationSection(
+    productViewModel: ProductViewModel,
+) {
+    val product by productViewModel.selectedProduct.collectAsState()
+
     Box(
         modifier = Modifier
             .width((getScreenWidth() - 30).dp)
@@ -458,11 +466,38 @@ private fun ProductCustomizationSection(product: Product) {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth()
         ) {
+            // Tiêu đề phân loại sản phẩm
             ProductCustomizationTitle()
             when (product) {
-                is FoodProduct -> ProductFoodCustomization()
-                is ToyProduct -> ProductToyCustomization()
-                is ClothesProduct -> ProductClothesCustomization()
+                is FoodProduct -> ProductFoodCustomization(
+                    onOption1Click = { option ->
+                        productViewModel.setFlavor(Flavor.entries.find { it.value == option }!!)
+                        //product.selectedFlavor = Flavor.entries.find { it.value == option }!!
+                    },
+                    onOption2Click = { option ->
+                        productViewModel.setWeight(Weight.entries.find { it.value == option }!!)
+                        //product.selectedWeight = Weight.entries.find { it.value == option }!!
+                    },
+                    selectedOption1 = (product as FoodProduct).selectedFlavor.value,
+                    selectedOption2 = (product as FoodProduct).selectedWeight.value
+                )
+
+                is ToyProduct -> ProductToyCustomization(
+                    onOptionClick = { option ->
+                        productViewModel.setSize(Size.entries.find { it.value == option }!!)
+                        //product.selectedSize = Size.entries.find { it.value == option }!!
+                    },
+                    selectedOption = (product as ToyProduct).selectedSize.value
+                )
+
+                is ClothesProduct -> ProductClothesCustomization(
+                    onOptionClick = { option ->
+                        productViewModel.setSize(Size.entries.find { it.value == option }!!)
+                        //product.selectedSize = Size.entries.find { it.value == option }!!
+                    },
+                    selectedOption = (product as ClothesProduct).selectedSize.value
+                )
+
                 else -> {}
             }
         }
@@ -490,29 +525,65 @@ private fun ProductCustomizationTitle() {
 
 
 @Composable
-private fun ProductFoodCustomization() {
+private fun ProductFoodCustomization(
+    onOption1Click: (String) -> Unit,
+    onOption2Click: (String) -> Unit,
+    selectedOption1: String,
+    selectedOption2: String,
+) {
     Column {
-        ProductCustomizationOption(title = "Vị:", options = Flavor.entries.map { it.value })
-        ProductCustomizationOption(title = "Kích cỡ:", options = Weight.entries.map { it.value })
+        ProductCustomizationOption(
+            title = "Vị:",
+            options = Flavor.entries.map { it.value },
+            onOptionClick = onOption1Click,
+            selectedOption = selectedOption1,
+        )
+        ProductCustomizationOption(
+            title = "Kích cỡ:",
+            options = Weight.entries.map { it.value },
+            onOptionClick = onOption2Click,
+            selectedOption = selectedOption2,
+        )
     }
 }
 
 @Composable
-private fun ProductClothesCustomization() {
+private fun ProductClothesCustomization(
+    onOptionClick: (String) -> Unit,
+    selectedOption: String,
+) {
     Column {
-        ProductCustomizationOption(title = "Kích cỡ:", options = Size.entries.map { it.value })
+        ProductCustomizationOption(
+            title = "Kích cỡ:",
+            options = Size.entries.map { it.value },
+            onOptionClick = onOptionClick,
+            selectedOption = selectedOption,
+        )
     }
 }
 
 @Composable
-private fun ProductToyCustomization() {
+private fun ProductToyCustomization(
+    onOptionClick: (String) -> Unit,
+    selectedOption: String,
+) {
     Column {
-        ProductCustomizationOption(title = "Kích cỡ:", options = Size.entries.map { it.value })
+        ProductCustomizationOption(
+            title = "Kích cỡ:",
+            options = Size.entries.map { it.value },
+            onOptionClick = onOptionClick,
+            selectedOption = selectedOption,
+        )
     }
 }
 
 @Composable
-private fun ProductCustomizationOption(title: String, options: List<String>) {
+private fun ProductCustomizationOption(
+    title: String,
+    options: List<String>,
+    onOptionClick: (String) -> Unit,
+    selectedOption: String,
+) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
         verticalAlignment = Alignment.CenterVertically,
@@ -536,24 +607,36 @@ private fun ProductCustomizationOption(title: String, options: List<String>) {
             modifier = Modifier.weight(1f)
         ) {
             items(options) { option ->
-                ProductCustomizationOptionItem(option)
+                ProductCustomizationOptionItem(
+                    option = option,
+                    onClick = { onOptionClick(option) },
+                    isSelected = selectedOption == option
+                )
             }
         }
     }
 }
 
 @Composable
-private fun ProductCustomizationOptionItem(option: String) {
+private fun ProductCustomizationOptionItem(
+    option: String,
+    onClick: () -> Unit,
+    isSelected: Boolean
+) {
     AssistChip(
-        onClick = { },
+        onClick = onClick,
         colors = AssistChipDefaults.assistChipColors(
-            containerColor = Color(0xFF5D4037),
+            containerColor =
+            if (isSelected) Color(0xFF5D4037)
+            else Color.White,
         ),
         label = {
             Text(
                 option,
                 style = MaterialTheme.typography.labelLarge.copy(
-                    color = Color.White
+                    color =
+                    if (isSelected) Color.White
+                    else Color(0xFF5D4037)
                 )
             )
         },

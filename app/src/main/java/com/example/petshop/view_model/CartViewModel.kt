@@ -1,7 +1,11 @@
 package com.example.petshop.view_model
 
 import androidx.lifecycle.ViewModel
+import com.example.petshop.R
+import com.example.petshop.model.ClothesProduct
+import com.example.petshop.model.FoodProduct
 import com.example.petshop.model.Product
+import com.example.petshop.model.ToyProduct
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -39,39 +43,40 @@ class CartViewModel : ViewModel() {
     }
 
     private var _productsInCart = MutableStateFlow<List<Product>>(listOf(
-        Product(
+        FoodProduct(
             name = "Đồ ăn cho chó cao cấp",
             description = "Đây là sản phẩm thức ăn cho chó cao cấp",
             price = 19000.0,
             oldPrice = 9999999.0,
             star = 4.5,
             quantity = 1,
+            image = R.drawable.avt,
+            detailDescription = "Chi tiết sản phẩm",
+            id = "12",
         ),
-        Product(
-            name = "Đồ ăn cho mèo",
-            description = "Đây là sản phẩm thức ăn cho mèo",
-            price = 14500.0,
-            oldPrice = 9999999.0,
-            star = 4.5,
-            quantity = 1,
-        ),
-        Product(
+        ToyProduct(
             name = "Đồ chơi cho chó",
             description = "Đây là sản phẩm đồ chơi cho chó",
-            price = 25000.0,
+            price = 50000.0,
             oldPrice = 9999999.0,
             star = 4.5,
             quantity = 1,
+            image = R.drawable.avt,
+            detailDescription = "Chi tiết sản phẩm",
+            id = "13",
         ),
-        Product(
+        ClothesProduct(
             name = "Quần áo cho chó",
             description = "Đây là sản phẩm quần áo cho chó",
-            price = 35000.0,
+            price = 100000.0,
             oldPrice = 9999999.0,
             star = 4.5,
             quantity = 1,
-        ),)
-    )
+            image = R.drawable.avt,
+            detailDescription = "Chi tiết sản phẩm",
+            id = "14",
+        )
+    ))
     var productsInCart: StateFlow<List<Product>> = _productsInCart.asStateFlow()
 
     fun addProductToCart(product: Product) {

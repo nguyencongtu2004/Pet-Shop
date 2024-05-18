@@ -31,10 +31,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.petshop.R
+import com.example.petshop.model.ClothesProduct
 import com.example.petshop.model.FoodProduct
 import com.example.petshop.model.Order
 import com.example.petshop.model.Product
 import com.example.petshop.model.Screen
+import com.example.petshop.model.ToyProduct
 import com.example.petshop.ui.NewCheckoutEndBar
 import com.example.petshop.ui.theme.PetShopTheme
 import com.example.petshop.view_model.CartViewModel
@@ -115,7 +118,17 @@ fun CheckoutScreen(
 @Composable
 fun CheckoutItem(
     modifier: Modifier = Modifier,
-    product: Product = FoodProduct(),
+    product: Product = FoodProduct(
+        id = "1",
+        name = "Đồ ăn cho chó",
+        description = "Chó rất thích ăn nó",
+        price = 10000.0,
+        oldPrice = 15000.0,
+        star = 4.5,
+        quantity = 1,
+        image = R.drawable.avt,
+        detailDescription = "Chi tiết sản phẩm"
+    ),
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(0.dp, Alignment.Top),
@@ -131,7 +144,7 @@ fun CheckoutItem(
                 verticalArrangement = Arrangement.Center,
             ) {
                 Image(
-                    painter = painterResource(id =  product.image),
+                    painter = painterResource(id = product.image),
                     contentDescription = null,
                     modifier = Modifier
                         .shadow(
@@ -210,45 +223,89 @@ fun CheckoutItem(
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
-                item {
-                    if (product is FoodProduct)
-                        FilterChip(
-                            label = {
-                                Text(
-                                    text = product.selectedFlavor.value,
-                                    style = MaterialTheme.typography.labelSmall
-                                )
-                            },
-                            onClick = { /*TODO*/ },
-                            selected = true,
-                            colors = FilterChipDefaults.filterChipColors(
-                                labelColor = Color(0xFF000000),
-                                selectedLabelColor = Color.White,
-                                selectedContainerColor = Color(0xFF5D4037),
-                            ),
-                            shape = RoundedCornerShape(8.dp),
-                            modifier = Modifier.height(28.dp)
-                        )
-                }
-                item {
-                    if (product is FoodProduct)
-                        FilterChip(
-                            label = {
-                                Text(
-                                    text = "${product.selectedWeight}kg",
-                                    style = MaterialTheme.typography.labelSmall
-                                )
-                            },
-                            onClick = { /*TODO*/ },
-                            selected = true,
-                            colors = FilterChipDefaults.filterChipColors(
-                                labelColor = Color(0xFF000000),
-                                selectedLabelColor = Color.White,
-                                selectedContainerColor = Color(0xFF5D4037),
-                            ),
-                            shape = RoundedCornerShape(8.dp),
-                            modifier = Modifier.height(28.dp)
-                        )
+                when (product) {
+                    is FoodProduct -> {
+                        item {
+                            FilterChip(
+                                label = {
+                                    Text(
+                                        text = product.selectedFlavor.value,
+                                        style = MaterialTheme.typography.labelSmall
+                                    )
+                                },
+                                onClick = { /*TODO*/ },
+                                selected = true,
+                                colors = FilterChipDefaults.filterChipColors(
+                                    labelColor = Color(0xFF000000),
+                                    selectedLabelColor = Color.White,
+                                    selectedContainerColor = Color(0xFF5D4037),
+                                ),
+                                shape = RoundedCornerShape(8.dp),
+                                modifier = Modifier.height(28.dp)
+                            )
+                        }
+                        item {
+                            FilterChip(
+                                label = {
+                                    Text(
+                                        text = "${product.selectedWeight.value}",
+                                        style = MaterialTheme.typography.labelSmall
+                                    )
+                                },
+                                onClick = { /*TODO*/ },
+                                selected = true,
+                                colors = FilterChipDefaults.filterChipColors(
+                                    labelColor = Color(0xFF000000),
+                                    selectedLabelColor = Color.White,
+                                    selectedContainerColor = Color(0xFF5D4037),
+                                ),
+                                shape = RoundedCornerShape(8.dp),
+                                modifier = Modifier.height(28.dp)
+                            )
+                        }
+                    }
+                    is ToyProduct -> {
+                        item {
+                            FilterChip(
+                                label = {
+                                    Text(
+                                        text = product.selectedSize.value,
+                                        style = MaterialTheme.typography.labelSmall
+                                    )
+                                },
+                                onClick = { /*TODO*/ },
+                                selected = true,
+                                colors = FilterChipDefaults.filterChipColors(
+                                    labelColor = Color(0xFF000000),
+                                    selectedLabelColor = Color.White,
+                                    selectedContainerColor = Color(0xFF5D4037),
+                                ),
+                                shape = RoundedCornerShape(8.dp),
+                                modifier = Modifier.height(28.dp)
+                            )
+                        }
+                    }
+                    is ClothesProduct -> {
+                        item {
+                            FilterChip(
+                                label = {
+                                    Text(
+                                        text = product.selectedSize.value,
+                                        style = MaterialTheme.typography.labelSmall
+                                    )
+                                },
+                                onClick = { /*TODO*/ },
+                                selected = true,
+                                colors = FilterChipDefaults.filterChipColors(
+                                    labelColor = Color(0xFF000000),
+                                    selectedLabelColor = Color.White,
+                                    selectedContainerColor = Color(0xFF5D4037),
+                                ),
+                                shape = RoundedCornerShape(8.dp),
+                                modifier = Modifier.height(28.dp)
+                            )
+                        }
+                    }
                 }
             }
         }
