@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -51,12 +52,13 @@ fun CheckoutScreen(
     orderViewModel: OrderViewModel,
     userViewModel: UserViewModel,
 ) {
+    val selectedProducts by cartViewModel.selectedProducts.collectAsState()
     val user by userViewModel.currentUser.collectAsState()
     val order by orderViewModel.order.collectAsState()
 
     // Create a new order with the selected products and the current user
     orderViewModel.updateOrder(Order(
-        products = cartViewModel.selectedProducts,
+        products = selectedProducts,
         user = user,
     ))
 
@@ -66,7 +68,6 @@ fun CheckoutScreen(
             CheckoutEndBar(
                 total = order.total,
                 onCheckoutClick = {
-
                     orderViewModel.addOrder(order)
                     navController?.navigate(Screen.LoadingCheckout.route)
                 }
@@ -181,7 +182,7 @@ fun CheckoutItem(
             }
             Column(
                 //verticalArrangement = Arrangement.Center,
-                //horizontalAlignment = Alignment.End,
+                horizontalAlignment = Alignment.End,
                 modifier = Modifier.padding(start = 10.dp)
             ) {
                 Text(
@@ -257,6 +258,13 @@ fun CheckoutItem(
     }
 }
 
+@Preview
+@Composable
+fun CheckoutItemPreview() {
+    PetShopTheme {
+        CheckoutItem()
+    }
+}
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable

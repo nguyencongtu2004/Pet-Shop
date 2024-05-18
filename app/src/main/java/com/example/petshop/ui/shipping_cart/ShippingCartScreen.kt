@@ -19,6 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,9 +30,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -45,7 +47,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.petshop.R
 import com.example.petshop.view_model.CartViewModel
 import com.example.petshop.model.FoodProduct
 import com.example.petshop.model.Product
@@ -58,21 +59,26 @@ fun ShoppingCartScreen(
     modifier: Modifier = Modifier,
     navController: NavController? = null,
     cartViewModel: CartViewModel,
-    //products: List<Product> = emptyList(),
-
 ) {
-    var totalAmount by remember { mutableStateOf(0.0) }
-    val selectedItems = remember { mutableStateListOf<Product>() }
+    val selectedProducts by cartViewModel.selectedProducts.collectAsState()
+    val productsInCart by cartViewModel.productsInCart.collectAsState()
+    val totalAmount by cartViewModel.totalAmount.collectAsState()
 
-    val productsInCart = cartViewModel.productInCart
+    // Thêm biến trạng thái để kiểm tra xem reset đã được thực hiện chưa
+    var isInitialized by remember { mutableStateOf(false) }
+
+    // Reset các sản phẩm đã chọn nếu chưa được thực hiện
+    if (!isInitialized) {
+        cartViewModel.resetSelectedProducts()
+        isInitialized = true
+    }
 
     Scaffold(
         bottomBar = {
-            if (selectedItems.isNotEmpty())
+            if (selectedProducts.isNotEmpty())
                 CheckoutBottomBar(
                     total = totalAmount,
                     onBuyClicked = {
-                        cartViewModel.setSelectedProducts(selectedItems)
                         navController?.navigate(Screen.CheckoutScreen.route)
                     }
                 )
@@ -82,22 +88,30 @@ fun ShoppingCartScreen(
             modifier = modifier.padding(it),
         ) {
             items(productsInCart) { product ->
-                BoughtItemCart(product = product, onQuantityChange = { isChecked, newQuantity ->
-                    if (isChecked) {
-                        if (!selectedItems.contains(product)) {
-                            selectedItems.add(product)
+                BoughtItemCart(
+                    product = product,
+                    onQuantityChange = { isChecked, newQuantity ->
+                        if (isChecked) {
+                            if (!selectedProducts.contains(product)) {
+                                cartViewModel.addProductToSelected(product)
+                            }
+                            product.quantity = newQuantity
+                        } else {
+                            cartViewModel.removeProductFromSelected(product)
                         }
-                        product.quantity = newQuantity
-                    } else {
-                        selectedItems.remove(product)
+                        cartViewModel.updateTotalAmount()
+                    },
+                    onDeleteClick = {
+                        cartViewModel.removeProductFromCart(product)
+                        cartViewModel.updateTotalAmount()
                     }
-                    totalAmount = selectedItems.sumOf { it.price * it.quantity }
-                })
+                )
                 Divider()
             }
         }
     }
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -105,10 +119,45 @@ fun BoughtItemCart(
     modifier: Modifier = Modifier,
     product: Product = FoodProduct(),
     onQuantityChange: (Boolean, Int) -> Unit,
-    onItemClick: () -> Unit = {},
+    onDeleteClick: () -> Unit = {},
 ) {
     var quantity by remember { mutableStateOf(product.quantity) }
     var checkedState by remember { mutableStateOf(false) }
+    var showDialog by remember { mutableStateOf(false) }
+
+    // Hiện dialog xác nhận xóa sản phẩm khỏi giỏ hàng
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { Text(
+                text = "Xác nhận xóa",
+                style = MaterialTheme.typography.titleLarge,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            ) },
+            text = { Text(
+                text = "Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?",
+                style = MaterialTheme.typography.bodyMedium,
+            ) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showDialog = false
+                        onDeleteClick()
+                    }
+                ) {
+                    Text("Xóa")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { showDialog = false }
+                ) {
+                    Text("Hủy")
+                }
+            }
+        )
+    }
 
     Column(
         horizontalAlignment = Alignment.Start,
@@ -245,7 +294,7 @@ fun BoughtItemCart(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     //Spacer(modifier = Modifier.weight(1f))
-                    IconButton(onClick = { /*TODO xoas*/ }) {
+                    IconButton(onClick = { showDialog = true }) {
                         Icon(
                             imageVector = Icons.Default.Delete,
                             contentDescription = null
@@ -304,6 +353,7 @@ fun BoughtItemCart(
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
