@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
@@ -124,6 +125,7 @@ fun ShipmentStateScreen(
                                 navController?.navigate(Screen.FollowShipping.createRoute(orderId))
                             }
                         )
+                        Divider(modifier = Modifier.padding(top = 8.dp))
                     }
                     item {
                         Spacer(modifier = Modifier.height(100.dp))
@@ -139,6 +141,7 @@ fun ShipmentStateScreen(
                                 navController?.navigate("order/${order.id}")
                             }
                         )
+                        Divider(modifier = Modifier.padding(top = 8.dp))
                     }
                     item {
                         Spacer(modifier = Modifier.height(100.dp))

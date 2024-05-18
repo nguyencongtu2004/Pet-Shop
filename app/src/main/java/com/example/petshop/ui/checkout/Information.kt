@@ -29,9 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.petshop.model.DeliveryMethod
-import com.example.petshop.model.Order
 import com.example.petshop.model.PaymentMethod
-import com.example.petshop.model.User
 import com.example.petshop.view_model.OrderViewModel
 import com.example.petshop.view_model.UserViewModel
 
@@ -117,7 +115,7 @@ fun Delivery(
     onPaymentClick: () -> Unit = {},
     onVoucherClick: () -> Unit = {}
 ) {
-    val order by orderViewModel.order.collectAsState()
+    val order by orderViewModel.currentOrder.collectAsState()
 
     Column(
         horizontalAlignment = Alignment.Start,
@@ -281,7 +279,7 @@ fun PaymentDetail(
     modifier: Modifier = Modifier,
     orderViewModel: OrderViewModel,
 ) {
-    val order by orderViewModel.order.collectAsState()
+    val order by orderViewModel.currentOrder.collectAsState()
 
     Column(
         verticalArrangement = Arrangement.spacedBy(6.dp, Alignment.Top),

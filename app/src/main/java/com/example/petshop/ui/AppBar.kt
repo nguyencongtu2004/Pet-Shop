@@ -40,6 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -88,6 +89,7 @@ fun TopAppBarNoSearch(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
+            .height(56.dp)
             .padding(start = 8.dp, end = 8.dp, top = 8.dp, bottom = 8.dp)
     ) {
         IconButton(onClick = onBackClick) {
@@ -101,6 +103,8 @@ fun TopAppBarNoSearch(
             style = MaterialTheme.typography.titleMedium.copy(
                 fontSize = 20.sp
             ),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
             modifier = Modifier
                 .padding(start = 8.dp)
                 .weight(1f)
@@ -115,7 +119,6 @@ fun CheckoutBottomBar(
     onBuyClicked: () -> Unit = {}
 ) {
     Row(
-        //horizontalArrangement = Arrangement.spacedBy(22.dp, Alignment.End),
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .height(70.dp)
@@ -389,6 +392,51 @@ fun CheckoutEndBar(
     }
 }
 
+@Composable
+fun NewCheckoutEndBar(
+    modifier: Modifier = Modifier,
+    total: Double = 0.0,
+    onCheckoutClick: () -> Unit = {}
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .height(70.dp)
+            .background(color = MaterialTheme.colorScheme.secondaryContainer)
+            .padding(start = 14.dp, top = 8.dp, end = 8.dp, bottom = 8.dp)
+    ) {
+        Text(
+            text = "Tổng cộng:",
+            style = MaterialTheme.typography.titleMedium.copy(
+                fontSize = 16.sp
+            ),
+            modifier = Modifier
+                .padding(end = 5.dp)
+        )
+        Text(
+            text = total.toString().replace(".0", "") + "đ",
+            style = MaterialTheme.typography.titleLarge.copy(
+                color = Color.Red
+            ),
+            textAlign = TextAlign.End,
+            modifier = Modifier.weight(1f)
+
+        )
+        Spacer(modifier = Modifier.width(20.dp))
+        Button(
+            onClick = onCheckoutClick,
+            title = "Thanh toán",
+            isDisable = false,
+            color = Color(0xFFEE2828),
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun NewCheckoutEndBarPreview() {
+    NewCheckoutEndBar(total = 120000.0)
+}
 
 @Preview(showBackground = true)
 @Composable
@@ -405,7 +453,7 @@ fun PetShopNavigationBarPreview() {
 @Preview
 @Composable
 fun TopAppBarPreview() {
-    TopAppBarNoSearch(title = "test")
+    TopAppBarNoSearch(title = "test voi title dai qua them nua ddi van chua du dai")
 }
 
 @Preview

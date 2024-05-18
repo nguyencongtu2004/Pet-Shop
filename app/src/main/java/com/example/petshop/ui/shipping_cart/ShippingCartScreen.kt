@@ -254,7 +254,7 @@ fun BoughtItemCart(
                             FilterChip(
                                 label = {
                                     Text(
-                                        text = product.flavor,
+                                        text = product.selectedFlavor.value,
                                         style = MaterialTheme.typography.labelSmall
                                     )
                                 },
@@ -274,7 +274,7 @@ fun BoughtItemCart(
                             FilterChip(
                                 label = {
                                     Text(
-                                        text = "${product.weight}kg",
+                                        text = "${product.selectedWeight}kg",
                                         style = MaterialTheme.typography.labelSmall
                                     )
                                 },

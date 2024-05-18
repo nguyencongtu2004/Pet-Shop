@@ -14,6 +14,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -22,7 +23,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.petshop.model.Flavor
+import com.example.petshop.model.FoodProduct
 import com.example.petshop.model.Screen
+import com.example.petshop.model.Weight
 import com.example.petshop.ui.PetShopNavigationBar
 import com.example.petshop.ui.TopAppBarNoSearch
 import com.example.petshop.ui.TopAppBarWithSearch
@@ -33,7 +37,7 @@ import com.example.petshop.ui.checkout.SelectVoucher
 import com.example.petshop.ui.checkout.TransactionScreen
 import com.example.petshop.ui.home.HomeScreen
 import com.example.petshop.ui.notification.NotificationScreen
-import com.example.petshop.ui.product_infor.ProDuctDetail
+import com.example.petshop.ui.product_infor.ProductDetail
 import com.example.petshop.ui.shipment.FollowShippingScreen
 import com.example.petshop.ui.shipment.ShipmentStateScreen
 import com.example.petshop.ui.shipping_cart.ShoppingCartScreen
@@ -45,6 +49,15 @@ import com.example.petshop.view_model.NotificationViewModel
 import com.example.petshop.view_model.OrderViewModel
 import com.example.petshop.view_model.ProductViewModel
 import com.example.petshop.view_model.UserViewModel
+
+val NavHostController.canGoBack: Boolean
+    get() = this.previousBackStackEntry?.lifecycle?.currentState == Lifecycle.State.RESUMED
+
+fun NavHostController.navigateBack() {
+    if (canGoBack) {
+        this.popBackStack()
+    }
+}
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -92,11 +105,13 @@ fun PetShopApp(
                 isNoSearchBarVisible = false
                 isNavigationBarVisible = true
             }
-            Screen.LoadingCheckout.route, Screen.TransactionScreen.route, Screen.ProDuctDetail.route -> {
+
+            Screen.LoadingCheckout.route, Screen.TransactionScreen.route, Screen.ProductDetailScreen.route -> {
                 isSearchBarVisible = false
                 isNoSearchBarVisible = false
                 isNavigationBarVisible = false
             }
+
             else -> {
                 isSearchBarVisible = false
                 isNoSearchBarVisible = true
@@ -163,8 +178,8 @@ fun PetShopApp(
                     navController = navController,
                     productViewModel = productViewModel,
                     bannerViewModel = bannerViewModel,
-                    onProductClick = {
-                        navController.navigate(Screen.ProDuctDetail.route)
+                    onProductClick = {productId ->
+                        navController.navigate(Screen.ProductDetailScreen.createRoute(productId))
                     }
                 )
             }
@@ -246,12 +261,16 @@ fun PetShopApp(
 
             composable(
                 route = Screen.FollowShipping.route,
-                arguments = listOf(navArgument("orderId") { type = NavType.StringType })
+                arguments = listOf(navArgument("orderId") {
+                    type = NavType.StringType;
+                    defaultValue = "no_id"
+                    nullable = true
+                })
             ) { backStackEntry ->
                 val orderId = backStackEntry.arguments?.getString("orderId")
                 FollowShippingScreen(
                     orderViewModel = orderViewModel,
-                    orderId = orderId ?: "no_id_huhu"
+                    orderId = orderId!!
                 )
             }
 
@@ -268,9 +287,21 @@ fun PetShopApp(
                 )
             }
 
-            composable(route = Screen.ProDuctDetail.route) {
-                ProDuctDetail(
+            composable(
+                route = Screen.ProductDetailScreen.route,
+                arguments = listOf(navArgument("productId") {
+                    type = NavType.StringType;
+                    defaultValue = "no_id"
+                    nullable = true
+                })
+            ) {backStackEntry ->
+                val productId = backStackEntry.arguments?.getString("productId")
+
+                ProductDetail(
                     navController = navController,
+                    produciId = productId!!,
+                    productViewModel = productViewModel,
+
                 )
             }
         }

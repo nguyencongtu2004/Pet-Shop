@@ -20,7 +20,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -28,17 +27,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.petshop.R
 import com.example.petshop.model.FoodProduct
 import com.example.petshop.model.Order
 import com.example.petshop.model.Product
 import com.example.petshop.model.Screen
-import com.example.petshop.ui.CheckoutEndBar
+import com.example.petshop.ui.NewCheckoutEndBar
 import com.example.petshop.ui.theme.PetShopTheme
 import com.example.petshop.view_model.CartViewModel
 import com.example.petshop.view_model.OrderViewModel
@@ -54,7 +51,7 @@ fun CheckoutScreen(
 ) {
     val selectedProducts by cartViewModel.selectedProducts.collectAsState()
     val user by userViewModel.currentUser.collectAsState()
-    val order by orderViewModel.order.collectAsState()
+    val order by orderViewModel.currentOrder.collectAsState()
 
     // Create a new order with the selected products and the current user
     orderViewModel.updateOrder(Order(
@@ -65,7 +62,7 @@ fun CheckoutScreen(
     Scaffold(
         modifier = modifier,
         bottomBar = {
-            CheckoutEndBar(
+            NewCheckoutEndBar(
                 total = order.total,
                 onCheckoutClick = {
                     orderViewModel.addOrder(order)
@@ -218,7 +215,7 @@ fun CheckoutItem(
                         FilterChip(
                             label = {
                                 Text(
-                                    text = product.flavor,
+                                    text = product.selectedFlavor.value,
                                     style = MaterialTheme.typography.labelSmall
                                 )
                             },
@@ -238,7 +235,7 @@ fun CheckoutItem(
                         FilterChip(
                             label = {
                                 Text(
-                                    text = "${product.weight}kg",
+                                    text = "${product.selectedWeight}kg",
                                     style = MaterialTheme.typography.labelSmall
                                 )
                             },

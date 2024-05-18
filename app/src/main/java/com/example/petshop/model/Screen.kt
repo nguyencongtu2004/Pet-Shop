@@ -16,5 +16,7 @@ sealed class Screen(val route: String, val title: String) {
     }
     object SelectPayMethod : Screen(route = "select_pay_method", title = "Phương thức thanh toán")
     object SelectVoucher : Screen(route = "select_voucher", title = "Voucher")
-    object ProDuctDetail : Screen(route = "product_detail", title = "Product Detail ??")
+    object ProductDetailScreen : Screen(route = "product_detail/{productId}", title = "Chi tiết sản phẩm") {
+        fun createRoute(productId: String) = "product_detail/$productId"
+    }
 }

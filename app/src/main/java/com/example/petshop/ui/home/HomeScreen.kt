@@ -25,7 +25,9 @@ import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -41,7 +43,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.petshop.R
+import com.example.petshop.model.ClothesProduct
+import com.example.petshop.model.FoodProduct
 import com.example.petshop.model.Product
+import com.example.petshop.model.ToyProduct
 import com.example.petshop.view_model.BannerViewModel
 import com.example.petshop.view_model.ProductViewModel
 import kotlinx.coroutines.delay
@@ -50,19 +55,20 @@ import kotlinx.coroutines.yield
 @Composable
 fun HomeScreen(
     navController: NavController? = null,
-    //: List<Painter> = listOf(),
     productViewModel: ProductViewModel,
     bannerViewModel: BannerViewModel,
-    //products: List<Product> = listOf(),
-    onProductClick: () -> Unit = {},
+    onProductClick: (String) -> Unit = {},
 ) {
-    val firstTabProduct: List<Product> = productViewModel.allProducts
-    val secondTabProduct: List<Product> = listOf()
-    val thirdTabProduct: List<Product> = listOf()
+    val allProducts by productViewModel.allProducts.collectAsState()
+
+    val firstTabProduct = allProducts.filterIsInstance<FoodProduct>()
+    val secondTabProduct = allProducts.filterIsInstance<ToyProduct>()
+    val thirdTabProduct = allProducts.filterIsInstance<ClothesProduct>()
 
     val bannerItems = bannerViewModel.allBanners
 
-    var selectedTabIndex by remember { mutableStateOf(0) } // Chọn tab "Đang giao" hoặc "Đã giao"
+    // Chọn tab mặc định là tab thứ nhất
+    var selectedTabIndex by remember { mutableIntStateOf(0) }
 
     Column {
         HorizontalBanner(bannerItems = bannerItems)
@@ -87,14 +93,14 @@ fun HomeScreen(
 fun ProductWithStar(
     modifier: Modifier = Modifier,
     product: Product,
-    onProductClick: () -> Unit = {},
+    onProductClick: (String) -> Unit = {},
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .padding(8.dp)
-            .clickable { onProductClick() }
+            .clickable { onProductClick(product.id) }
     ) {
         Box(
             contentAlignment = Alignment.BottomCenter,
@@ -193,7 +199,7 @@ fun ProductTabs(
     secondTabProduct: List<Product> = listOf(),
     thirdTabProduct: List<Product> = listOf(),
     onTabSelected: (Int) -> Unit,
-    onProductClick: () -> Unit = {},
+    onProductClick: (String) -> Unit = {},
 ) {
     Column {
         TabRow(
@@ -254,7 +260,7 @@ fun ProductTabs(
 @Composable
 fun TabContent(
     products: List<Product>,
-    onProductClick: () -> Unit = {},
+    onProductClick: (String) -> Unit = {},
 ) {
     LazyColumn {
         items(products.size) { index ->
