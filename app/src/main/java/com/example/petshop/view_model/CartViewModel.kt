@@ -42,6 +42,12 @@ class CartViewModel : ViewModel() {
         _totalAmount.update { _selectedProducts.value.sumOf { it.price * it.quantity } }
     }
 
+    fun updateSelectedProduct(products: List<Product>) {
+        _selectedProducts.update { _ ->
+            products
+        }
+    }
+
     private var _productsInCart = MutableStateFlow<List<Product>>(listOf(
         FoodProduct(
             name = "Đồ ăn cho chó cao cấp",

@@ -304,7 +304,8 @@ fun PetShopApp(
                     productId = productId!!,
                     productViewModel = productViewModel,
                     userViewModel = userViewModel,
-                    cartViewModel = cartViewModel
+                    cartViewModel = cartViewModel,
+                    orderViewModel = orderViewModel,
                 )
             }
 

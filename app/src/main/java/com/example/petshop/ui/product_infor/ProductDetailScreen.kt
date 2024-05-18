@@ -55,6 +55,7 @@ import com.example.petshop.R
 import com.example.petshop.model.ClothesProduct
 import com.example.petshop.model.Flavor
 import com.example.petshop.model.FoodProduct
+import com.example.petshop.model.Order
 import com.example.petshop.model.Product
 import com.example.petshop.model.Screen
 import com.example.petshop.model.Size
@@ -63,6 +64,7 @@ import com.example.petshop.model.Weight
 import com.example.petshop.ui.DetailProductBottomBar
 import com.example.petshop.ui.TopAppBarNoSearch
 import com.example.petshop.view_model.CartViewModel
+import com.example.petshop.view_model.OrderViewModel
 import com.example.petshop.view_model.ProductViewModel
 import com.example.petshop.view_model.UserViewModel
 
@@ -79,11 +81,13 @@ fun ProductDetail(
     productViewModel: ProductViewModel,
     userViewModel: UserViewModel,
     cartViewModel: CartViewModel,
+    orderViewModel: OrderViewModel,
     onBackClick: () -> Unit = {}
 ) {
     val allProducts by productViewModel.allProducts.collectAsState()
     val product by productViewModel.selectedProduct.collectAsState()
     val user by userViewModel.currentUser.collectAsState()
+    val selectedProducts by cartViewModel.selectedProducts.collectAsState()
 
     productViewModel.setSelectedProduct(allProducts.find { it.id == productId }!!)
 
@@ -104,7 +108,6 @@ fun ProductDetail(
             }
         },
         bottomBar = {
-            // TODO
             DetailProductBottomBar(
                 onChatClicked = {},
                 onAddToCartClicked = {
@@ -113,6 +116,12 @@ fun ProductDetail(
                 },
                 onBuyClicked = {
                     // TODO: Navigate to Checkout screen with the selected product
+                    val newOrder = Order(
+                        user = user,
+                        products = listOf(product!!),
+                    )
+                    cartViewModel.updateSelectedProduct(listOf(product!!))
+                    navController?.navigate(Screen.CheckoutScreen.route)
                 },
             )
         }
@@ -740,6 +749,7 @@ fun ProductDetailPreview() {
         productViewModel = ProductViewModel(),
         userViewModel = UserViewModel(),
         cartViewModel = CartViewModel(),
+        orderViewModel = OrderViewModel(),
         productId = "1"
     )
 }
