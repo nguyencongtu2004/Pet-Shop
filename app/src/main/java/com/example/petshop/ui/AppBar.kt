@@ -1,5 +1,6 @@
 package com.example.petshop.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -18,6 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -49,45 +52,17 @@ import com.example.petshop.model.BottomNavigationBarItem
 import com.example.petshop.ui.login_register.Button
 
 @Composable
-fun PetShopAppBar(
-    modifier: Modifier = Modifier,
-    title: String
-) {
-    Row(
-        horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 16.dp, top = 14.dp, end = 16.dp, bottom = 14.dp)
-    ) {
-        IconButton(onClick = { /*TODO*/ }) {
-            Icon(
-                imageVector = Icons.Filled.ArrowBack,
-                contentDescription = null
-            )
-        }
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleMedium.copy(
-                fontSize = 20.sp
-            ),
-            modifier = Modifier
-                .padding(start = 8.dp)
-                .weight(1f)
-        )
-    }
-}
-
-@Composable
 fun TopAppBarNoSearch(
-    //modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier,
     title: String,
     onBackClick: () -> Unit = {},
+    onCartClick: () -> Unit = {},
+    isCartEnable: Boolean = false,
 ) {
     Row(
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(56.dp)
             .padding(start = 8.dp, end = 8.dp, top = 8.dp, bottom = 8.dp)
@@ -109,6 +84,15 @@ fun TopAppBarNoSearch(
                 .padding(start = 8.dp)
                 .weight(1f)
         )
+        if (isCartEnable) {
+            IconButton(onClick = onCartClick) {
+                Icon(
+                    painter = painterResource(id = R.drawable.shopping_cart),
+                    contentDescription = "Giỏ hàng",
+                    tint = Color(0xFF5D4037),
+                )
+            }
+        }
     }
 }
 
@@ -162,8 +146,6 @@ fun PetShopNavigationBar(
     updateIndex: (Int) -> Unit = {},
     selectedIndex: Int = 0
 ) {
-    //val selectedIndex = remember { mutableStateOf(0) }
-
     val items = listOf(
         BottomNavigationBarItem(
             label = "Trang chủ",
@@ -187,8 +169,6 @@ fun PetShopNavigationBar(
 
     NavigationBar(
         modifier = modifier,
-        //containerColor = Color.White
-        //contentColor = Color.Transparent
     ) {
         items.forEach { item ->
             val index = items.indexOf(item)
@@ -246,9 +226,7 @@ fun TopAppBarWithSearch(
         Box(
             modifier = Modifier
                 .weight(1f)
-                //.background(Color.White, RoundedCornerShape(16.dp))
-                //.border(1.dp, Color(0xFFCACACA), RoundedCornerShape(16.dp))
-                .padding(horizontal = 8.dp) // Padding inside the box
+                .padding(horizontal = 8.dp)
         ) {
             Column {
                 Spacer(modifier = Modifier.height(9.dp))
@@ -336,19 +314,6 @@ fun TopAppBarWithSearch(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PetShopTopAppBarPreview() {
-    TopAppBarWithSearch(
-        filterClicked = { /*TODO*/ },
-        notificationClicked = { /*TODO*/ },
-        cartClicked = { /*TODO*/ },
-        onSearchIconClicked = { /*TODO*/ },
-        onSearchTextChanged = { /*TODO*/ }
-    )
-}
-
-
 @Composable
 fun CheckoutEndBar(
     total: Double = 0.0,
@@ -432,6 +397,92 @@ fun NewCheckoutEndBar(
     }
 }
 
+@Composable
+fun DetailProductBottomBar(
+    modifier: Modifier = Modifier,
+    onChatClicked: () -> Unit = {},
+    onAddToCartClicked: () -> Unit = {},
+    onBuyClicked: () -> Unit = {},
+) {
+    Row(
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .fillMaxWidth()
+            .height(70.dp)
+            .background(color = MaterialTheme.colorScheme.secondaryContainer)
+            .padding(start = 0.dp, top = 8.dp, end = 8.dp, bottom = 8.dp)
+    ) {
+        // Chat button
+        androidx.compose.material3.Button(
+            modifier = modifier
+                .padding(0.dp)
+                .sizeIn(minHeight = 48.dp)
+                .width(120.dp)
+                .height(55.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Transparent,
+                disabledContainerColor = Color(0xFFCACACA)
+            ),
+            shape = RoundedCornerShape(16.dp),
+            onClick = onChatClicked,
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.height(30.dp)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.message_icon_selected),
+                    contentDescription = null,
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Chat",
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight(700),
+                        color = Color(0xFF5D4037)
+                    ),
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+        // Add to cart button
+        Button(
+            onClick = onAddToCartClicked,
+            title = "Thêm vào\ngiỏ hàng",
+            isDisable = false,
+            color = Color(0xFF46AE7C),
+            modifier = Modifier.height(55.dp)
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        // Buy button
+        Button(
+            onClick = onBuyClicked,
+            title = "Mua hàng",
+            isDisable = false,
+            color = Color(0xFFEE2828),
+            modifier = Modifier.height(55.dp)
+        )
+    }
+}
+
+@Preview
+@Composable
+fun DetailProductBottomBarPreview() {
+    DetailProductBottomBar()
+}
+
+@Preview
+@Composable
+fun TopAppBarPreview() {
+    TopAppBarNoSearch(
+        title = "test voi title dai qua them nua ddi van chua du dai",
+        isCartEnable = true
+    )
+}
+
+/*
 @Preview(showBackground = true)
 @Composable
 fun NewCheckoutEndBarPreview() {
@@ -450,11 +501,7 @@ fun PetShopNavigationBarPreview() {
     PetShopNavigationBar()
 }
 
-@Preview
-@Composable
-fun TopAppBarPreview() {
-    TopAppBarNoSearch(title = "test voi title dai qua them nua ddi van chua du dai")
-}
+
 
 @Preview
 @Composable
@@ -463,5 +510,20 @@ fun CheckoutBottomBarPreview() {
         total = 120000.0
     )
 }
+
+
+@Preview(showBackground = true)
+@Composable
+fun PetShopTopAppBarPreview() {
+    TopAppBarWithSearch(
+        filterClicked = { /*TODO*/ },
+        notificationClicked = { /*TODO*/ },
+        cartClicked = { /*TODO*/ },
+        onSearchIconClicked = { /*TODO*/ },
+        onSearchTextChanged = { /*TODO*/ }
+    )
+}
+
+*/
 
 

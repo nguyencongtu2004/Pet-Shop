@@ -104,8 +104,7 @@ fun ProfileScreen(
                         )
                         Text(
                             text = user.role,
-                            style = MaterialTheme.typography.bodySmall.copy(
-                                fontWeight = FontWeight(500),
+                            style = MaterialTheme.typography.titleMedium.copy(
                                 color = Color(0xFF48854B),
                             ),
                         )

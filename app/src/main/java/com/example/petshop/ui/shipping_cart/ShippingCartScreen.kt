@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -47,6 +48,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.petshop.R
 import com.example.petshop.view_model.CartViewModel
 import com.example.petshop.model.FoodProduct
 import com.example.petshop.model.Product
@@ -296,51 +298,64 @@ fun BoughtItemCart(
                     //Spacer(modifier = Modifier.weight(1f))
                     IconButton(onClick = { showDialog = true }) {
                         Icon(
-                            imageVector = Icons.Default.Delete,
-                            contentDescription = null
-                        )
-                    }
-                    IconButton(
-                        onClick = {
-                            if (quantity > 1) quantity--
-                            product.quantity = quantity
-                            onQuantityChange(checkedState, quantity)
-                        },
-                        modifier = Modifier
-                            .border(width = 1.dp, color = Color(0xFFCACACA))
-                            .padding(1.dp)
-                            .width(30.dp)
-                            .height(30.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.KeyboardArrowDown,
+                            painter = painterResource(id = R.drawable.trash),
                             contentDescription = null,
+                            modifier = Modifier.width(28.dp)
                         )
                     }
-                    Text(
-                        text = quantity.toString(),
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            fontSize = 18.sp
-                        ),
-                        modifier = Modifier.width(36.dp),
-                        textAlign = TextAlign.Center
-                    )
-                    IconButton(
-                        onClick = {
-                            quantity++
-                            product.quantity = quantity
-                            onQuantityChange(checkedState, quantity)
-                        },
+
+                    // Nút giảm tăng số lượng sản phẩm
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
-                            .border(width = 1.dp, color = Color(0xFFCACACA))
-                            .padding(1.dp)
-                            .width(30.dp)
-                            .height(30.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.KeyboardArrowUp,
-                            contentDescription = null
+                        .border(
+                            shape = RoundedCornerShape(8.dp),
+                            width = 1.dp,
+                            color = Color(0xFFCACACA)
                         )
+                    ) {
+                        IconButton(
+                            onClick = {
+                                if (quantity > 1) quantity--
+                                product.quantity = quantity
+                                onQuantityChange(checkedState, quantity)
+                            },
+                            modifier = Modifier
+                                //.border(width = 1.dp, color = Color(0xFFCACACA))
+                                .padding(1.dp)
+                                .width(30.dp)
+                                .height(30.dp)
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.remove),
+                                contentDescription = null,
+                            )
+                        }
+                        Text(
+                            text = quantity.toString(),
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontSize = 18.sp
+                            ),
+                            modifier = Modifier.width(36.dp),
+                            textAlign = TextAlign.Center
+                        )
+                        IconButton(
+                            onClick = {
+                                quantity++
+                                product.quantity = quantity
+                                onQuantityChange(checkedState, quantity)
+                            },
+                            modifier = Modifier
+                                //.border(width = 1.dp, color = Color(0xFFCACACA))
+                                .padding(1.dp)
+                                .width(30.dp)
+                                .height(30.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Add,
+                                contentDescription = null
+                            )
+                        }
                     }
                 }
             }

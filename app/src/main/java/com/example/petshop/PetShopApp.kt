@@ -299,7 +299,7 @@ fun PetShopApp(
 
                 ProductDetail(
                     navController = navController,
-                    produciId = productId!!,
+                    productId = productId!!,
                     productViewModel = productViewModel,
 
                 )

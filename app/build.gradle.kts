@@ -82,7 +82,8 @@ dependencies {
 
     implementation(kotlin("reflect"))
 
-    implementation ("androidx.sqlite:sqlite:3.4.4")
-    implementation ("androidx.sqlite:sqlite-framework:3.4.4")
+    // Không tìm thấy thư viện này
+    //implementation ("androidx.sqlite:sqlite:3.4.4")
+    //implementation ("androidx.sqlite:sqlite-framework:3.4.4")
 
 }

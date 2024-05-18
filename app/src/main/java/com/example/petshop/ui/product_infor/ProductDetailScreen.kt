@@ -22,6 +22,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Star
@@ -35,6 +36,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -59,9 +63,11 @@ import com.example.petshop.model.ClothesProduct
 import com.example.petshop.model.Flavor
 import com.example.petshop.model.FoodProduct
 import com.example.petshop.model.Product
+import com.example.petshop.model.Screen
 import com.example.petshop.model.Size
 import com.example.petshop.model.ToyProduct
 import com.example.petshop.model.Weight
+import com.example.petshop.ui.DetailProductBottomBar
 import com.example.petshop.ui.TopAppBarNoSearch
 import com.example.petshop.view_model.ProductViewModel
 
@@ -73,21 +79,33 @@ fun getScreenWidth(): Int {
 
 @Composable
 fun ProductDetail(
-    produciId: String,
+    productId: String,
     navController: NavController? = null,
     productViewModel: ProductViewModel,
     onBackClick: () -> Unit = {}
 ) {
     val allProducts by productViewModel.allProducts.collectAsState()
-    val product = allProducts.find { it.id == produciId } !!
+    val product = allProducts.find { it.id == productId }!!
 
     Scaffold(
         topBar = {
             TopAppBarNoSearch(
                 title = product.name,
+                isCartEnable = true,
+                onCartClick = {
+                    navController?.navigate(Screen.ShoppingCartScreen.route)
+                },
                 onBackClick = {
                     navController?.popBackStack()
                 }
+            )
+        },
+        bottomBar = {
+            // TODO
+            DetailProductBottomBar(
+                onChatClicked = {},
+                onAddToCartClicked = {},
+                onBuyClicked = {},
             )
         }
     ) {
@@ -159,7 +177,6 @@ private fun ProductInfoSection(
     }
 }
 
-// Other Composables for ProductCustomizationSection and ProductDescriptionSection
 @Composable
 private fun ProductInfoCard(
     modifier: Modifier = Modifier,
@@ -185,7 +202,8 @@ private fun ProductInfoCard(
             ProductRatingAndFavorite(
                 rating = product.star,
                 onRateClick = onRateClick,
-                onFavoriteClick = onFavoriteClick
+                onFavoriteClick = onFavoriteClick,
+                isFavorite = false
             )
         }
     }
@@ -244,7 +262,6 @@ private fun ProductTag(text: String, color: Color) {
     )
 }
 
-// Other Composables...
 @Composable
 private fun ProductTitleAndPrice(
     modifier: Modifier = Modifier,
@@ -303,58 +320,51 @@ private fun ProductDescription(
 }
 
 @Composable
-private fun ProductQuantitySelector() {
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Box(
+private fun ProductQuantitySelector(
+    modifier: Modifier = Modifier,
+    quantity: Int = 1,
+    onMinusClick: () -> Unit = {},
+    onPlusClick: () -> Unit = {}
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .border(
+                shape = RoundedCornerShape(8.dp),
+                width = 1.dp,
+                color = Color(0xFFCACACA)
+            )
+    ) {
+        IconButton(
+            onClick = onMinusClick,
             modifier = Modifier
-                .align(Alignment.CenterVertically)
-                .width(25.dp)
-                .height(25.dp)
-                .background(color = colorResource(id = R.color.saddle_brown))
+                .padding(1.dp)
+                .width(30.dp)
+                .height(30.dp)
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.minus),
-                contentDescription = "Decrease Quantity",
-                colorFilter = ColorFilter.tint(Color.White),
-                modifier = Modifier.fillMaxSize()
+            Icon(
+                painter = painterResource(id = R.drawable.remove),
+                contentDescription = null,
             )
         }
-        Box(
+        Text(
+            text = quantity.toString(),
+            style = MaterialTheme.typography.bodyMedium.copy(
+                fontSize = 18.sp
+            ),
+            modifier = Modifier.width(36.dp),
+            textAlign = TextAlign.Center
+        )
+        IconButton(
+            onClick = onPlusClick,
             modifier = Modifier
-                .width(25.dp)
-                .height(25.dp)
-                .border(
-                    width = 2.dp,
-                    color = colorResource(id = R.color.saddle_brown),
-                    shape = RoundedCornerShape(4.dp)
-                )
+                .padding(1.dp)
+                .width(30.dp)
+                .height(30.dp)
         ) {
-            Text(
-                text = "1",
-                style = TextStyle(
-                    fontSize = 18.sp,
-                    lineHeight = 26.sp,
-                    fontFamily = FontFamily(Font(R.font.poppins_regular)),
-                    fontWeight = FontWeight(500),
-                    color = Color(0xFF3C3C3C),
-                    textAlign = TextAlign.Center
-                ),
-                color = Color.Black,
-                modifier = Modifier.fillMaxSize()
-            )
-        }
-        Box(
-            modifier = Modifier
-                .align(Alignment.CenterVertically)
-                .width(25.dp)
-                .height(25.dp)
-                .background(color = colorResource(id = R.color.saddle_brown))
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.plus),
-                contentDescription = "Increase Quantity",
-                colorFilter = ColorFilter.tint(Color.White),
-                modifier = Modifier.fillMaxSize()
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = null
             )
         }
     }
@@ -366,6 +376,7 @@ private fun ProductRatingAndFavorite(
     rating: Double,
     onRateClick: () -> Unit,
     onFavoriteClick: () -> Unit,
+    isFavorite: Boolean = false,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -411,13 +422,26 @@ private fun ProductRatingAndFavorite(
         }
         Spacer(modifier = Modifier.weight(1f))
         IconButton(onClick = onFavoriteClick) {
-            Icon(
-                imageVector = Icons.Default.Favorite,
-                tint = Color.Red,
-                contentDescription = "Favorite",
-                modifier = Modifier
-                    .size(24.dp)
-            )
+            Box(
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.fav),
+                    tint = Color.Red,
+                    contentDescription = "Favorite",
+                    modifier = Modifier
+                        .size(32.dp)
+                )
+                if (isFavorite)
+                    Icon(
+                        imageVector = Icons.Default.Favorite,
+                        tint = Color.Red,
+                        contentDescription = "Favorite",
+                        modifier = Modifier
+                            .size(32.dp)
+                    )
+
+            }
         }
     }
 }
@@ -436,9 +460,9 @@ private fun ProductCustomizationSection(product: Product) {
         ) {
             ProductCustomizationTitle()
             when (product) {
-                is FoodProduct -> ProductFoodCustomization(product = product)
-                is ToyProduct -> ProductToyCustomization(product = product)
-                is ClothesProduct -> ProductClothesCustomization(product = product)
+                is FoodProduct -> ProductFoodCustomization()
+                is ToyProduct -> ProductToyCustomization()
+                is ClothesProduct -> ProductClothesCustomization()
                 else -> {}
             }
         }
@@ -456,7 +480,7 @@ private fun ProductCustomizationTitle() {
             .padding(10.dp)
     ) {
         Text(
-            text = "Tùy chỉnh",
+            text = "Chọn phân loại sản phẩm:",
             style = MaterialTheme.typography.titleMedium.copy(
                 color = Color(0xFF3C3C3C)
             )
@@ -466,7 +490,7 @@ private fun ProductCustomizationTitle() {
 
 
 @Composable
-private fun ProductFoodCustomization(product: FoodProduct) {
+private fun ProductFoodCustomization() {
     Column {
         ProductCustomizationOption(title = "Vị:", options = Flavor.entries.map { it.value })
         ProductCustomizationOption(title = "Kích cỡ:", options = Weight.entries.map { it.value })
@@ -474,14 +498,14 @@ private fun ProductFoodCustomization(product: FoodProduct) {
 }
 
 @Composable
-private fun ProductClothesCustomization(product: ClothesProduct) {
+private fun ProductClothesCustomization() {
     Column {
         ProductCustomizationOption(title = "Kích cỡ:", options = Size.entries.map { it.value })
     }
 }
 
 @Composable
-private fun ProductToyCustomization(product: ToyProduct) {
+private fun ProductToyCustomization() {
     Column {
         ProductCustomizationOption(title = "Kích cỡ:", options = Size.entries.map { it.value })
     }
@@ -534,33 +558,6 @@ private fun ProductCustomizationOptionItem(option: String) {
             )
         },
     )
-
-
-    val roundedSize = 10.dp
-    /*Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .width(IntrinsicSize.Min)
-            .height(30.dp)
-            .border(
-                width = 2.dp,
-                color = colorResource(id = R.color.saddle_brown),
-                shape = RoundedCornerShape(roundedSize)
-            )
-            .padding(horizontal = 8.dp)
-    ) {
-        Text(
-            text = option,
-            style = TextStyle(
-                fontSize = 12.sp,
-                fontFamily = FontFamily(Font(R.font.poppins_regular)),
-                fontWeight = FontWeight(600),
-                color = colorResource(id = R.color.saddle_brown)
-            ),
-            textAlign = TextAlign.Center
-        )
-    }
-    */
 }
 
 @Composable
@@ -591,7 +588,7 @@ private fun ProductDescriptionTitle() {
             .padding(10.dp)
     ) {
         Text(
-            text = "Thông tin sản phẩm",
+            text = "Thông tin sản phẩm:",
             style = MaterialTheme.typography.titleMedium.copy(
                 color = Color(0xFF3C3C3C)
             )
@@ -624,6 +621,6 @@ private fun ProductDescriptionText(description: String) {
 fun ProductDetailPreview() {
     ProductDetail(
         productViewModel = ProductViewModel(),
-        produciId = "1"
+        productId = "1"
     )
 }
