@@ -312,13 +312,13 @@ private fun ProductTitleAndPrice(
             style = MaterialTheme.typography.titleLarge.copy(
                 color = Color(0xFF5D4037)
             ),
-            modifier = Modifier.width(250.dp)
+            modifier = Modifier.width(240.dp)
         )
         Text(
-            text = "${price.toInt()} đ",
+            text = "${price.toInt()}đ",
             style = MaterialTheme.typography.titleMedium.copy(
                 fontSize = 18.sp,
-                color = Color(0xFF3C3C3C)
+                color = Color(0xFFFF4081)
             ),
             textAlign = TextAlign.Right,
             modifier = Modifier.fillMaxWidth()

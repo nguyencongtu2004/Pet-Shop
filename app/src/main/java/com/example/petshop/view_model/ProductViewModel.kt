@@ -105,6 +105,7 @@ class ProductViewModel : ViewModel() {
     }
 
     fun decreaseQuantity() {
+        if (_selectedProduct.value?.quantity == 1) return
         _selectedProduct.update {
             it?.let { product ->
                 when (product) {

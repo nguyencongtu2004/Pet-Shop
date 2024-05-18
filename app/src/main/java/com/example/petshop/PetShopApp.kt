@@ -36,6 +36,7 @@ import com.example.petshop.ui.checkout.SelectPayMethod
 import com.example.petshop.ui.checkout.SelectVoucher
 import com.example.petshop.ui.checkout.TransactionScreen
 import com.example.petshop.ui.home.HomeScreen
+import com.example.petshop.ui.login_register.Login
 import com.example.petshop.ui.notification.NotificationScreen
 import com.example.petshop.ui.product_infor.ProductDetail
 import com.example.petshop.ui.shipment.FollowShippingScreen
@@ -304,6 +305,14 @@ fun PetShopApp(
                     userViewModel = userViewModel,
                     cartViewModel = cartViewModel
                 )
+            }
+
+            composable(route = Screen.LoginScreen.route) {
+                Login()
+            }
+
+            composable(route = Screen.RegisterScreen.route) {
+                Login()
             }
         }
     }

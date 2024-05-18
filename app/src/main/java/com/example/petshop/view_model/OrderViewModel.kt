@@ -58,22 +58,6 @@ class OrderViewModel : ViewModel() {
         calculateProductTotal()  // Recalculate total when a new order is set
     }
 
-    fun addProduct(product: Product) {
-        _currentOrder.update { order ->
-            val updatedProducts = order.products.toMutableList().apply { add(product) }
-            order.copy(products = updatedProducts)
-        }
-        calculateProductTotal()  // Recalculate total when a product is added
-    }
-
-    fun updateProduct(index: Int, product: Product) {
-        _currentOrder.update { order ->
-            val updatedProducts = order.products.toMutableList().apply { this[index] = product }
-            order.copy(products = updatedProducts)
-        }
-        calculateProductTotal()  // Recalculate total when a product is updated
-    }
-
     fun resetOrder() {
         _currentOrder.update { _ ->
             Order()
