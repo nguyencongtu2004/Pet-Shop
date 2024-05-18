@@ -37,6 +37,7 @@ import com.example.petshop.ui.checkout.SelectVoucher
 import com.example.petshop.ui.checkout.TransactionScreen
 import com.example.petshop.ui.home.HomeScreen
 import com.example.petshop.ui.login_register.Login
+import com.example.petshop.ui.login_register.Register
 import com.example.petshop.ui.notification.NotificationScreen
 import com.example.petshop.ui.product_infor.ProductDetail
 import com.example.petshop.ui.shipment.FollowShippingScreen
@@ -170,11 +171,11 @@ fun PetShopApp(
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Screen.HomePage.route, // Màn hình bắt đầu
+            startDestination = Screen.RegisterScreen.route, // Màn hình bắt đầu
             modifier = Modifier.padding(innerPadding),
         ) {
             // Màn hình chính
-            composable(route = Screen.HomePage.route) {
+            composable(route = Screen.RegisterScreen.route) {
                 HomeScreen(
                     navController = navController,
                     productViewModel = productViewModel,
@@ -312,7 +313,7 @@ fun PetShopApp(
             }
 
             composable(route = Screen.RegisterScreen.route) {
-                Login()
+                Register()
             }
         }
     }

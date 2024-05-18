@@ -6,48 +6,44 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.DatabaseReference
+import kotlinx.coroutines.tasks.await
 
 class AccountController {
-    private val database: DatabaseReference = FirebaseDatabase.getInstance().reference
+    companion object {
+        private val database: DatabaseReference = FirebaseDatabase.getInstance().reference
 
-    fun registerAccount(numberphone: String, password: String, callback: (Boolean, String?) -> Unit) {
-        val userId = database.push().key
-        if (userId == null) {
-            callback(false, "Failed to generate user ID")
-            return
+        fun isPhoneNumberExists(numberphone: String, callback: (Boolean) -> Unit) {
+            val query = database.child("Accounts").orderByChild("numberphone").equalTo(numberphone)
+            query.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    callback(dataSnapshot.exists())
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    // Xử lý lỗi nếu cần
+                }
+            })
         }
-        val account = Account(user_id = userId, numberphone = numberphone, password = password)
-        database.child("Accounts").child(userId).setValue(account)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    callback(true, null)
+
+        fun registerAccount(numberphone: String, password: String, callback: (Boolean) -> Unit) {
+            isPhoneNumberExists(numberphone) { isExists ->
+                if (isExists) {
+                    callback(false)
                 } else {
-                    callback(false, task.exception?.message)
+                    // Tiếp tục đăng ký nếu số điện thoại chưa tồn tại
+                    val userId = database.push().key ?: return@isPhoneNumberExists
+                    val account =
+                        Account(user_id = userId, numberphone = numberphone, password = password)
+                    database.child("Accounts").child(userId).setValue(account)
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                callback(true)
+                            } else {
+                                callback(false)
+                            }
+                        }
                 }
             }
+        }
     }
-
-//    fun loginAccount(numberphone: String, password: String, callback: (Boolean, String?) -> Unit) {
-//        database.child("Accounts").orderByChild("numberphone").equalTo(numberphone)
-//            .addListenerForSingleValueEvent(object : ValueEventListener {
-//                override fun onDataChange(snapshot: DataSnapshot) {
-//                    if (snapshot.exists()) {
-//                        for (accountSnapshot in snapshot.children) {
-//                            val account = accountSnapshot.getValue(Account::class.java)
-//                            if (account != null && account.password == password) {
-//                                callback(true, null)
-//                                return
-//                            }
-//                        }
-//                        callback(false, "Incorrect password")
-//                    } else {
-//                        callback(false, "Account does not exist")
-//                    }
-//                }
-//
-//                override fun onCancelled(error: DatabaseError) {
-//                    callback(false, error.message)
-//                }
-//            })
-//    }
 }

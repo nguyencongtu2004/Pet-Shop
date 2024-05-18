@@ -1,5 +1,7 @@
 package com.example.petshop.ui.login_register
-
+import android.widget.Toast
+import  android.app.Application
+import kotlinx.coroutines.runBlocking
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,8 +32,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.petshop.R
+import com.example.petshop.database.controller.AccountController
 import com.example.petshop.ui.theme.PetShopTheme
-
+import android.content.Context
 @Composable
 fun Register(
     modifier: Modifier = Modifier,
@@ -71,7 +74,18 @@ fun Register(
             Button(
                 title = "Đăng ký",
                 isDisable = if (phoneText == "" || passwordText == "") true else false,
-                onClick = onRegisterClick,
+                onClick = {
+                    val pass = passwordText.toString()
+                    val sdt = phoneText.toString()
+
+                    AccountController.registerAccount(sdt, pass) { success ->
+                        if (success) {
+                                // sau khi dang ki thang cong
+                        } else {
+                                //dang ki that bai
+                        }
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp)
