@@ -1,8 +1,6 @@
 package com.example.petshop.model
 
 import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
-import androidx.compose.ui.graphics.painter.Painter
 import com.example.petshop.R
 
 data class User(
@@ -17,5 +15,5 @@ data class User(
     var email: String = "noemail@email.com",
     var password: String? = null, // Chưa đăng nhập thì password = null
 
-    var favoriteProducts: List<Product> = listOf(),
+    var favoriteProducts: List<String> = listOf(),
 )

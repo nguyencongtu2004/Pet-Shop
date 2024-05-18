@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.petshop.R
+import com.example.petshop.model.FoodProduct
 import com.example.petshop.model.PaymentMethod
 import com.example.petshop.model.Product
 import com.example.petshop.model.Screen
@@ -333,11 +334,16 @@ fun ActionBottomBar(
 fun ProductItemPreview() {
     PetShopTheme {
         ProductItem(
-            product = Product(
+            product = FoodProduct(
+                id = "1",
+                oldPrice = 20000.0,
+                star = 4.8,
                 name = "Thức ăn hạt mềm Zenith",
                 price = 45000.0,
                 description = "Thức ăn hạt mềm Zenith dành cho chó",
-                quantity = 1
+                quantity = 1,
+                image = R.drawable.avt,
+                detailDescription = "Thức ăn hạt mềm Zenith dành cho chó"
             )
         )
     }

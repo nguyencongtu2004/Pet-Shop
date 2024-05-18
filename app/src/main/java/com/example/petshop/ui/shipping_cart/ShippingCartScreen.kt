@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -47,10 +48,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.petshop.R
+import com.example.petshop.model.ClothesProduct
 import com.example.petshop.view_model.CartViewModel
 import com.example.petshop.model.FoodProduct
 import com.example.petshop.model.Product
 import com.example.petshop.model.Screen
+import com.example.petshop.model.ToyProduct
 import com.example.petshop.ui.CheckoutBottomBar
 import com.example.petshop.ui.theme.PetShopTheme
 
@@ -117,7 +121,17 @@ fun ShoppingCartScreen(
 @Composable
 fun BoughtItemCart(
     modifier: Modifier = Modifier,
-    product: Product = FoodProduct(),
+    product: Product = FoodProduct(
+        id = "1",
+        name = "Đồ ăn cho chó",
+        description = "Chó rất thích ăn nó",
+        price = 10000.0,
+        oldPrice = 15000.0,
+        star = 4.0,
+        quantity = 1,
+        image = R.drawable.avt,
+        detailDescription = "Chi tiết sản phẩm"
+    ),
     onQuantityChange: (Boolean, Int) -> Unit,
     onDeleteClick: () -> Unit = {},
 ) {
@@ -249,45 +263,90 @@ fun BoughtItemCart(
                         //.width(160.dp)
                         .weight(1f)
                 ) {
-                    item {
-                        if (product is FoodProduct)
-                            FilterChip(
-                                label = {
-                                    Text(
-                                        text = product.flavor,
-                                        style = MaterialTheme.typography.labelSmall
-                                    )
-                                },
-                                onClick = { /*TODO*/ },
-                                selected = true,
-                                colors = FilterChipDefaults.filterChipColors(
-                                    labelColor = Color(0xFF000000),
-                                    selectedLabelColor = Color.White,
-                                    selectedContainerColor = Color(0xFF5D4037),
-                                ),
-                                shape = RoundedCornerShape(8.dp),
-                                modifier = Modifier.height(28.dp)
-                            )
-                    }
-                    item {
-                        if (product is FoodProduct)
-                            FilterChip(
-                                label = {
-                                    Text(
-                                        text = "${product.weight}kg",
-                                        style = MaterialTheme.typography.labelSmall
-                                    )
-                                },
-                                onClick = { /*TODO*/ },
-                                selected = true,
-                                colors = FilterChipDefaults.filterChipColors(
-                                    labelColor = Color(0xFF000000),
-                                    selectedLabelColor = Color.White,
-                                    selectedContainerColor = Color(0xFF5D4037),
-                                ),
-                                shape = RoundedCornerShape(8.dp),
-                                modifier = Modifier.height(28.dp)
-                            )
+                    // Hiển thị các thông số của sản phẩm theo loại sản phẩm
+                    when (product) {
+                        is FoodProduct -> {
+                            item {
+                                FilterChip(
+                                    label = {
+                                        Text(
+                                            text = product.selectedFlavor.value,
+                                            style = MaterialTheme.typography.labelSmall
+                                        )
+                                    },
+                                    onClick = { /*TODO*/ },
+                                    selected = true,
+                                    colors = FilterChipDefaults.filterChipColors(
+                                        labelColor = Color(0xFF000000),
+                                        selectedLabelColor = Color.White,
+                                        selectedContainerColor = Color(0xFF5D4037),
+                                    ),
+                                    shape = RoundedCornerShape(8.dp),
+                                    modifier = Modifier.height(28.dp)
+                                )
+                            }
+                            item {
+                                FilterChip(
+                                    label = {
+                                        Text(
+                                            text = "${product.selectedWeight.value}",
+                                            style = MaterialTheme.typography.labelSmall
+                                        )
+                                    },
+                                    onClick = { /*TODO*/ },
+                                    selected = true,
+                                    colors = FilterChipDefaults.filterChipColors(
+                                        labelColor = Color(0xFF000000),
+                                        selectedLabelColor = Color.White,
+                                        selectedContainerColor = Color(0xFF5D4037),
+                                    ),
+                                    shape = RoundedCornerShape(8.dp),
+                                    modifier = Modifier.height(28.dp)
+                                )
+                            }
+                        }
+                        is ToyProduct -> {
+                            item {
+                                FilterChip(
+                                    label = {
+                                        Text(
+                                            text = product.selectedSize.value,
+                                            style = MaterialTheme.typography.labelSmall
+                                        )
+                                    },
+                                    onClick = { /*TODO*/ },
+                                    selected = true,
+                                    colors = FilterChipDefaults.filterChipColors(
+                                        labelColor = Color(0xFF000000),
+                                        selectedLabelColor = Color.White,
+                                        selectedContainerColor = Color(0xFF5D4037),
+                                    ),
+                                    shape = RoundedCornerShape(8.dp),
+                                    modifier = Modifier.height(28.dp)
+                                )
+                            }
+                        }
+                        is ClothesProduct -> {
+                            item {
+                                FilterChip(
+                                    label = {
+                                        Text(
+                                            text = product.selectedSize.value,
+                                            style = MaterialTheme.typography.labelSmall
+                                        )
+                                    },
+                                    onClick = { /*TODO*/ },
+                                    selected = true,
+                                    colors = FilterChipDefaults.filterChipColors(
+                                        labelColor = Color(0xFF000000),
+                                        selectedLabelColor = Color.White,
+                                        selectedContainerColor = Color(0xFF5D4037),
+                                    ),
+                                    shape = RoundedCornerShape(8.dp),
+                                    modifier = Modifier.height(28.dp)
+                                )
+                            }
+                        }
                     }
                 }
                 Row(
@@ -296,51 +355,64 @@ fun BoughtItemCart(
                     //Spacer(modifier = Modifier.weight(1f))
                     IconButton(onClick = { showDialog = true }) {
                         Icon(
-                            imageVector = Icons.Default.Delete,
-                            contentDescription = null
-                        )
-                    }
-                    IconButton(
-                        onClick = {
-                            if (quantity > 1) quantity--
-                            product.quantity = quantity
-                            onQuantityChange(checkedState, quantity)
-                        },
-                        modifier = Modifier
-                            .border(width = 1.dp, color = Color(0xFFCACACA))
-                            .padding(1.dp)
-                            .width(30.dp)
-                            .height(30.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.KeyboardArrowDown,
+                            painter = painterResource(id = R.drawable.trash),
                             contentDescription = null,
+                            modifier = Modifier.width(28.dp)
                         )
                     }
-                    Text(
-                        text = quantity.toString(),
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            fontSize = 18.sp
-                        ),
-                        modifier = Modifier.width(36.dp),
-                        textAlign = TextAlign.Center
-                    )
-                    IconButton(
-                        onClick = {
-                            quantity++
-                            product.quantity = quantity
-                            onQuantityChange(checkedState, quantity)
-                        },
+
+                    // Nút giảm tăng số lượng sản phẩm
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
-                            .border(width = 1.dp, color = Color(0xFFCACACA))
-                            .padding(1.dp)
-                            .width(30.dp)
-                            .height(30.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.KeyboardArrowUp,
-                            contentDescription = null
+                        .border(
+                            shape = RoundedCornerShape(8.dp),
+                            width = 1.dp,
+                            color = Color(0xFFCACACA)
                         )
+                    ) {
+                        IconButton(
+                            onClick = {
+                                if (quantity > 1) quantity--
+                                product.quantity = quantity
+                                onQuantityChange(checkedState, quantity)
+                            },
+                            modifier = Modifier
+                                //.border(width = 1.dp, color = Color(0xFFCACACA))
+                                .padding(1.dp)
+                                .width(30.dp)
+                                .height(30.dp)
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.remove),
+                                contentDescription = null,
+                            )
+                        }
+                        Text(
+                            text = quantity.toString(),
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                fontSize = 18.sp
+                            ),
+                            modifier = Modifier.width(36.dp),
+                            textAlign = TextAlign.Center
+                        )
+                        IconButton(
+                            onClick = {
+                                quantity++
+                                product.quantity = quantity
+                                onQuantityChange(checkedState, quantity)
+                            },
+                            modifier = Modifier
+                                //.border(width = 1.dp, color = Color(0xFFCACACA))
+                                .padding(1.dp)
+                                .width(30.dp)
+                                .height(30.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Add,
+                                contentDescription = null
+                            )
+                        }
                     }
                 }
             }
