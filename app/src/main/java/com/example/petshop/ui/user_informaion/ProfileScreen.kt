@@ -342,6 +342,7 @@ fun SettingComponent(
 @Composable
 fun ProfileScreenPreview() {
     val loginedUser = User(
+        user_id = "0",
         name = "Võ Hoàng Tuấn",
         role = "Khách hàng thân thiết",
         favoriteProducts = listOf(),

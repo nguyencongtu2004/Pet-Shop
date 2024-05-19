@@ -59,7 +59,6 @@ class AccountController {
         }
 
         fun Login(numberphone: String, password: String, callback: (Boolean) -> Unit) {
-
             val query = database.child("Accounts").orderByChild("numberphone").equalTo(numberphone)
             query.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -80,6 +79,24 @@ class AccountController {
             })
         }
 
+
+        // Hàm cập nhật thông tin tài khoản
+        fun editProfile(account: Account, callback: (Boolean) -> Unit) {
+            val userId = account.user_id
+            if (userId != null) {
+                database.child("Accounts").child(userId).setValue(account)
+                    .addOnCompleteListener { task ->
+                        callback(task.isSuccessful)
+                    }
+                    .addOnFailureListener {
+                        callback(false)
+                    }
+            } else {
+                callback(false)
+            }
+        }
+
+        // lấy thông tin người dùng bằng sđt
         fun getAccountByNumberphone(numberphone: String, callback: (Account?) -> Unit) {
             val query = database.child("Accounts").orderByChild("numberphone").equalTo(numberphone).limitToFirst(1)
             query.addListenerForSingleValueEvent(object : ValueEventListener {

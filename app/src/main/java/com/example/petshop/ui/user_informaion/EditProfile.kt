@@ -1,5 +1,6 @@
 package com.example.petshop.ui.user_informaion
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -35,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -45,6 +47,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.petshop.R
+import com.example.petshop.database.controller.AccountController
+import com.example.petshop.database.model.Account
+import com.example.petshop.model.Screen
+import com.example.petshop.model.User
 import com.example.petshop.view_model.UserViewModel
 
 /*
@@ -61,7 +67,7 @@ fun EditProfile(
     modifier: Modifier = Modifier,
 ) {
     val user by userViewModel.currentUser.collectAsState()
-
+    val context = LocalContext.current
     var showEditDialog by remember { mutableStateOf(false) }
     var editField by remember { mutableStateOf("") }
     var editValue by remember { mutableStateOf("") }
@@ -183,6 +189,23 @@ fun EditProfile(
                 .fillMaxWidth()
                 .height(48.dp),
             onClick = {
+                val account = Account(
+                        user_id = user.user_id,
+                        numberphone = user.phone,
+                        password = user.password,
+                        name = user.name,
+                        email = user.email,
+                        sex = user.sex,
+                        address = user.address,
+                        birthDay = user.birthday
+                    )
+                AccountController.editProfile(account) { success ->
+                    if (success) {
+                        Toast.makeText(context, "Thay đổi thành công", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(context, "Thay đổi thất bại", Toast.LENGTH_SHORT).show()
+                    }
+                }
                 navController?.popBackStack()
             },
             title = "Xong",

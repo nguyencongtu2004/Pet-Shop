@@ -109,6 +109,7 @@ fun Login(
                                     if (account != null) {
                                         userViewModel.updateUser(
                                             User(
+                                                user_id = account.user_id.toString(),
                                                 name = account.name.toString(),
                                                 role = "Khách hàng thân thiết",
                                                 favoriteProducts = listOf(),
