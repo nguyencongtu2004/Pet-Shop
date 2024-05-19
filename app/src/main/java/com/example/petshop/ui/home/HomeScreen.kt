@@ -16,7 +16,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -70,7 +72,9 @@ fun HomeScreen(
     // Chọn tab mặc định là tab thứ nhất
     var selectedTabIndex by remember { mutableIntStateOf(0) }
 
-    Column {
+    Column(
+        modifier = Modifier.verticalScroll(rememberScrollState())
+    ) {
         HorizontalBanner(bannerItems = bannerItems)
         Box {
             ProductTabs(
@@ -262,10 +266,18 @@ fun TabContent(
     products: List<Product>,
     onProductClick: (String) -> Unit = {},
 ) {
-    LazyColumn {
+    /*LazyColumn {
         items(products.size) { index ->
             ProductWithStar(
                 product = products[index],
+                onProductClick = onProductClick
+            )
+        }
+    }*/
+    Column {
+        products.forEach { product ->
+            ProductWithStar(
+                product = product,
                 onProductClick = onProductClick
             )
         }
