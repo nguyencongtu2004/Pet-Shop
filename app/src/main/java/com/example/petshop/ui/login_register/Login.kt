@@ -1,6 +1,7 @@
 package com.example.petshop.ui.login_register
 
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -31,6 +32,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
@@ -43,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.petshop.R
+import com.example.petshop.database.controller.AccountController
 import com.example.petshop.model.Screen
 import com.example.petshop.ui.theme.PetShopTheme
 
@@ -52,6 +55,7 @@ fun Login(
     navController: NavController,
     onLoginClick: () -> Unit = {}
 ) {
+    val context = LocalContext.current
     Scaffold(
         modifier = modifier,
     ) {
@@ -90,7 +94,19 @@ fun Login(
                 Button(
                     title = "Đăng nhập",
                     isDisable = if (phoneText == "" || passwordText == "") true else false,
-                    onClick = onLoginClick,
+                    onClick = {
+                        val pass = passwordText.toString()
+                        val sdt = phoneText.toString()
+
+                        AccountController.Login(sdt, pass) { success ->
+                            if (success) {
+                                // Hiện toast thông báo đã thêm vào giỏ hàng
+                                navController.navigate(Screen.ProfileScreen.route)
+                            } else {
+                                Toast.makeText(context, "Sai thông tin đăng nhâp", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 20.dp)

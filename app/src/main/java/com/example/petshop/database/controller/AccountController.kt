@@ -33,7 +33,15 @@ class AccountController {
                     // Tiếp tục đăng ký nếu số điện thoại chưa tồn tại
                     val userId = database.push().key ?: return@isPhoneNumberExists
                     val account =
-                        Account(user_id = userId, numberphone = numberphone, password = password)
+                        Account(user_id = userId,
+                            numberphone = numberphone,
+                            password = password,
+                            name = "Chưa đặt",
+                            email = null,
+                            sex = null,
+                            address = null,
+                            birthDay = null
+                        )
                     database.child("Accounts").child(userId).setValue(account)
                         .addOnCompleteListener { task ->
                             if (task.isSuccessful) {
@@ -45,5 +53,27 @@ class AccountController {
                 }
             }
         }
+
+        fun Login(numberphone: String, password: String, callback: (Boolean) -> Unit) {
+            val query = database.child("Accounts").orderByChild("numberphone").equalTo(numberphone)
+            query.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    var accountExists = false
+                    for (accountSnapshot in dataSnapshot.children) {
+                        val account = accountSnapshot.getValue(Account::class.java)
+                        if (account != null && account.password == password) {
+                            accountExists = true
+                            break
+                        }
+                    }
+                    callback(accountExists)
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    callback(false)
+                }
+            })
+        }
+
     }
 }

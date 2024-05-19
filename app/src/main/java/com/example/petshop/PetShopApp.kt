@@ -177,7 +177,7 @@ fun PetShopApp(
         NavHost(
             navController = navController,
             // Nơi bắt đầu của ứng dụng
-            startDestination = Screen.HomePage.route,
+            startDestination = Screen.RegisterScreen.route,
             modifier = Modifier.padding(innerPadding),
         ) {
             // Màn hình chính
