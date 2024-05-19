@@ -21,4 +21,6 @@ sealed class Screen(val route: String, val title: String) {
     }
     object LoginScreen : Screen(route = "login", title = "Đăng nhập")
     object RegisterScreen : Screen(route = "register", title = "Đăng ký")
+
+    object ChatScreen : Screen(route = "chat", title = "Chat")
 }

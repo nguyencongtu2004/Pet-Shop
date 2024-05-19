@@ -72,10 +72,6 @@ import com.example.petshop.view_model.OrderViewModel
 import com.example.petshop.view_model.ProductViewModel
 import com.example.petshop.view_model.UserViewModel
 
-import kotlinx.coroutines.launch
-
-
-
 @Composable
 fun getScreenWidth(): Int {
     val configuration = LocalConfiguration.current
@@ -123,6 +119,7 @@ fun ProductDetail(
                 onAddToCartClicked = {
                     cartViewModel.addProductToCart(product!!)
                     cartViewModel.updateSelectedProduct(listOf(product!!))
+
                     // Hiện toast thông báo đã thêm vào giỏ hàng
                     Toast.makeText(context, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show()
                 },

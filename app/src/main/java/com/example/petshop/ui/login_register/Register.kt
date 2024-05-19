@@ -35,11 +35,19 @@ import com.example.petshop.R
 import com.example.petshop.database.controller.AccountController
 import com.example.petshop.ui.theme.PetShopTheme
 import android.content.Context
+import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.example.petshop.model.Screen
+
 @Composable
 fun Register(
     modifier: Modifier = Modifier,
+    navController: NavController,
     onRegisterClick: () -> Unit = {}
 ) {
+    val context = LocalContext.current
+
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -80,9 +88,11 @@ fun Register(
 
                     AccountController.registerAccount(sdt, pass) { success ->
                         if (success) {
-                                // sau khi dang ki thang cong
+                            // Hiện toast thông báo đã thêm vào giỏ hàng
+                            Toast.makeText(context, "Đăng ký thành công", Toast.LENGTH_SHORT).show()
+                            navController.navigate(Screen.LoginScreen.route)
                         } else {
-                                //dang ki that bai
+                            Toast.makeText(context, "Đăng ký thất bại", Toast.LENGTH_SHORT).show()
                         }
                     }
                 },
@@ -156,6 +166,8 @@ fun TypingNameField(
 @Composable
 fun RegisterPreview() {
     PetShopTheme {
-        Register()
+        Register(
+            navController = rememberNavController()
+        )
     }
 }

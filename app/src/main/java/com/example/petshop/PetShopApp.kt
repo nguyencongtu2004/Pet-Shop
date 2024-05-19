@@ -30,6 +30,7 @@ import com.example.petshop.model.Weight
 import com.example.petshop.ui.PetShopNavigationBar
 import com.example.petshop.ui.TopAppBarNoSearch
 import com.example.petshop.ui.TopAppBarWithSearch
+import com.example.petshop.ui.chat.ChatScreen
 import com.example.petshop.ui.checkout.CheckoutScreen
 import com.example.petshop.ui.checkout.LoadingScreen
 import com.example.petshop.ui.checkout.SelectPayMethod
@@ -47,6 +48,7 @@ import com.example.petshop.ui.user_informaion.EditProfile
 import com.example.petshop.ui.user_informaion.ProfileScreen
 import com.example.petshop.view_model.BannerViewModel
 import com.example.petshop.view_model.CartViewModel
+import com.example.petshop.view_model.ChatViewModel
 import com.example.petshop.view_model.NotificationViewModel
 import com.example.petshop.view_model.OrderViewModel
 import com.example.petshop.view_model.ProductViewModel
@@ -73,6 +75,7 @@ fun PetShopApp(
     val notificationViewModel = viewModel<NotificationViewModel>()
     val bannerViewModel = viewModel<BannerViewModel>()
     val orderViewModel = viewModel<OrderViewModel>()
+    val chatViewModel = viewModel<ChatViewModel>()
 
     // TRẠNG THÁI CỦA MÀN HÌNH Ở ĐÂY
 
@@ -108,7 +111,7 @@ fun PetShopApp(
                 isNavigationBarVisible = true
             }
 
-            Screen.LoadingCheckout.route, Screen.TransactionScreen.route, Screen.ProductDetailScreen.route, Screen.LoginScreen.route, Screen.RegisterScreen.route -> {
+            Screen.LoadingCheckout.route, Screen.TransactionScreen.route, Screen.ProductDetailScreen.route, Screen.LoginScreen.route, Screen.RegisterScreen.route, Screen.ChatScreen.route -> {
                 isSearchBarVisible = false
                 isNoSearchBarVisible = false
                 isNavigationBarVisible = false
@@ -158,7 +161,9 @@ fun PetShopApp(
                             }
                         }
                     },
-                    onChatClick = { /*TODO*/ },
+                    onChatClick = {
+                        navController.navigate(Screen.ChatScreen.route)
+                    },
                     onUserClick = {
                         if (currentScreen != Screen.ProfileScreen.route) {
                             navController.navigate(Screen.ProfileScreen.route) {
@@ -314,7 +319,16 @@ fun PetShopApp(
             }
 
             composable(route = Screen.RegisterScreen.route) {
-                Register()
+                Register(
+                    navController = navController
+                )
+            }
+
+            composable(route = Screen.ChatScreen.route) {
+                ChatScreen(
+                    navController = navController,
+                    chatViewModel = chatViewModel,
+                    )
             }
         }
     }
