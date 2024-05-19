@@ -4,6 +4,7 @@ package com.example.petshop
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -87,6 +88,8 @@ fun PetShopApp(
     val currentScreenObject = Screen::class.sealedSubclasses
         .mapNotNull { it.objectInstance }
         .find { it.route == currentScreen }
+
+    val scrollState = rememberScrollState()
 
     // Tìm kiếm
     var searchText by rememberSaveable { mutableStateOf("") }
@@ -186,6 +189,7 @@ fun PetShopApp(
                     navController = navController,
                     productViewModel = productViewModel,
                     bannerViewModel = bannerViewModel,
+
                     onProductClick = {productId ->
                         navController.navigate(Screen.ProductDetailScreen.createRoute(productId))
                     }

@@ -101,16 +101,21 @@ fun ProductDetail(
     Scaffold(
         topBar = {
             product?.let {
-                TopAppBarNoSearch(
-                    title = it.name,
-                    isCartEnable = true,
-                    onCartClick = {
-                        navController?.navigate(Screen.ShoppingCartScreen.route)
-                    },
-                    onBackClick = {
-                        navController?.popBackStack()
-                    }
-                )
+                Box(modifier = Modifier
+                    .fillMaxWidth()
+                    .background(color = Color.White))
+                {
+                    TopAppBarNoSearch(
+                        title = it.name,
+                        isCartEnable = true,
+                        onCartClick = {
+                            navController?.navigate(Screen.ShoppingCartScreen.route)
+                        },
+                        onBackClick = {
+                            navController?.popBackStack()
+                        }
+                    )
+                }
             }
         },
         bottomBar = {
