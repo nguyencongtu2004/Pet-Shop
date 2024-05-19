@@ -23,6 +23,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,14 +48,18 @@ import androidx.navigation.compose.rememberNavController
 import com.example.petshop.R
 import com.example.petshop.database.controller.AccountController
 import com.example.petshop.model.Screen
+import com.example.petshop.model.User
 import com.example.petshop.ui.theme.PetShopTheme
+import com.example.petshop.view_model.UserViewModel
 
 @Composable
 fun Login(
     modifier: Modifier = Modifier,
     navController: NavController,
+    userViewModel: UserViewModel,
     onLoginClick: () -> Unit = {}
 ) {
+    val user by userViewModel.currentUser.collectAsState()
     val context = LocalContext.current
     Scaffold(
         modifier = modifier,
@@ -100,7 +105,26 @@ fun Login(
 
                         AccountController.Login(sdt, pass) { success ->
                             if (success) {
-                                // Hiện toast thông báo đã thêm vào giỏ hàng
+                                AccountController.getAccountByNumberphone(sdt) { account ->
+                                    if (account != null) {
+                                        userViewModel.updateUser(
+                                            User(
+                                                name = account.name.toString(),
+                                                role = "Khách hàng thân thiết",
+                                                favoriteProducts = listOf(),
+                                                sex = account.sex.toString(),
+                                                email = account.email.toString(),
+                                                phone = account.numberphone.toString(),
+                                                avatar = R.drawable.avatar,
+                                                birthday = account.birthDay.toString(),
+                                                password = account.password,
+                                                address = account.address.toString(),
+                                            )
+                                        )
+                                    } else {
+                                        println("Không tìm thấy tài khoản")
+                                    }
+                                }
                                 navController.navigate(Screen.ProfileScreen.route)
                             } else {
                                 Toast.makeText(context, "Sai thông tin đăng nhâp", Toast.LENGTH_SHORT).show()
@@ -224,7 +248,8 @@ fun Logo(modifier: Modifier = Modifier) {
 fun LoginPreview() {
     PetShopTheme {
         Login(
-            navController = rememberNavController()
+            navController = rememberNavController() ,
+            userViewModel = UserViewModel(),
         )
     }
 }
