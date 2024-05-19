@@ -176,7 +176,8 @@ fun PetShopApp(
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Screen.HomePage.route, // Màn hình bắt đầu
+            // Nơi bắt đầu của ứng dụng
+            startDestination = Screen.HomePage.route,
             modifier = Modifier.padding(innerPadding),
         ) {
             // Màn hình chính
@@ -315,7 +316,9 @@ fun PetShopApp(
             }
 
             composable(route = Screen.LoginScreen.route) {
-                Login()
+                Login(
+                    navController = navController
+                )
             }
 
             composable(route = Screen.RegisterScreen.route) {

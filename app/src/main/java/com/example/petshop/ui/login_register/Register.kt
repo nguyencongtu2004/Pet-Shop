@@ -69,6 +69,7 @@ fun Register(
                 title = "Số điện thoại",
                 placeholder = "Nhập số điện thoại của bạn",
                 value = phoneText,
+                keyboardType = KeyboardType.Phone,
                 onPhoneChange = { newText -> phoneText = newText }
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -76,6 +77,7 @@ fun Register(
                 title = "Mật khẩu",
                 placeholder = "Mật khẩu",
                 value = passwordText,
+                keyboardType = KeyboardType.Password,
                 onPhoneChange = { newText -> passwordText = newText }
             )
             Spacer(modifier = Modifier.height(28.dp))
@@ -92,7 +94,7 @@ fun Register(
                             Toast.makeText(context, "Đăng ký thành công", Toast.LENGTH_SHORT).show()
                             navController.navigate(Screen.LoginScreen.route)
                         } else {
-                            Toast.makeText(context, "Đăng ký thất bại", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Số điện thoại đã được sử dụng", Toast.LENGTH_SHORT).show()
                         }
                     }
                 },
@@ -111,7 +113,11 @@ fun Register(
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontFamily = FontFamily(Font(R.font.poppins_bold)),
                 ),
-                modifier = Modifier.clickable { /*TODO*/ }
+                modifier = Modifier.clickable {
+                    navController.navigate(Screen.LoginScreen.route) {
+                        popUpTo(Screen.RegisterScreen.route) { inclusive = true }
+                    }
+                }
             )
         }
         Spacer(modifier = Modifier.height(24.dp))

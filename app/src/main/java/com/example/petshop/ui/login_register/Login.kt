@@ -40,12 +40,16 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.petshop.R
+import com.example.petshop.model.Screen
 import com.example.petshop.ui.theme.PetShopTheme
 
 @Composable
 fun Login(
     modifier: Modifier = Modifier,
+    navController: NavController,
     onLoginClick: () -> Unit = {}
 ) {
     Scaffold(
@@ -71,6 +75,7 @@ fun Login(
                     title = "Số điện thoại",
                     placeholder = "Nhập số điện thoại của bạn",
                     value = phoneText,
+                    keyboardType = KeyboardType.Phone,
                     onPhoneChange = { newText -> phoneText = newText }
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -78,6 +83,7 @@ fun Login(
                     title = "Mật khẩu",
                     placeholder = "Mật khẩu",
                     value = passwordText,
+                    keyboardType = KeyboardType.Password,
                     onPhoneChange = { newText -> passwordText = newText }
                 )
                 Spacer(modifier = Modifier.height(28.dp))
@@ -100,7 +106,11 @@ fun Login(
                     style = MaterialTheme.typography.bodyMedium.copy(
                         fontFamily = FontFamily(Font(R.font.poppins_bold)),
                     ),
-                    modifier = Modifier.clickable { /*TODO*/ }
+                    modifier = Modifier.clickable {
+                        navController.navigate(Screen.RegisterScreen.route) {
+                            popUpTo(Screen.LoginScreen.route) { inclusive = true }
+                        }
+                    }
                 )
             }
             Spacer(modifier = Modifier.height(24.dp))
@@ -142,6 +152,7 @@ fun TypingSdtField(
     placeholder: String,
     value: String,
     onPhoneChange: (String) -> Unit,
+    keyboardType: KeyboardType = KeyboardType.Text,
 ) {
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
@@ -169,7 +180,7 @@ fun TypingSdtField(
             maxLines = 1,
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Done,
-                keyboardType = KeyboardType.Number
+                keyboardType = keyboardType
             ),
             keyboardActions = KeyboardActions(
                 onDone = {
@@ -196,6 +207,8 @@ fun Logo(modifier: Modifier = Modifier) {
 @Composable
 fun LoginPreview() {
     PetShopTheme {
-        Login()
+        Login(
+            navController = rememberNavController()
+        )
     }
 }

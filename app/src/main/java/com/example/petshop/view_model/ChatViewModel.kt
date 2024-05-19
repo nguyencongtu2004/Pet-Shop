@@ -27,6 +27,7 @@ class ChatViewModel : ViewModel() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun sendMessage(content: String) {
+        if (content.isEmpty()) return
         val newMessage = Message(
             message = content,
             time = getCurrentTimeFormatted(),
