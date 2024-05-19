@@ -331,8 +331,9 @@ fun PetShopApp(
                 ChatScreen(
                     navController = navController,
                     chatViewModel = chatViewModel,
-                    )
+                )
             }
+
         }
     }
 }

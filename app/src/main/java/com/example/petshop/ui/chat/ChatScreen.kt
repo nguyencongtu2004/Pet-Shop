@@ -47,6 +47,45 @@ import com.example.petshop.model.Screen
 import com.example.petshop.ui.TopAppBarNoSearch
 import com.example.petshop.view_model.ChatViewModel
 import com.example.petshop.R
+import com.example.petshop.ui.home.ProductWithStar
+import com.example.petshop.view_model.ProductViewModel
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun ChatScreen(
+    modifier: Modifier = Modifier,
+    productId: String = "",
+    navController: NavController,
+    chatViewModel: ChatViewModel,
+) {
+    val messages by chatViewModel.messages.collectAsState()
+
+
+    Scaffold(
+        topBar = {
+            TopAppBarNoSearch(
+                title = "Chat",
+                onBackClick = { navController.popBackStack() },
+                isCartEnable = true,
+                onCartClick = { navController.navigate(Screen.ShoppingCartScreen.route) },
+            )
+        }
+    ) { paddingValues ->
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
+            Spacer(modifier = Modifier.weight(1f)) // Thêm khoảng trống để đẩy các tin nhắn xuống dưới
+
+            MessageList(messages = messages)
+            MessageInput(onMessageSent = { text ->
+                chatViewModel.sendMessage(text)
+            })
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+    }
+}
 
 @Composable
 fun MessageList(
@@ -76,39 +115,7 @@ fun MessageList(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
-@Composable
-fun ChatScreen(
-    modifier: Modifier = Modifier,
-    navController: NavController,
-    chatViewModel: ChatViewModel,
-) {
-    val messages by chatViewModel.messages.collectAsState()
 
-    Scaffold(
-        topBar = {
-            TopAppBarNoSearch(
-                title = "Chat",
-                onBackClick = { navController.popBackStack() },
-                isCartEnable = true,
-                onCartClick = { navController.navigate(Screen.ShoppingCartScreen.route) },
-            )
-        }
-    ) {
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(it)
-        ) {
-            Spacer(modifier = Modifier.weight(1f)) // Thêm khoảng trống để đẩy các tin nhắn xuống dưới
-            MessageList(messages = messages)
-            MessageInput(onMessageSent = { text ->
-                chatViewModel.sendMessage(text)
-            })
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-    }
-}
 
 @Composable
 fun MessageItem(message: Message) {
@@ -146,7 +153,6 @@ fun MessageItem(message: Message) {
 @Composable
 fun MessageInput(onMessageSent: (String) -> Unit) {
     var message by remember { mutableStateOf("") }
-    val keyboardController = LocalSoftwareKeyboardController.current
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -186,7 +192,6 @@ fun MessageInput(onMessageSent: (String) -> Unit) {
                     onSend = {
                         onMessageSent(message)
                         message = ""
-                        keyboardController?.hide()
                     }
                 ),
                 colors = TextFieldDefaults.colors(

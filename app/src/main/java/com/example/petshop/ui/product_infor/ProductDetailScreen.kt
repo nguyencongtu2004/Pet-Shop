@@ -115,7 +115,9 @@ fun ProductDetail(
         },
         bottomBar = {
             DetailProductBottomBar(
-                onChatClicked = {},
+                onChatClicked = {
+                    navController?.navigate(Screen.ChatScreen.route)
+                },
                 onAddToCartClicked = {
                     cartViewModel.addProductToCart(product!!)
                     cartViewModel.updateSelectedProduct(listOf(product!!))
