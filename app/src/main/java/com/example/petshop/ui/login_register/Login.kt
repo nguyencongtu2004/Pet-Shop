@@ -194,7 +194,7 @@ fun TypingSdtField(
 @Composable
 fun Logo(modifier: Modifier = Modifier) {
     Image(
-        painter = painterResource(id = R.drawable.logo),
+        painter = painterResource(id = R.drawable.logo_tranfer),
         contentDescription = null,
         contentScale = ContentScale.Crop,
         modifier = modifier
