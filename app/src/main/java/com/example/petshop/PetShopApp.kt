@@ -171,11 +171,11 @@ fun PetShopApp(
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Screen.RegisterScreen.route, // Màn hình bắt đầu
+            startDestination = Screen.HomePage.route, // Màn hình bắt đầu
             modifier = Modifier.padding(innerPadding),
         ) {
             // Màn hình chính
-            composable(route = Screen.RegisterScreen.route) {
+            composable(route = Screen.HomePage.route) {
                 HomeScreen(
                     navController = navController,
                     productViewModel = productViewModel,

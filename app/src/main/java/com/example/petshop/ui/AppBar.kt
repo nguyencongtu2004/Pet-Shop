@@ -409,44 +409,18 @@ fun DetailProductBottomBar(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
-            .height(70.dp)
+            .sizeIn(minHeight = 70.dp, maxHeight = 200.dp)
             .background(color = MaterialTheme.colorScheme.secondaryContainer)
-            .padding(start = 0.dp, top = 8.dp, end = 8.dp, bottom = 8.dp)
+            .padding(start = 16.dp, top = 8.dp, end = 8.dp, bottom = 8.dp)
     ) {
         // Chat button
-        androidx.compose.material3.Button(
-            modifier = modifier
-                .padding(0.dp)
-                .sizeIn(minHeight = 48.dp)
-                .width(120.dp)
-                .height(55.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Transparent,
-                disabledContainerColor = Color(0xFFCACACA)
-            ),
-            shape = RoundedCornerShape(16.dp),
-            onClick = onChatClicked,
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.height(30.dp)
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.message_icon_selected),
-                    contentDescription = null,
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "Chat",
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight(700),
-                        color = Color(0xFF5D4037)
-                    ),
-                    textAlign = TextAlign.Center
-                )
-            }
+        IconButton(onClick = onChatClicked) {
+            Image(
+                painter = painterResource(id = R.drawable.message_icon_selected),
+                contentDescription = null,
+            )
         }
+        Spacer(modifier = Modifier.weight(1f))
         // Add to cart button
         Button(
             onClick = onAddToCartClicked,

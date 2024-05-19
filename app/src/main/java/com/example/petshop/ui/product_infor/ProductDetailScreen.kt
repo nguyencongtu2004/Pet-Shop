@@ -1,5 +1,6 @@
 package com.example.petshop.ui.product_infor
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
@@ -32,10 +33,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -44,6 +47,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -68,6 +72,10 @@ import com.example.petshop.view_model.OrderViewModel
 import com.example.petshop.view_model.ProductViewModel
 import com.example.petshop.view_model.UserViewModel
 
+import kotlinx.coroutines.launch
+
+
+
 @Composable
 fun getScreenWidth(): Int {
     val configuration = LocalConfiguration.current
@@ -89,8 +97,10 @@ fun ProductDetail(
     val user by userViewModel.currentUser.collectAsState()
     val selectedProducts by cartViewModel.selectedProducts.collectAsState()
 
-    productViewModel.setSelectedProduct(allProducts.find { it.id == productId }!!)
+    val context = LocalContext.current
 
+
+    productViewModel.setSelectedProduct(allProducts.find { it.id == productId }!!)
 
     Scaffold(
         topBar = {
@@ -112,14 +122,11 @@ fun ProductDetail(
                 onChatClicked = {},
                 onAddToCartClicked = {
                     cartViewModel.addProductToCart(product!!)
-                    // TODO: Show notification "Đã thêm vào giỏ hàng"
+                    cartViewModel.updateSelectedProduct(listOf(product!!))
+                    // Hiện toast thông báo đã thêm vào giỏ hàng
+                    Toast.makeText(context, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show()
                 },
                 onBuyClicked = {
-                    // TODO: Navigate to Checkout screen with the selected product
-                    val newOrder = Order(
-                        user = user,
-                        products = listOf(product!!),
-                    )
                     cartViewModel.updateSelectedProduct(listOf(product!!))
                     navController?.navigate(Screen.CheckoutScreen.route)
                 },
@@ -136,7 +143,6 @@ fun ProductDetail(
                     .verticalScroll(scrollState)
                     .padding(padding)
             ) {
-
                 ProductImageSection(product.image, scrollState)
                 ProductInfoSection(
                     product = product,
@@ -152,9 +158,7 @@ fun ProductDetail(
                     onMinusClick = { productViewModel.decreaseQuantity() },
                     onPlusClick = { productViewModel.increaseQuantity() }
                 )
-                ProductCustomizationSection(
-                    productViewModel = productViewModel
-                )
+                ProductCustomizationSection(productViewModel = productViewModel)
                 ProductDescriptionSection(product.detailDescription)
 
                 Spacer(modifier = Modifier.height(500.dp))
@@ -162,6 +166,7 @@ fun ProductDetail(
         }
     }
 }
+
 
 @Composable
 private fun ProductImageSection(
