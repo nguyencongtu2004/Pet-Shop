@@ -116,20 +116,10 @@ fun Delivery(
 ) {
     val order by orderViewModel.currentOrder.collectAsState()
 
-    //val currentPayMethod by orderViewModel.currentPayMethod.collectAsState()
-    //val currentDeliveryMethod by orderViewModel.currentDeliveryMethod.collectAsState()
-    //val currentVoucher by orderViewModel.currentVoucher.collectAsState()
-
     Column(
         horizontalAlignment = Alignment.Start,
         modifier = modifier,
     ) {
-        Divider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(4.dp)
-                .background(color = Color(0xFFEFEBE9))
-        )
         Spacer(modifier = Modifier.height(10.dp))
         Text(
             text = "Phương thức giao hàng",
@@ -190,12 +180,6 @@ fun Delivery(
         )
 
         Spacer(modifier = Modifier.height(10.dp))
-        Divider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(4.dp)
-                .background(color = Color(0xFFEFEBE9))
-        )
     }
 }
 

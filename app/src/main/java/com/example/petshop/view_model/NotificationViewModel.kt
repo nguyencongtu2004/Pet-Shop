@@ -18,7 +18,7 @@ class NotificationViewModel : ViewModel() {
         Notification(
             title = "Thông báo 2",
             description = "Nội dung thông báo 2",
-            isSeen = true,
+            isSeen = false,
         ),
         Notification(
             title = "Thông báo 3",

@@ -3,6 +3,7 @@ package com.example.petshop.ui.shipping_cart
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,9 +19,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
@@ -51,7 +49,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.petshop.R
 import com.example.petshop.model.ClothesProduct
-import com.example.petshop.view_model.CartViewModel
 import com.example.petshop.model.FoodProduct
 import com.example.petshop.model.Order
 import com.example.petshop.model.Product
@@ -59,6 +56,7 @@ import com.example.petshop.model.Screen
 import com.example.petshop.model.ToyProduct
 import com.example.petshop.ui.CheckoutBottomBar
 import com.example.petshop.ui.theme.PetShopTheme
+import com.example.petshop.view_model.CartViewModel
 import com.example.petshop.view_model.OrderViewModel
 import com.example.petshop.view_model.UserViewModel
 
@@ -141,7 +139,7 @@ fun ShoppingCartScreen(
                         cartViewModel.updateTotalAmount()
                     }
                 )
-                if (productsInCart.indexOf(product) != productsInCart.size - 1){
+                if (productsInCart.indexOf(product) != productsInCart.size - 1) {
                     Divider(color = Color(0xFFD9D9D9))
                 }
             }
@@ -154,17 +152,7 @@ fun ShoppingCartScreen(
 @Composable
 fun BoughtItemCart(
     modifier: Modifier = Modifier,
-    product: Product = FoodProduct(
-        id = "1",
-        name = "Đồ ăn cho chó",
-        description = "Chó rất thích ăn nó",
-        price = 10000.0,
-        oldPrice = 15000.0,
-        star = 4.0,
-        quantity = 1,
-        image = R.drawable.avt,
-        detailDescription = "Chi tiết sản phẩm"
-    ),
+    product: Product,
     onQuantityChange: (Boolean, Int) -> Unit,
     onDeleteClick: () -> Unit = {},
 ) {
@@ -176,16 +164,20 @@ fun BoughtItemCart(
     if (showDialog) {
         AlertDialog(
             onDismissRequest = { showDialog = false },
-            title = { Text(
-                text = "Xác nhận xóa",
-                style = MaterialTheme.typography.titleLarge,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            ) },
-            text = { Text(
-                text = "Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?",
-                style = MaterialTheme.typography.bodyMedium,
-            ) },
+            title = {
+                Text(
+                    text = "Xác nhận xóa",
+                    style = MaterialTheme.typography.titleLarge,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            },
+            text = {
+                Text(
+                    text = "Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?",
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -210,7 +202,10 @@ fun BoughtItemCart(
         horizontalAlignment = Alignment.Start,
         modifier = modifier
             .padding(start = 8.dp, end = 8.dp, bottom = 6.dp)
-            .clickable {
+            .clickable(
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() },
+            ) {
                 checkedState = !checkedState
                 onQuantityChange(checkedState, quantity)
             }
@@ -337,6 +332,7 @@ fun BoughtItemCart(
                                 )
                             }
                         }
+
                         is ToyProduct -> {
                             item {
                                 FilterChip(
@@ -358,6 +354,7 @@ fun BoughtItemCart(
                                 )
                             }
                         }
+
                         is ClothesProduct -> {
                             item {
                                 FilterChip(
@@ -397,11 +394,11 @@ fun BoughtItemCart(
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
-                        .border(
-                            shape = RoundedCornerShape(8.dp),
-                            width = 1.dp,
-                            color = Color(0xFFCACACA)
-                        )
+                            .border(
+                                shape = RoundedCornerShape(8.dp),
+                                width = 1.dp,
+                                color = Color(0xFFCACACA)
+                            )
                     ) {
                         IconButton(
                             onClick = {

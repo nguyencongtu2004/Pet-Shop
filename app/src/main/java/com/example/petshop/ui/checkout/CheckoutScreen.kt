@@ -1,6 +1,7 @@
 package com.example.petshop.ui.checkout
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,6 +14,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
@@ -79,6 +81,13 @@ fun CheckoutScreen(
                 CheckoutItem(product = product)
             }
             item {
+                Spacer(modifier = Modifier.height(10.dp))
+                Divider(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(4.dp)
+                        .background(color = Color(0xFFEFEBE9))
+                )
                 Column {
                     Information(
                         modifier.padding(10.dp),
@@ -86,6 +95,12 @@ fun CheckoutScreen(
                         onEditAddressClick = {
                             navController?.navigate(Screen.EditProfileScreen.route)
                         },
+                    )
+                    Divider(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(4.dp)
+                            .background(color = Color(0xFFEFEBE9))
                     )
                     Delivery(
                         modifier = Modifier.padding(10.dp),
@@ -97,6 +112,12 @@ fun CheckoutScreen(
                             navController?.navigate(Screen.SelectVoucher.route)
                         }
 
+                    )
+                    Divider(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(4.dp)
+                            .background(color = Color(0xFFEFEBE9))
                     )
                     PaymentDetail(
                         modifier = Modifier.padding(10.dp),

@@ -3,34 +3,15 @@ package com.example.petshop.ui.user_informaion
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.KeyboardArrowRight
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -49,17 +30,12 @@ import androidx.navigation.NavController
 import com.example.petshop.R
 import com.example.petshop.database.controller.AccountController
 import com.example.petshop.database.model.Account
-import com.example.petshop.model.Screen
 import com.example.petshop.model.User
 import com.example.petshop.view_model.UserViewModel
+import java.text.SimpleDateFormat
+import java.util.*
 
-/*
-fun isValidEmail(email: String): Boolean {
-    val emailRegex = Regex("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")
-    return emailRegex.matches(email)
-}
-*/
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditProfile(
     navController: NavController? = null,
@@ -71,11 +47,19 @@ fun EditProfile(
     var showEditDialog by remember { mutableStateOf(false) }
     var editField by remember { mutableStateOf("") }
     var editValue by remember { mutableStateOf("") }
+    var selectedGender by remember { mutableStateOf(user.sex) }
+    var showDatePicker by remember { mutableStateOf(false) }
 
     val openEditDialog: (String, String) -> Unit = { field, value ->
         editField = field
         editValue = value
-        showEditDialog = true
+        when (field) {
+            "Giới tính" -> selectedGender = value
+            "Ngày sinh" -> showDatePicker = true
+        }
+        if (field != "Ngày sinh") {
+            showEditDialog = true
+        }
     }
 
     if (showEditDialog) {
@@ -83,11 +67,18 @@ fun EditProfile(
             onDismissRequest = { showEditDialog = false },
             title = { Text(text = "Chỉnh sửa $editField") },
             text = {
-                TextField(
-                    value = editValue,
-                    onValueChange = { editValue = it },
-                    modifier = Modifier.fillMaxWidth(),
-                )
+                when (editField) {
+                    "Giới tính" -> GenderPicker(selectedGender) { selectedGender = it }
+                    "Ngày sinh" -> {
+                        showDatePicker = true
+                        Text(text = editValue)
+                    }
+                    else -> TextField(
+                        value = editValue,
+                        onValueChange = { editValue = it },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
             },
             confirmButton = {
                 TextButton(
@@ -96,7 +87,7 @@ fun EditProfile(
                         userViewModel.updateUser(
                             user.copy(
                                 name = if (editField == "Tên") editValue else user.name,
-                                sex = if (editField == "Giới tính") editValue else user.sex,
+                                sex = if (editField == "Giới tính") selectedGender else user.sex,
                                 birthday = if (editField == "Ngày sinh") editValue else user.birthday,
                                 phone = if (editField == "Số điện thoại") editValue else user.phone,
                                 email = if (editField == "Email") editValue else user.email,
@@ -109,19 +100,50 @@ fun EditProfile(
                 }
             },
             dismissButton = {
-                TextButton(
-                    onClick = { showEditDialog = false }
-                ) {
+                TextButton(onClick = { showEditDialog = false }) {
                     Text("Hủy")
                 }
             }
         )
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
+    if (showDatePicker) {
+        val datePickerState = rememberDatePickerState()
+        val confirmEnabled = remember { derivedStateOf { datePickerState.selectedDateMillis != null } }
+        DatePickerDialog(
+            onDismissRequest = { showDatePicker = false },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showDatePicker = false
+                        editValue = datePickerState.selectedDateMillis?.let { millis ->
+                            SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date(millis))
+                        } ?: editValue
+                        showEditDialog = false
+                        // Update user birthday
+                        userViewModel.updateUser(
+                            user.copy(birthday = editValue)
+                        )
+                    },
+                    enabled = confirmEnabled.value
+                ) {
+                    Text("OK")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    showDatePicker = false
+                    showEditDialog = false
+                }) {
+                    Text("Hủy")
+                }
+            }
+        ) {
+            DatePicker(state = datePickerState)
+        }
+    }
+
+    Column(modifier = Modifier.fillMaxSize()) {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -131,7 +153,6 @@ fun EditProfile(
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
-                        //.background(Color.White)
                         .padding(vertical = 16.dp)
                         .fillMaxWidth()
                 ) {
@@ -179,7 +200,9 @@ fun EditProfile(
                     "Địa chỉ" to user.address
                 )
             ) { (label, value) ->
-                ProfileItem(label, value, openEditDialog)
+                Box(
+                    modifier = Modifier.clickable { openEditDialog(label, value) }
+                ) { ProfileItem(label, value) }
             }
         }
 
@@ -190,15 +213,15 @@ fun EditProfile(
                 .height(48.dp),
             onClick = {
                 val account = Account(
-                        user_id = user.user_id,
-                        numberphone = user.phone,
-                        password = user.password,
-                        name = user.name,
-                        email = user.email,
-                        sex = user.sex,
-                        address = user.address,
-                        birthDay = user.birthday
-                    )
+                    user_id = user.user_id,
+                    numberphone = user.phone,
+                    password = user.password,
+                    name = user.name,
+                    email = user.email,
+                    sex = user.sex,
+                    address = user.address,
+                    birthDay = user.birthday
+                )
                 AccountController.editProfile(account) { success ->
                     if (success) {
                         Toast.makeText(context, "Thay đổi thành công", Toast.LENGTH_SHORT).show()
@@ -216,7 +239,10 @@ fun EditProfile(
 }
 
 @Composable
-fun ProfileItem(label: String, value: String, onEdit: (String, String) -> Unit) {
+fun ProfileItem(
+    label: String,
+    value: String,
+) {
     val iconSize = 24.dp
 
     Row(
@@ -224,9 +250,7 @@ fun ProfileItem(label: String, value: String, onEdit: (String, String) -> Unit) 
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            //.background(Color.White)
             .padding(vertical = 12.dp, horizontal = 16.dp)
-            .clickable { onEdit(label, value) }
     ) {
         Text(
             text = label,
@@ -234,8 +258,7 @@ fun ProfileItem(label: String, value: String, onEdit: (String, String) -> Unit) 
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium,
                 color = Color.Black
-            ),
-            //modifier = Modifier.weight(1f)
+            )
         )
         Spacer(modifier = Modifier.width(10.dp))
         Row(
@@ -259,6 +282,48 @@ fun ProfileItem(label: String, value: String, onEdit: (String, String) -> Unit) 
                 modifier = Modifier.size(iconSize),
                 tint = Color.Gray
             )
+        }
+    }
+}
+
+@Composable
+fun GenderPicker(selectedGender: String, onGenderSelected: (String) -> Unit) {
+    Column {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onGenderSelected("Nam") }
+        ) {
+            RadioButton(
+                selected = selectedGender == "Nam",
+                onClick = { onGenderSelected("Nam") }
+            )
+            Text(text = "Nam")
+        }
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onGenderSelected("Nữ") }
+        ) {
+            RadioButton(
+                selected = selectedGender == "Nữ",
+                onClick = { onGenderSelected("Nữ") }
+            )
+            Text(text = "Nữ")
+        }
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onGenderSelected("Khác") }
+        ) {
+            RadioButton(
+                selected = selectedGender == "Khác",
+                onClick = { onGenderSelected("Khác") }
+            )
+            Text(text = "Khác")
         }
     }
 }
