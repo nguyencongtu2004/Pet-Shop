@@ -3,7 +3,6 @@ package com.example.petshop.ui.user_informaion
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -26,7 +24,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -115,14 +112,12 @@ fun ProfileScreen(
                             modifier = Modifier
                                 .width(100.dp)
                                 .height(25.dp)
-                                .clip(RoundedCornerShape(20.dp))
                                 .clickable { onEditProfileClicked() }
                         ) {
                             Text(
                                 text = "Chỉnh sửa",
-                                style = MaterialTheme.typography.labelLarge,
-                                modifier = Modifier
-                                    .padding(vertical = 5.dp)
+                                style = MaterialTheme.typography.labelMedium,
+                                modifier = Modifier.padding(vertical = 5.dp)
                             )
                             IconButton(
                                 onClick = { onEditProfileClicked() },
@@ -131,9 +126,7 @@ fun ProfileScreen(
                                 Icon(
                                     imageVector = Icons.Default.KeyboardArrowRight,
                                     contentDescription = null,
-                                    modifier = Modifier
-                                        .padding(all = 0.dp)
-                                        .offset(x = 0.dp, y = 3.dp)
+                                    modifier = Modifier.padding(all = 0.dp)
                                 )
                             }
                         }
@@ -201,7 +194,6 @@ fun ProfileScreen(
                             )
                             .width(160.dp)
                             .height(90.dp)
-                            .clip(RoundedCornerShape(30.dp))
                             .clickable { onShippingClicked() }
                     ) {
                         Image(
@@ -235,7 +227,6 @@ fun ProfileScreen(
                             )
                             .width(160.dp)
                             .height(90.dp)
-                            .clip(RoundedCornerShape(30.dp))
                             .clickable { onShippedClicked() }
                     ) {
                         Image(

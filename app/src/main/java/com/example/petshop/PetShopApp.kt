@@ -1,11 +1,20 @@
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
+
 package com.example.petshop
 
-
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.material3.rememberModalBottomSheetState
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -55,6 +64,8 @@ import com.example.petshop.view_model.NotificationViewModel
 import com.example.petshop.view_model.OrderViewModel
 import com.example.petshop.view_model.ProductViewModel
 import com.example.petshop.view_model.UserViewModel
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
 
 val NavHostController.canGoBack: Boolean
     get() = this.previousBackStackEntry?.lifecycle?.currentState == Lifecycle.State.RESUMED
@@ -206,6 +217,10 @@ fun PetShopApp(
 
             // Màn hình thông tin cá nhân
             composable(route = Screen.ProfileScreen.route) {
+                val sheetState = rememberModalBottomSheetState()
+                var isSheetOpen by rememberSaveable { mutableStateOf(false) }
+                var isShopInforSheetOpen by rememberSaveable { mutableStateOf(false) }
+
                 ProfileScreen(
                     navController = navController,
                     userViewModel = userViewModel,
@@ -217,7 +232,19 @@ fun PetShopApp(
                     },
                     onShippedClicked = {
                         navController.navigate(Screen.ShipmentStateScreen2.route)
-                    }
+                    },
+                    onShopInforClicked = {
+                        isSheetOpen = true
+                        isShopInforSheetOpen = true
+                    },
+                    onAppInforClicked = {
+                        isSheetOpen = true
+                        isShopInforSheetOpen = false
+                    },
+                    isSheetOpen = isSheetOpen,
+                    onDismissRequset = {isSheetOpen = false},
+                    sheetState  = sheetState,
+                    isShopInforSheetOpen = isShopInforSheetOpen
                 )
             }
 
