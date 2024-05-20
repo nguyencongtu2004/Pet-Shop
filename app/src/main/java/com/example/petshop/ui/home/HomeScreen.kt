@@ -193,96 +193,100 @@ fun ProductWithStar(
     product: Product,
     onProductClick: (String) -> Unit = {},
 ) {
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .padding(8.dp)
-            .clickable { onProductClick(product.id) }
+    Box(
+        modifier = Modifier.clickable { onProductClick(product.id) }
     ) {
-        Box(
-            contentAlignment = Alignment.BottomCenter,
-            modifier = Modifier
-                .width(69.dp)
-                .height(69.dp)
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = modifier
+                .padding(8.dp)
+
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.avt),
-                contentDescription = "image description",
-                contentScale = ContentScale.Fit,
+            Box(
+                contentAlignment = Alignment.BottomCenter,
                 modifier = Modifier
                     .width(69.dp)
                     .height(69.dp)
-                    .shadow(
-                        elevation = 2.2138051986694336.dp,
-                        spotColor = Color(0x05000000),
-                        ambientColor = Color(0x05000000)
-                    )
-            )
-
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .width(69.dp)
-                    .padding(top = 8.dp) // spacing between image and rating
             ) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(
-                        2.dp,
-                        Alignment.CenterHorizontally
-                    ),
-                    verticalAlignment = Alignment.CenterVertically,
+                Image(
+                    painter = painterResource(id = R.drawable.avt),
+                    contentDescription = "image description",
+                    contentScale = ContentScale.Fit,
                     modifier = Modifier
-                        .width(43.dp)
-                        .height(20.dp)
-                        .background(
-                            color = Color(0xFFFFFFFF),
-                            shape = RoundedCornerShape(size = 10.dp)
+                        .width(69.dp)
+                        .height(69.dp)
+                        .shadow(
+                            elevation = 2.2138051986694336.dp,
+                            spotColor = Color(0x05000000),
+                            ambientColor = Color(0x05000000)
                         )
-                        .padding(start = 4.dp, top = 1.dp, end = 4.dp, bottom = 1.dp)
+                )
+
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .width(69.dp)
+                        .padding(top = 8.dp) // spacing between image and rating
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.star),
-                        contentDescription = "image description",
-                        contentScale = ContentScale.None
-                    )
-                    Text(
-                        text = product.star.toString(),
-                        style = MaterialTheme.typography.labelSmall
-                    )
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(
+                            2.dp,
+                            Alignment.CenterHorizontally
+                        ),
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .width(43.dp)
+                            .height(20.dp)
+                            .background(
+                                color = Color(0xFFFFFFFF),
+                                shape = RoundedCornerShape(size = 10.dp)
+                            )
+                            .padding(start = 4.dp, top = 1.dp, end = 4.dp, bottom = 1.dp)
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.star),
+                            contentDescription = "image description",
+                            contentScale = ContentScale.None
+                        )
+                        Text(
+                            text = product.star.toString(),
+                            style = MaterialTheme.typography.labelSmall
+                        )
+                    }
                 }
             }
-        }
-        Column(
-            modifier = Modifier
-                .weight(1f),
-        ) {
-            Text(
-                text = product.name,
-                style = MaterialTheme.typography.titleMedium,
-            )
-            Text(
-                text = product.description,
-                style = MaterialTheme.typography.bodyMedium,
-            )
-        }
-        Column(
-            modifier = Modifier
-                .width(100.dp)
-                .padding(end = 8.dp),
-            horizontalAlignment = Alignment.End,
-        ) {
-            Text(
-                text = product.price.toString().replace(".0", "") + " đ",
-                style = MaterialTheme.typography.titleMedium,
-                textAlign = TextAlign.End,
-            )
-            Text(
-                text = product.oldPrice.toString().replace(".0", "") + " đ",
-                style = MaterialTheme.typography.bodyMedium,
-                textAlign = TextAlign.End,
-                textDecoration = TextDecoration.LineThrough
-            )
+            Column(
+                modifier = Modifier
+                    .weight(1f),
+            ) {
+                Text(
+                    text = product.name,
+                    style = MaterialTheme.typography.titleMedium,
+                )
+                Text(
+                    text = product.description,
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
+            Column(
+                modifier = Modifier
+                    .width(100.dp)
+                    .padding(end = 8.dp),
+                horizontalAlignment = Alignment.End,
+            ) {
+                Text(
+                    text = product.price.toString().replace(".0", "") + " đ",
+                    style = MaterialTheme.typography.titleMedium,
+                    textAlign = TextAlign.End,
+                )
+                Text(
+                    text = product.oldPrice.toString().replace(".0", "") + " đ",
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.End,
+                    textDecoration = TextDecoration.LineThrough
+                )
+            }
         }
     }
 }
