@@ -52,8 +52,6 @@ fun CheckoutScreen(
     orderViewModel: OrderViewModel,
     userViewModel: UserViewModel,
 ) {
-    val selectedProducts by cartViewModel.selectedProducts.collectAsState()
-    val user by userViewModel.currentUser.collectAsState()
     val order by orderViewModel.currentOrder.collectAsState()
 
     Scaffold(
@@ -62,15 +60,13 @@ fun CheckoutScreen(
             NewCheckoutEndBar(
                 total = order.total,
                 onCheckoutClick = {
-                    /*orderViewModel.updateOrder(
-                        order.copy(
-                            paymentMethod = currentPayMethod,
-                            voucher = orderViewModel.currentVoucher.value,
-                            deliveryMethod = orderViewModel.currentDeliveryMethod.value,
-                            discount = orderViewModel.currentDiscount.value,
-                        )
-                    )*/
+                    // Thêm sản phẩm vào order mới
                     orderViewModel.addOrder(order)
+
+                    // Xóa sản phẩm đã chọn khỏi giỏ hàng
+                    for (product in order.products) {
+                        cartViewModel.removeProductFromCart(product)
+                    }
                     navController?.navigate(Screen.LoadingCheckout.route)
                 }
             )
@@ -246,7 +242,7 @@ fun CheckoutItem(
                             FilterChip(
                                 label = {
                                     Text(
-                                        text = "${product.selectedWeight.value}",
+                                        text = product.selectedWeight.value,
                                         style = MaterialTheme.typography.labelSmall
                                     )
                                 },
