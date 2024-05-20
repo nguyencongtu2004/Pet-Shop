@@ -38,7 +38,6 @@ import com.example.petshop.model.Order
 import com.example.petshop.model.Product
 import com.example.petshop.model.Screen
 import com.example.petshop.model.ToyProduct
-import com.example.petshop.model.User
 import com.example.petshop.ui.NewCheckoutEndBar
 import com.example.petshop.ui.theme.PetShopTheme
 import com.example.petshop.view_model.CartViewModel
@@ -57,21 +56,20 @@ fun CheckoutScreen(
     val user by userViewModel.currentUser.collectAsState()
     val order by orderViewModel.currentOrder.collectAsState()
 
-    // Create a new order with the selected products and the current user
-    orderViewModel.updateOrder(
-        Order(
-            products = selectedProducts,
-            user = user,
-        )
-    )
-    println("Voucher in CheckOutScreen: ${order.voucher?.title}")
-
     Scaffold(
         modifier = modifier,
         bottomBar = {
             NewCheckoutEndBar(
                 total = order.total,
                 onCheckoutClick = {
+                    /*orderViewModel.updateOrder(
+                        order.copy(
+                            paymentMethod = currentPayMethod,
+                            voucher = orderViewModel.currentVoucher.value,
+                            deliveryMethod = orderViewModel.currentDeliveryMethod.value,
+                            discount = orderViewModel.currentDiscount.value,
+                        )
+                    )*/
                     orderViewModel.addOrder(order)
                     navController?.navigate(Screen.LoadingCheckout.route)
                 }
@@ -192,7 +190,6 @@ fun CheckoutItem(
                 Spacer(modifier = Modifier.height(6.dp))
             }
             Column(
-                //verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.End,
                 modifier = Modifier.padding(start = 10.dp)
             ) {

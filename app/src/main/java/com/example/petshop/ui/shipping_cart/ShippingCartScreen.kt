@@ -52,21 +52,27 @@ import com.example.petshop.R
 import com.example.petshop.model.ClothesProduct
 import com.example.petshop.view_model.CartViewModel
 import com.example.petshop.model.FoodProduct
+import com.example.petshop.model.Order
 import com.example.petshop.model.Product
 import com.example.petshop.model.Screen
 import com.example.petshop.model.ToyProduct
 import com.example.petshop.ui.CheckoutBottomBar
 import com.example.petshop.ui.theme.PetShopTheme
+import com.example.petshop.view_model.OrderViewModel
+import com.example.petshop.view_model.UserViewModel
 
 @Composable
 fun ShoppingCartScreen(
     modifier: Modifier = Modifier,
     navController: NavController? = null,
     cartViewModel: CartViewModel,
+    orderViewModel: OrderViewModel,
+    userViewModel: UserViewModel
 ) {
     val selectedProducts by cartViewModel.selectedProducts.collectAsState()
     val productsInCart by cartViewModel.productsInCart.collectAsState()
     val totalAmount by cartViewModel.totalAmount.collectAsState()
+    val user by userViewModel.currentUser.collectAsState()
 
     // Thêm biến trạng thái để kiểm tra xem reset đã được thực hiện chưa
     var isInitialized by remember { mutableStateOf(false) }
@@ -83,6 +89,15 @@ fun ShoppingCartScreen(
                 CheckoutBottomBar(
                     total = totalAmount,
                     onBuyClicked = {
+                        orderViewModel.updateOrder(
+                            Order(
+                                products = selectedProducts,
+                                user = user,
+                                discount = 0.0,
+                                voucher = null,
+                            )
+                        )
+                        println(orderViewModel.currentOrder.value.products)
                         navController?.navigate(Screen.CheckoutScreen.route)
                     }
                 )
@@ -262,7 +277,6 @@ fun BoughtItemCart(
                     horizontalArrangement = Arrangement.spacedBy(9.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
-                        //.width(160.dp)
                         .weight(1f)
                 ) {
                     // Hiển thị các thông số của sản phẩm theo loại sản phẩm
@@ -380,7 +394,6 @@ fun BoughtItemCart(
                                 onQuantityChange(checkedState, quantity)
                             },
                             modifier = Modifier
-                                //.border(width = 1.dp, color = Color(0xFFCACACA))
                                 .padding(1.dp)
                                 .width(30.dp)
                                 .height(30.dp)
@@ -405,7 +418,6 @@ fun BoughtItemCart(
                                 onQuantityChange(checkedState, quantity)
                             },
                             modifier = Modifier
-                                //.border(width = 1.dp, color = Color(0xFFCACACA))
                                 .padding(1.dp)
                                 .width(30.dp)
                                 .height(30.dp)
@@ -435,6 +447,8 @@ fun BoughtItemPreview() {
     PetShopTheme {
         ShoppingCartScreen(
             cartViewModel = CartViewModel(),
+            userViewModel = UserViewModel(),
+            orderViewModel = OrderViewModel(),
         )
     }
 }

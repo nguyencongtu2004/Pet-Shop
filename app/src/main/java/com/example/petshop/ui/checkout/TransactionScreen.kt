@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.petshop.R
+import com.example.petshop.model.DeliveryMethod
 import com.example.petshop.model.FoodProduct
 import com.example.petshop.model.PaymentMethod
 import com.example.petshop.model.Product
@@ -187,7 +188,10 @@ fun TransactionScreen(
                                 )
                                 ItemMedium(
                                     title = "Thời gian dự kiến:",
-                                    detail = "1 - 2 ngày",
+                                    detail = when (order.deliveryMethod) {
+                                        DeliveryMethod.NORMAL -> "1-2 ngày"
+                                        DeliveryMethod.FAST -> "khoảng 30 phút"
+                                    },
                                     modifier = Modifier.padding(horizontal = 8.dp),
                                 )
                             }

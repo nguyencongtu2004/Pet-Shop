@@ -222,7 +222,9 @@ fun PetShopApp(
             composable(route = Screen.ShoppingCartScreen.route) {
                 ShoppingCartScreen(
                     navController = navController, // Để điều hướng sang màn hình thanh toán
-                    cartViewModel = cartViewModel
+                    cartViewModel = cartViewModel,
+                    userViewModel = userViewModel,
+                    orderViewModel = orderViewModel,
                 )
             }
 
