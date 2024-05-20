@@ -110,7 +110,9 @@ fun ShoppingCartScreen(
                         cartViewModel.updateTotalAmount()
                     }
                 )
-                Divider()
+                if (productsInCart.indexOf(product) != productsInCart.size - 1){
+                    Divider(color = Color(0xFFD9D9D9))
+                }
             }
         }
     }

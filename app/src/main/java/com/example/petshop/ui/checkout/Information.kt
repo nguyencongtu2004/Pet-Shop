@@ -37,7 +37,6 @@ import com.example.petshop.view_model.UserViewModel
 fun Information(
     modifier: Modifier = Modifier,
     userViewModel: UserViewModel,
-    //user: User = User(),
     onEditAddressClick: () -> Unit = { /*TODO*/ },
 ) {
     val user by userViewModel.currentUser.collectAsState()
@@ -156,9 +155,7 @@ fun Delivery(
                 orderViewModel.updateOrderDeliveryMethod(DeliveryMethod.FAST)
             }
         )
-
         Divider()
-
         Spacer(modifier = Modifier.height(4.dp))
         PaymentOption(
             title = "Phương thức thanh toán",
@@ -280,6 +277,7 @@ fun PaymentDetail(
     orderViewModel: OrderViewModel,
 ) {
     val order by orderViewModel.currentOrder.collectAsState()
+    println("Voucher in PaymentDetail: ${order.voucher?.title}")
 
     Column(
         verticalArrangement = Arrangement.spacedBy(6.dp, Alignment.Top),
@@ -298,6 +296,14 @@ fun PaymentDetail(
             isBold = true,
         )
 
+        println("trước khi hiện discount: ${order.discount}")
+        println("voucher đã chọn: ${order.voucher?.title}")
+        PaymentDetailRow(
+            label = "Voucher",
+            value = "-${order.discount.toInt()} đ",
+            isBold = true,
+        )
+
         PaymentDetailRow(
             label = "Phí vận chuyển",
             value = "${order.shippingFee.toInt()} đ",
@@ -306,11 +312,13 @@ fun PaymentDetail(
 
         PaymentDetailRow(
             label = "Tổng cộng",
-            value = "${(order.productTotal + order.shippingFee).toInt()} đ",
+            value = "${(order.total).toInt()} đ",
             isBold = true,
         )
     }
 }
+
+
 
 @Composable
 fun PaymentDetailRow(

@@ -1,10 +1,14 @@
 package com.example.petshop.model
 
+import android.media.Image
+import com.example.petshop.R
+
 data class Voucher(
     var code: String = "",
 
     var title: String = "",
     var description: String = "",
+    var image: Int = R.drawable.voucher,
 
     var isDiscountByPercent: Boolean = true,
     var discount: Double = 0.0,

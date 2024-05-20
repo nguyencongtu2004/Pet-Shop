@@ -28,7 +28,8 @@ data class Order(
 
     var deliveryMethod: DeliveryMethod = DeliveryMethod.NORMAL,
     var paymentMethod: PaymentMethod = PaymentMethod.CASH,
-    var voucher: Voucher = Voucher(),
+    var voucher: Voucher? = null,
+    var discount: Double = 0.0,
 
     var productTotal: Double = 0.0,
     var shippingFee: Double = 12000.0,

@@ -38,6 +38,7 @@ import com.example.petshop.model.Order
 import com.example.petshop.model.Product
 import com.example.petshop.model.Screen
 import com.example.petshop.model.ToyProduct
+import com.example.petshop.model.User
 import com.example.petshop.ui.NewCheckoutEndBar
 import com.example.petshop.ui.theme.PetShopTheme
 import com.example.petshop.view_model.CartViewModel
@@ -57,10 +58,13 @@ fun CheckoutScreen(
     val order by orderViewModel.currentOrder.collectAsState()
 
     // Create a new order with the selected products and the current user
-    orderViewModel.updateOrder(Order(
-        products = selectedProducts,
-        user = user,
-    ))
+    orderViewModel.updateOrder(
+        Order(
+            products = selectedProducts,
+            user = user,
+        )
+    )
+    println("Voucher in CheckOutScreen: ${order.voucher?.title}")
 
     Scaffold(
         modifier = modifier,
@@ -82,10 +86,8 @@ fun CheckoutScreen(
             }
             item {
                 Column {
-                    //Spacer(modifier = Modifier.height(10.dp))
                     Information(
                         modifier.padding(10.dp),
-                        //user = order.user,
                         userViewModel = userViewModel,
                         onEditAddressClick = {
                             navController?.navigate(Screen.EditProfileScreen.route)
@@ -104,7 +106,6 @@ fun CheckoutScreen(
                     )
                     PaymentDetail(
                         modifier = Modifier.padding(10.dp),
-                        //order = order,
                         orderViewModel = orderViewModel,
                     )
                     Spacer(modifier = Modifier.height(50.dp))
@@ -264,6 +265,7 @@ fun CheckoutItem(
                             )
                         }
                     }
+
                     is ToyProduct -> {
                         item {
                             FilterChip(
@@ -285,6 +287,7 @@ fun CheckoutItem(
                             )
                         }
                     }
+
                     is ClothesProduct -> {
                         item {
                             FilterChip(

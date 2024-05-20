@@ -180,7 +180,7 @@ fun PetShopApp(
         NavHost(
             navController = navController,
             // Nơi bắt đầu của ứng dụng
-            startDestination = Screen.RegisterScreen.route,
+            startDestination = Screen.HomePage.route,
             modifier = Modifier.padding(innerPadding),
         ) {
             // Màn hình chính
@@ -295,6 +295,7 @@ fun PetShopApp(
             composable(route = Screen.SelectVoucher.route) {
                 SelectVoucher(
                     navController = navController,
+                    orderViewModel = orderViewModel,
                     onSearchVoucher = { /*TODO*/ }
                 )
             }
@@ -328,7 +329,7 @@ fun PetShopApp(
 
             composable(route = Screen.RegisterScreen.route) {
                 Register(
-                    navController = navController
+                    navController = navController,
                 )
             }
 

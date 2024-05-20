@@ -1,10 +1,8 @@
 package com.example.petshop.ui.checkout
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,12 +21,12 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -40,36 +38,38 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.petshop.R
+import com.example.petshop.model.Voucher
 import com.example.petshop.ui.theme.PetShopTheme
+import com.example.petshop.view_model.OrderViewModel
 
 
 @Composable
 fun SelectVoucher(
     modifier: Modifier = Modifier,
     navController: NavController? = null,
+    orderViewModel: OrderViewModel,
     onSearchVoucher: (String) -> Unit = {},
 ) {
-    var isSelect1 by remember { mutableStateOf(false) }
-    var isSelect2 by remember { mutableStateOf(false) }
+    val allVouchers by orderViewModel.allVouchers.collectAsState()
+    val order by orderViewModel.currentOrder.collectAsState()
+
+    println("Voucher in SelectVoucher: ${order.voucher?.title}")
+
 
     Scaffold(
         modifier = modifier,
         bottomBar = {
-            if (isSelect1 || isSelect2) {
-                VoucherStatus(
-                    onClick = { navController?.popBackStack()                    },
-                    numVoucherSelected = if (isSelect1 || isSelect2) 1 else 0
-                )
-            }
+        if (order.voucher != null)
+            VoucherStatus(
+                onClick = { navController?.popBackStack() },
+                discount = order.discount,
+                numVoucherSelected = 1
+            )
         }
     ) {
         Column(
             modifier = Modifier.padding(it),
         ) {
-
-            /// TODO
-            Text(text = "Chưa làm, sẽ làm sau")
-            ///
             var searchText by remember { mutableStateOf("") }
             SearchBox(
                 value = searchText,
@@ -82,44 +82,34 @@ fun SelectVoucher(
                 modifier = Modifier.padding(horizontal = 20.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Voucher list ở đây
                 item {
-                    Column (
+                    Column(
                         verticalArrangement = Arrangement.spacedBy(16.dp)
-                    ){
-                        Voucher(
-                            imageId = R.drawable.voucher,
-                            title = "Giảm 10% tối đa 20.000 đ",
-                            description = "Không yêu cầu giá trị đơn hàng",
-                            isSelected = isSelect1,
-                            onClick = {
-                                isSelect1 = !isSelect1
-                                isSelect2 = false
+                    ) {
+                        allVouchers.forEachIndexed { index, voucher ->
+                            Voucher(
+                                voucher = voucher,
+                                isSelected = order.voucher == voucher,
+                                isDisable = order.productTotal < voucher.minOrderValue,
+                                warning = "Mua thêm ${(voucher.minOrderValue - order.productTotal).toInt()} đ để sử dụng voucher",
+                                onClick = {
+                                    /*orderViewModel.updateOrder(
+                                        order.copy(
+                                            voucher = voucher
+                                        )
+                                    )*/
+                                    orderViewModel.updateVoucher(voucher = voucher)
+                                    println("Voucher selected after call fun-------: ${order.voucher?.title}")
+                                }
+                            )
+                            if (index != allVouchers.lastIndex) {
+                                Divider(color = Color(0xFFD9D9D9))
                             }
-                        )
-                        Divider(color = Color(0xFFD9D9D9))
-                        Voucher(
-                            imageId = R.drawable.voucher,
-                            title = "Giảm 15% tối đa 35.000 đ",
-                            description = "Đơn tối thiểu 20.000 đ",
-                            isSelected = isSelect2,
-                            onClick = {
-                                isSelect2 = !isSelect2
-                                isSelect1 = false
-                            }
-                        )
-                        Divider(color = Color(0xFFD9D9D9))
-                        Voucher(
-                            imageId = R.drawable.bca,
-                            title = "Giảm 75.000 đ",
-                            description = "Đơn tối thiểu 280.000 đ",
-                            isDisable = true,
-                            warning = "Mua thêm 223.000 đ để sử dụng voucher",
-                            onClick = { }
-                        )
+                        }
                     }
                 }
             }
+
         }
     }
 }
@@ -127,10 +117,8 @@ fun SelectVoucher(
 @Composable
 fun Voucher(
     modifier: Modifier = Modifier,
+    voucher: Voucher,
     isSelected: Boolean = false,
-    @DrawableRes imageId: Int,
-    title: String,
-    description: String,
     isDisable: Boolean = false,
     warning: String = "Không thể sử dụng",
     onClick: () -> Unit,
@@ -147,7 +135,7 @@ fun Voucher(
             modifier.fillMaxWidth()
     ) {
         Image(
-            painter = painterResource(id = imageId),
+            painter = painterResource(id = voucher.image),
             contentDescription = null,
             modifier = Modifier.size(48.dp),
             contentScale = ContentScale.Fit
@@ -160,11 +148,11 @@ fun Voucher(
                 .padding(horizontal = 16.dp)
         ) {
             Text(
-                text = title,
+                text = voucher.title,
                 style = MaterialTheme.typography.titleMedium,
             )
             Text(
-                text = description,
+                text = voucher.description,
                 style = MaterialTheme.typography.bodyMedium,
             )
             if (isDisable)
@@ -183,7 +171,6 @@ fun Voucher(
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SearchBox(
     value: String = "",
@@ -217,6 +204,7 @@ fun SearchBox(
 fun VoucherStatus(
     modifier: Modifier = Modifier,
     numVoucherSelected: Int = 0,
+    discount: Double = 0.0,
     onClick: () -> Unit
 ) {
     Row(
@@ -226,13 +214,24 @@ fun VoucherStatus(
             .fillMaxWidth()
             .padding(vertical = 16.dp, horizontal = 20.dp)
     ) {
-        Text(
-            text = "Đã chọn $numVoucherSelected voucher",
-            style = MaterialTheme.typography.titleMedium.copy(
-                fontSize = 14.sp
-            ),
+        Column(
             modifier = Modifier.weight(1f)
-        )
+        ) {
+            Text(
+                text = "Đã chọn $numVoucherSelected voucher",
+                style = MaterialTheme.typography.titleMedium.copy(
+                    fontSize = 18.sp
+                ),
+            )
+            if (discount > 0.0)
+            Text(
+                text = "Giảm ${discount.toInt()} đ",
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontSize = 14.sp,
+                    color = Color(0xFF46AE7C)
+                ),
+            )
+        }
         Button(
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF46AE7C)),
             onClick = onClick
@@ -247,8 +246,21 @@ fun VoucherStatus(
 
 @Preview
 @Composable
+fun VoucherStatusPreview() {
+    PetShopTheme {
+        VoucherStatus(
+            numVoucherSelected = 1,
+            onClick = {}
+        )
+    }
+}
+
+@Preview
+@Composable
 fun SelectVoucherPreview() {
     PetShopTheme {
-        SelectVoucher()
+        SelectVoucher(
+            orderViewModel = OrderViewModel()
+        )
     }
 }

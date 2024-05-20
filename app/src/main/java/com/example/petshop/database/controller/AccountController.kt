@@ -14,6 +14,8 @@ import kotlinx.coroutines.tasks.await
 
 class AccountController {
     companion object {
+
+
         private val database: DatabaseReference = FirebaseDatabase.getInstance().reference
 
         fun isPhoneNumberExists(numberphone: String, callback: (Boolean) -> Unit) {

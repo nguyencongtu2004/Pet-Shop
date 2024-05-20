@@ -125,7 +125,12 @@ fun ShipmentStateScreen(
                                 navController?.navigate(Screen.FollowShipping.createRoute(orderId))
                             }
                         )
-                        Divider(modifier = Modifier.padding(top = 8.dp))
+                        if (shippingOrders.indexOf(order) != shippingOrders.size - 1){
+                            Divider(
+                                color = Color(0xFFD9D9D9),
+                                modifier = Modifier.padding(top = 8.dp)
+                            )
+                        }
                     }
                     item {
                         Spacer(modifier = Modifier.height(100.dp))

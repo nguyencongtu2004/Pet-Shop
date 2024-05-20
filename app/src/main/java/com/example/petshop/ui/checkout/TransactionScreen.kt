@@ -173,7 +173,7 @@ fun TransactionScreen(
                                     Spacer(modifier = Modifier.height(8.dp))
                                     ItemMedium(title = "Tổng tiền hàng:", detail = order.productTotal.toInt().toString() + " đ")
                                     ItemMedium(title = "Phí vận chuyển:", detail = order.shippingFee.toInt().toString() + " đ")
-                                    ItemMedium(title = "Voucher:", detail = "- ?? đ")
+                                    ItemMedium(title = "Voucher:", detail = "- ${order.discount.toInt()} đ")
                                     ItemBold(title = "Tổng cộng:", detail = order.total.toInt().toString() + " đ")
                                 }
                                 Divider()
