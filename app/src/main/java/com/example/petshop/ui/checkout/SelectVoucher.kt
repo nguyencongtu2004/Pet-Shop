@@ -53,9 +53,6 @@ fun SelectVoucher(
     val allVouchers by orderViewModel.allVouchers.collectAsState()
     val order by orderViewModel.currentOrder.collectAsState()
 
-    println("Voucher in SelectVoucher: ${order.voucher?.title}")
-
-
     Scaffold(
         modifier = modifier,
         bottomBar = {
@@ -93,13 +90,14 @@ fun SelectVoucher(
                                 isDisable = order.productTotal < voucher.minOrderValue,
                                 warning = "Mua thêm ${(voucher.minOrderValue - order.productTotal).toInt()} đ để sử dụng voucher",
                                 onClick = {
-                                    /*orderViewModel.updateOrder(
+
+                                    val discount = orderViewModel.calculateDiscount(order, voucher)
+                                    orderViewModel.updateOrder(
                                         order.copy(
-                                            voucher = voucher
+                                            voucher = voucher,
+                                            discount = discount
                                         )
-                                    )*/
-                                    orderViewModel.updateVoucher(voucher = voucher)
-                                    println("Voucher selected after call fun-------: ${order.voucher?.title}")
+                                    )
                                 }
                             )
                             if (index != allVouchers.lastIndex) {

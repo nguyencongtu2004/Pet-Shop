@@ -92,6 +92,7 @@ fun ProductDetail(
     val product by productViewModel.selectedProduct.collectAsState()
     val user by userViewModel.currentUser.collectAsState()
     val selectedProducts by cartViewModel.selectedProducts.collectAsState()
+    val cartNumber by cartViewModel.productsInCart.collectAsState()
 
     val context = LocalContext.current
 
@@ -113,7 +114,8 @@ fun ProductDetail(
                         },
                         onBackClick = {
                             navController?.popBackStack()
-                        }
+                        },
+                        cartNumber = cartNumber.size
                     )
                 }
             }

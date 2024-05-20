@@ -61,7 +61,7 @@ import com.example.petshop.view_model.UserViewModel
 
 @Composable
 fun ProfileScreen(
-    navController: NavController? = null,
+    navController: NavController?   = null,
     userViewModel: UserViewModel,
     modifier: Modifier = Modifier,
     onEditProfileClicked: () -> Unit = {},

@@ -62,7 +62,9 @@ fun SelectPayMethod(
                 description = "Miễn phí thu hộ",
                 isSelected = order.paymentMethod == PaymentMethod.CASH,
                 onClick = {
-                    orderViewModel.updateOrderPaymentMethod(PaymentMethod.CASH)
+                    orderViewModel.updateOrder(
+                        order.copy(paymentMethod = PaymentMethod.CASH)
+                    )
                 })
             PayMethod(
                 imageId = R.drawable.transfer,
@@ -70,7 +72,9 @@ fun SelectPayMethod(
                 description = "(Tự động kiểm tra)",
                 isSelected = order.paymentMethod == PaymentMethod.BANK,
                 onClick = {
-                    orderViewModel.updateOrderPaymentMethod(PaymentMethod.BANK)
+                    orderViewModel.updateOrder(
+                        order.copy(paymentMethod = PaymentMethod.BANK)
+                    )
                 })
             Divider(color = Color(0xFFD9D9D9))
             AddPayMethod(

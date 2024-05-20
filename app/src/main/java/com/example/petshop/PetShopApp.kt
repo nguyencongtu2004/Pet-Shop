@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -111,6 +112,10 @@ fun PetShopApp(
     var isNavigationBarVisible by rememberSaveable { mutableStateOf(true) }
     var selectedIndex = remember { mutableStateOf(0) }
 
+    // Số lượng sản phẩm trong giỏ hàng và thông báo
+    val cartNumber by cartViewModel.productsInCart.collectAsState()
+    val notiNumber by notificationViewModel.allNotifications.collectAsState()
+
     // Cập nhật trạng thái khi currentScreen thay đổi (chạy đoạn code dưới sau mỗi lần currentScreen thay đổi)
     LaunchedEffect(currentScreen) {
         when (currentScreen) {
@@ -153,13 +158,16 @@ fun PetShopApp(
                         navController.navigate(Screen.ShoppingCartScreen.route)
                     },
                     searchText = searchText,
+                    cartNumber = cartNumber.size,
+                    notiNumber = notiNumber.filter { !it.isSeen }.size,
                 )
             if (isNoSearchBarVisible)
                 TopAppBarNoSearch(
                     title = currentScreenObject?.title ?: "",
                     onBackClick = {
                         navController.popBackStack()
-                    }
+                    },
+                    cartNumber = cartNumber.size,
                 )
         },
         bottomBar = {
@@ -249,7 +257,9 @@ fun PetShopApp(
             composable(route = Screen.ShoppingCartScreen.route) {
                 ShoppingCartScreen(
                     navController = navController, // Để điều hướng sang màn hình thanh toán
-                    cartViewModel = cartViewModel
+                    cartViewModel = cartViewModel,
+                    userViewModel = userViewModel,
+                    orderViewModel = orderViewModel,
                 )
             }
 
@@ -364,6 +374,7 @@ fun PetShopApp(
                 ChatScreen(
                     navController = navController,
                     chatViewModel = chatViewModel,
+                    cartViewModel = cartViewModel
                 )
             }
 

@@ -116,6 +116,10 @@ fun Delivery(
 ) {
     val order by orderViewModel.currentOrder.collectAsState()
 
+    //val currentPayMethod by orderViewModel.currentPayMethod.collectAsState()
+    //val currentDeliveryMethod by orderViewModel.currentDeliveryMethod.collectAsState()
+    //val currentVoucher by orderViewModel.currentVoucher.collectAsState()
+
     Column(
         horizontalAlignment = Alignment.Start,
         modifier = modifier,
@@ -144,7 +148,12 @@ fun Delivery(
             deliveryMethod = DeliveryMethod.NORMAL,
             selected = order.deliveryMethod == DeliveryMethod.NORMAL,
             onClick = {
-                orderViewModel.updateOrderDeliveryMethod(DeliveryMethod.NORMAL)
+                //orderViewModel.updateDeliveryMethod(DeliveryMethod.NORMAL)
+                orderViewModel.updateOrder(
+                    order.copy(
+                        deliveryMethod = DeliveryMethod.NORMAL
+                    )
+                )
             }
         )
         Divider()
@@ -152,7 +161,12 @@ fun Delivery(
             deliveryMethod = DeliveryMethod.FAST,
             selected = order.deliveryMethod == DeliveryMethod.FAST,
             onClick = {
-                orderViewModel.updateOrderDeliveryMethod(DeliveryMethod.FAST)
+                //orderViewModel.updateDeliveryMethod(DeliveryMethod.FAST)
+                orderViewModel.updateOrder(
+                    order.copy(
+                        deliveryMethod = DeliveryMethod.FAST
+                    )
+                )
             }
         )
         Divider()
@@ -168,7 +182,10 @@ fun Delivery(
         Divider()
         PaymentOption(
             title = "Voucher",
-            description = "Không có voucher nào được thêm",
+            description = when (order.voucher) {
+                null -> "Không có voucher nào được chọn"
+                else -> order.voucher!!.title
+            },
             onClick = onVoucherClick
         )
 
@@ -277,7 +294,9 @@ fun PaymentDetail(
     orderViewModel: OrderViewModel,
 ) {
     val order by orderViewModel.currentOrder.collectAsState()
-    println("Voucher in PaymentDetail: ${order.voucher?.title}")
+
+    //val currentDiscount by orderViewModel.currentDiscount.collectAsState()
+    //println("Voucher in PaymentDetail: ${order.voucher?.title}")
 
     Column(
         verticalArrangement = Arrangement.spacedBy(6.dp, Alignment.Top),
@@ -296,8 +315,6 @@ fun PaymentDetail(
             isBold = true,
         )
 
-        println("trước khi hiện discount: ${order.discount}")
-        println("voucher đã chọn: ${order.voucher?.title}")
         PaymentDetailRow(
             label = "Voucher",
             value = "-${order.discount.toInt()} đ",
