@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -81,6 +82,21 @@ fun ShoppingCartScreen(
     if (!isInitialized) {
         cartViewModel.resetSelectedProducts()
         isInitialized = true
+    }
+    if (productsInCart.isEmpty()) {
+        return Column(
+            //verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Spacer(modifier = Modifier.height(100.dp))
+            Text(
+                text = "Giỏ hàng trống!!\nHãy thêm sản phẩm vào giỏ hàng nào!",
+                style = MaterialTheme.typography.titleMedium,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(20.dp)
+            )
+        }
     }
 
     Scaffold(

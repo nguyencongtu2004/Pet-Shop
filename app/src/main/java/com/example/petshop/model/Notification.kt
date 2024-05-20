@@ -7,4 +7,5 @@ data class Notification(
     var title: String = "",
     var description: String = "",
     var image: Int = R.drawable.default_noti,
+    var isSeen: Boolean = false,
 )

@@ -27,7 +27,7 @@ class ProductViewModel : ViewModel() {
             star = 4.8,
             quantity = 1,
             image = R.drawable.avt,
-            detailDescription = "Chi tiết sản phẩm"
+            detailDescription = "Chi tiết sản phẩm",
         ),
         FoodProduct(
             id = "2",

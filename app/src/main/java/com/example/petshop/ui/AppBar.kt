@@ -10,7 +10,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,8 +21,9 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Badge
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -29,12 +32,10 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -51,6 +52,7 @@ import com.example.petshop.R
 import com.example.petshop.model.BottomNavigationBarItem
 import com.example.petshop.ui.login_register.Button
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopAppBarNoSearch(
     modifier: Modifier = Modifier,
@@ -58,6 +60,7 @@ fun TopAppBarNoSearch(
     onBackClick: () -> Unit = {},
     onCartClick: () -> Unit = {},
     isCartEnable: Boolean = false,
+    cartNumber: Int = 0,
 ) {
     Row(
         horizontalArrangement = Arrangement.Start,
@@ -86,11 +89,34 @@ fun TopAppBarNoSearch(
         )
         if (isCartEnable) {
             IconButton(onClick = onCartClick) {
-                Icon(
-                    painter = painterResource(id = R.drawable.shopping_cart),
-                    contentDescription = "Giỏ hàng",
-                    tint = Color(0xFF5D4037),
-                )
+                Box(
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.shopping_cart),
+                        contentDescription = "Giỏ hàng",
+                        tint = Color(0xFF5D4037),
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                    )
+                    if (cartNumber > 0)
+                        Badge(
+                            modifier = Modifier
+                                .size(16.dp)
+                                .align(Alignment.TopEnd)
+                                .offset(x = 4.dp, y = (-5).dp)
+                        ) {
+                            Text(
+                                cartNumber.toString(),
+                                style = TextStyle(
+                                    fontSize = if (cartNumber > 9) 7.sp else 12.sp,
+                                    fontWeight = FontWeight(700),
+                                    color = Color.White
+                                )
+                            )
+                        }
+                }
             }
         }
     }
@@ -205,6 +231,7 @@ fun PetShopNavigationBar(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopAppBarWithSearch(
     onSearchTextChanged: (String) -> Unit,
@@ -212,7 +239,9 @@ fun TopAppBarWithSearch(
     filterClicked: () -> Unit,
     notificationClicked: () -> Unit,
     cartClicked: () -> Unit,
-    searchText: String = ""
+    searchText: String = "",
+    cartNumber: Int = 0,
+    notiNumber: Int = 0
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     Row(
@@ -221,7 +250,7 @@ fun TopAppBarWithSearch(
             .fillMaxWidth()
             .height(56.dp)
             .padding(horizontal = 8.dp)
-            //.background(Color.White)
+        //.background(Color.White)
     ) {
         Box(
             modifier = Modifier
@@ -298,18 +327,64 @@ fun TopAppBarWithSearch(
             )
         }
         IconButton(onClick = notificationClicked) {
-            Icon(
-                painter = painterResource(id = R.drawable.bell),
-                contentDescription = "Thông báo",
-                tint = Color(0xFF5D4037),
-            )
+            Box(
+                modifier = Modifier
+                    .padding(end = 8.dp)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.bell),
+                    contentDescription = "Giỏ hàng",
+                    tint = Color(0xFF5D4037),
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                )
+                if (notiNumber > 0)
+                    Badge(
+                        modifier = Modifier
+                            .size(16.dp)
+                            .align(Alignment.TopEnd)
+                            .offset(x = 4.dp, y = (-5).dp)
+                    ) {
+                        Text(
+                            notiNumber.toString(),
+                            style = TextStyle(
+                                fontSize = if (notiNumber > 9) 7.sp else 12.sp,
+                                fontWeight = FontWeight(700),
+                                color = Color.White
+                            )
+                        )
+                    }
+            }
         }
         IconButton(onClick = cartClicked) {
-            Icon(
-                painter = painterResource(id = R.drawable.shopping_cart),
-                contentDescription = "Giỏ hàng",
-                tint = Color(0xFF5D4037),
-            )
+            Box(
+                modifier = Modifier
+                    .padding(end = 8.dp)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.shopping_cart),
+                    contentDescription = "Giỏ hàng",
+                    tint = Color(0xFF5D4037),
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                )
+                if (cartNumber > 0)
+                    Badge(
+                        modifier = Modifier
+                            .size(16.dp)
+                            .align(Alignment.TopEnd)
+                            .offset(x = 4.dp, y = (-5).dp)
+                    ) {
+                        Text(
+                            cartNumber.toString(),
+                            style = TextStyle(
+                                fontSize = if (cartNumber > 9) 7.sp else 12.sp,
+                                fontWeight = FontWeight(700),
+                                color = Color.White
+                            )
+                        )
+                    }
+            }
         }
     }
 }
@@ -441,7 +516,19 @@ fun DetailProductBottomBar(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
+@Composable
+fun PetShopTopAppBarPreview() {
+    TopAppBarWithSearch(
+        filterClicked = { /*TODO*/ },
+        notificationClicked = { /*TODO*/ },
+        cartClicked = { /*TODO*/ },
+        onSearchIconClicked = { /*TODO*/ },
+        onSearchTextChanged = { /*TODO*/ }
+    )
+}
+
+/*@Preview
 @Composable
 fun DetailProductBottomBarPreview() {
     DetailProductBottomBar()
@@ -454,7 +541,7 @@ fun TopAppBarPreview() {
         title = "test voi title dai qua them nua ddi van chua du dai",
         isCartEnable = true
     )
-}
+}*/
 
 /*
 @Preview(showBackground = true)
@@ -484,20 +571,6 @@ fun CheckoutBottomBarPreview() {
         total = 120000.0
     )
 }
-
-
-@Preview(showBackground = true)
-@Composable
-fun PetShopTopAppBarPreview() {
-    TopAppBarWithSearch(
-        filterClicked = { /*TODO*/ },
-        notificationClicked = { /*TODO*/ },
-        cartClicked = { /*TODO*/ },
-        onSearchIconClicked = { /*TODO*/ },
-        onSearchTextChanged = { /*TODO*/ }
-    )
-}
-
 */
 
 

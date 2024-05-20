@@ -94,7 +94,6 @@ fun ShipmentStateScreen(
                     style = MaterialTheme.typography.titleSmall
                 )
             }
-
             Tab(
                 selected = selectedTabIndex == 1,
                 onClick = { selectedTabIndex = 1 },
@@ -106,15 +105,25 @@ fun ShipmentStateScreen(
                 )
             }
         }
-        Box(
-            modifier = Modifier
-                //.background(Color.LightGray)
-        ) {
+        Box {
             val shippingOrders = allOrders.filter { it.status == OrderStatus.SHIPPING || it.status == OrderStatus.PREPARE}
             val shippedOrders = allOrders.filter { it.status == OrderStatus.DELIVERED }
 
             // Hiển thị nội dung của mỗi tab ở đây
             if (selectedTabIndex == 0) {
+                if (shippingOrders.isEmpty()) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Spacer(modifier = Modifier.height(100.dp))
+                        Text(
+                            text = "Không có đơn hàng nào đang giao",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                }
+
                 LazyColumn {
                     items(shippingOrders) { order ->
                         OrderItem(
@@ -137,6 +146,18 @@ fun ShipmentStateScreen(
                     }
                 }
             } else {
+                if (shippedOrders.isEmpty()) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Spacer(modifier = Modifier.height(100.dp))
+                        Text(
+                            text = "Không có đơn hàng nào đã giao",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                }
                 LazyColumn {
                     items(shippedOrders) { order ->
                         OrderItem(

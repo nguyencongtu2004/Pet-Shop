@@ -48,6 +48,7 @@ import com.example.petshop.ui.TopAppBarNoSearch
 import com.example.petshop.view_model.ChatViewModel
 import com.example.petshop.R
 import com.example.petshop.ui.home.ProductWithStar
+import com.example.petshop.view_model.CartViewModel
 import com.example.petshop.view_model.ProductViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -56,10 +57,11 @@ fun ChatScreen(
     modifier: Modifier = Modifier,
     productId: String = "",
     navController: NavController,
+    cartViewModel: CartViewModel,
     chatViewModel: ChatViewModel,
 ) {
     val messages by chatViewModel.messages.collectAsState()
-
+    val cartNumber by cartViewModel.productsInCart.collectAsState()
 
     Scaffold(
         topBar = {
@@ -68,6 +70,7 @@ fun ChatScreen(
                 onBackClick = { navController.popBackStack() },
                 isCartEnable = true,
                 onCartClick = { navController.navigate(Screen.ShoppingCartScreen.route) },
+                cartNumber = cartNumber.size
             )
         }
     ) { paddingValues ->
@@ -234,5 +237,6 @@ fun ChatScreenPreview() {
     ChatScreen(
         chatViewModel = ChatViewModel(),
         navController = rememberNavController(),
+        cartViewModel = CartViewModel()
     )
 }
