@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Icon
@@ -74,6 +75,22 @@ fun ChatScreen(
             )
         }
     ) { paddingValues ->
+        if (messages.isEmpty()) {
+            Column (
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxSize()
+            ){
+                CircularProgressIndicator(
+                    color = Color(0xFFA05F47),
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Đang tải tin nhắn...",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
         Column(
             modifier = modifier
                 .fillMaxSize()
@@ -98,7 +115,9 @@ fun MessageList(
     val listState = rememberLazyListState()
 
     LaunchedEffect(messages.size) {
-        listState.animateScrollToItem(messages.size - 1)
+        if (messages.isNotEmpty()) {
+            listState.animateScrollToItem(messages.size - 1)
+        }
     }
 
     LazyColumn(

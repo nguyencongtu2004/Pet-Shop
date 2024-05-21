@@ -98,10 +98,10 @@ fun Login(
                 Spacer(modifier = Modifier.height(28.dp))
                 Button(
                     title = "Đăng nhập",
-                    isDisable = if (phoneText == "" || passwordText == "") true else false,
+                    isDisable = phoneText == "" || passwordText == "",
                     onClick = {
-                        val pass = passwordText.toString()
-                        val sdt = phoneText.toString()
+                        val pass = passwordText
+                        val sdt = phoneText
 
                         AccountController.Login(sdt, pass) { success ->
                             if (success) {

@@ -1,34 +1,30 @@
 package com.example.petshop.database.controller
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import com.example.petshop.database.model.Account
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.DatabaseReference
-import com.example.petshop.view_model.UserViewModel
-import kotlinx.coroutines.tasks.await
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class AccountController {
     companion object {
-
 
         private val database: DatabaseReference = FirebaseDatabase.getInstance().reference
 
         fun isPhoneNumberExists(numberphone: String, callback: (Boolean) -> Unit) {
             val query = database.child("Accounts").orderByChild("numberphone").equalTo(numberphone)
-            query.addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    callback(dataSnapshot.exists())
-                }
+            query.addListenerForSingleValueEvent(
+                object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        callback(dataSnapshot.exists())
+                    }
 
-                override fun onCancelled(databaseError: DatabaseError) {
-                    // Xử lý lỗi nếu cần
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        // Xử lý lỗi nếu cần
+                    }
                 }
-            })
+            )
         }
 
         fun registerAccount(numberphone: String, password: String, callback: (Boolean) -> Unit) {
@@ -39,7 +35,8 @@ class AccountController {
                     // Tiếp tục đăng ký nếu số điện thoại chưa tồn tại
                     val userId = database.push().key ?: return@isPhoneNumberExists
                     val account =
-                        Account(user_id = userId,
+                        Account(
+                            user_id = userId,
                             numberphone = numberphone,
                             password = password,
                             name = "Chưa đặt",
@@ -100,7 +97,8 @@ class AccountController {
 
         // lấy thông tin người dùng bằng sđt
         fun getAccountByNumberphone(numberphone: String, callback: (Account?) -> Unit) {
-            val query = database.child("Accounts").orderByChild("numberphone").equalTo(numberphone).limitToFirst(1)
+            val query = database.child("Accounts").orderByChild("numberphone").equalTo(numberphone)
+                .limitToFirst(1)
             query.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     var account: Account? = null
