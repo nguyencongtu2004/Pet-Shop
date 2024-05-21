@@ -2,18 +2,12 @@
 
 package com.example.petshop
 
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.material3.rememberModalBottomSheetState
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,10 +28,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.petshop.model.Flavor
-import com.example.petshop.model.FoodProduct
 import com.example.petshop.model.Screen
-import com.example.petshop.model.Weight
 import com.example.petshop.ui.PetShopNavigationBar
 import com.example.petshop.ui.TopAppBarNoSearch
 import com.example.petshop.ui.TopAppBarWithSearch
@@ -64,8 +55,6 @@ import com.example.petshop.view_model.NotificationViewModel
 import com.example.petshop.view_model.OrderViewModel
 import com.example.petshop.view_model.ProductViewModel
 import com.example.petshop.view_model.UserViewModel
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.SheetState
 
 val NavHostController.canGoBack: Boolean
     get() = this.previousBackStackEntry?.lifecycle?.currentState == Lifecycle.State.RESUMED
@@ -209,7 +198,7 @@ fun PetShopApp(
                     productViewModel = productViewModel,
                     bannerViewModel = bannerViewModel,
 
-                    onProductClick = {productId ->
+                    onProductClick = { productId ->
                         navController.navigate(Screen.ProductDetailScreen.createRoute(productId))
                     }
                 )
@@ -242,7 +231,10 @@ fun PetShopApp(
                         isShopInforSheetOpen = false
                     },
                     isSheetOpen = isSheetOpen,
-                    onDismissRequset = {isSheetOpen = false},
+                    onDismissRequset = {
+                        isSheetOpen = false
+                        isShopInforSheetOpen = false
+                    },
                     sheetState = sheetState,
                     isShopInforSheetOpen = isShopInforSheetOpen
                 )
@@ -344,7 +336,7 @@ fun PetShopApp(
                     defaultValue = "no_id"
                     nullable = true
                 })
-            ) {backStackEntry ->
+            ) { backStackEntry ->
                 val productId = backStackEntry.arguments?.getString("productId")
 
                 ProductDetail(
@@ -359,7 +351,7 @@ fun PetShopApp(
 
             composable(route = Screen.LoginScreen.route) {
                 Login(
-                    navController = navController ,
+                    navController = navController,
                     userViewModel = userViewModel
                 )
             }
