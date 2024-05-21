@@ -658,7 +658,7 @@ private fun ProductToyCustomization(
 }
 
 @Composable
-private fun ProductCustomizationOption(
+fun ProductCustomizationOption(
     title: String,
     options: List<String>,
     onOptionClick: (String) -> Unit,

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -136,14 +137,16 @@ fun PetShopApp(
 
     Scaffold(
         topBar = {
-            if (isSearchBarVisible)
+            if (isSearchBarVisible) {
+                val sheetState = rememberModalBottomSheetState()
+                var isSheetOpen by rememberSaveable { mutableStateOf(false) }
                 TopAppBarWithSearch(
                     onSearchTextChanged = { text -> searchText = text },
                     onSearchIconClicked = {
                         navController.navigate(Screen.SearchScreen.createRoute(searchText))
                         searchText = ""
                     },
-                    filterClicked = { /*TODO*/ },
+                    filterClicked = { isSheetOpen = true },
                     notificationClicked = {
                         navController.navigate(Screen.NotificationScreen.route)
                     },
@@ -153,7 +156,11 @@ fun PetShopApp(
                     searchText = searchText,
                     cartNumber = cartNumber.size,
                     notiNumber = notiNumber.filter { !it.isSeen }.size,
+                    isSheetOpen = isSheetOpen,
+                    onDismissRequset = {isSheetOpen = false},
+                    sheetState  = sheetState,
                 )
+            }
             if (isNoSearchBarVisible)
                 TopAppBarNoSearch(
                     title = currentScreenObject?.title ?: "",

@@ -1,5 +1,8 @@
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
+
 package com.example.petshop.ui
 
+import android.icu.text.CaseMap.Title
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -27,13 +30,21 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -51,6 +62,7 @@ import androidx.compose.ui.unit.sp
 import com.example.petshop.R
 import com.example.petshop.model.BottomNavigationBarItem
 import com.example.petshop.ui.login_register.Button
+import com.example.petshop.ui.product_infor.ProductCustomizationOption
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -241,9 +253,18 @@ fun TopAppBarWithSearch(
     cartClicked: () -> Unit,
     searchText: String = "",
     cartNumber: Int = 0,
-    notiNumber: Int = 0
+    notiNumber: Int = 0,
+    isSheetOpen: Boolean = false,
+    onDismissRequset: () -> Unit = {},
+    sheetState: SheetState,
+
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
+    val ratingList: List<String> = listOf("1-2 sao", "2-3 sao", "3-4 sao", "4-5 sao")
+    val discountList: List<String> = listOf("Đang giảm giá", "Không giảm giá")
+    // Filter
+    var selectedRatingOption by remember { mutableStateOf("") }
+    var selectedDiscountOption by remember { mutableStateOf("") }
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -257,6 +278,53 @@ fun TopAppBarWithSearch(
                 .weight(1f)
                 .padding(horizontal = 8.dp)
         ) {
+            if (isSheetOpen)
+            ModalBottomSheet(
+                onDismissRequest = onDismissRequset,
+                sheetState = sheetState,
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 10.dp)
+                ) {
+                    Text(
+                        text = "Lọc",
+                        style = MaterialTheme.typography.titleLarge
+                    )
+
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.fi_done),
+                            contentDescription = "Done",
+                            modifier = Modifier.size(32.dp),
+                            tint = Color(0xFF08F720)
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                ProductCustomizationOption(
+                    "Đánh giá",
+                    options = ratingList,
+                    onOptionClick = { option ->
+                        selectedRatingOption = option},
+                    selectedOption = selectedRatingOption
+                )
+
+                ProductCustomizationOption(
+                    "Khuyến mãi",
+                    options = discountList,
+                    onOptionClick = { option ->
+                        selectedDiscountOption = option},
+                    selectedOption = selectedDiscountOption
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+            }
             Column {
                 Spacer(modifier = Modifier.height(9.dp))
                 Box(
@@ -520,12 +588,17 @@ fun DetailProductBottomBar(
 @Preview(showBackground = true)
 @Composable
 fun PetShopTopAppBarPreview() {
+    val sheetState = rememberModalBottomSheetState()
+    var isSheetOpen by rememberSaveable { mutableStateOf(false) }
     TopAppBarWithSearch(
         filterClicked = { /*TODO*/ },
         notificationClicked = { /*TODO*/ },
         cartClicked = { /*TODO*/ },
         onSearchIconClicked = { /*TODO*/ },
-        onSearchTextChanged = { /*TODO*/ }
+        onSearchTextChanged = { /*TODO*/ },
+        isSheetOpen = isSheetOpen,
+        onDismissRequset = {isSheetOpen = false},
+        sheetState  = sheetState
     )
 }
 
