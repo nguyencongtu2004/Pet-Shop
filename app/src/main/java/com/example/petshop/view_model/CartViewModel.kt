@@ -87,7 +87,9 @@ class CartViewModel : ViewModel() {
     )
     var productsInCart: StateFlow<List<Product>> = _productsInCart.asStateFlow()
 
-    fun addProductToCart(product: Product) {
+    fun addProductToCart(
+        product: Product
+    ) {
         val products = _productsInCart.value.toMutableList()
         val existingProductIndex = products.indexOfFirst {
             it.id == product.id && (

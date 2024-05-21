@@ -232,6 +232,7 @@ fun ProfileScreen(
                                 color = MaterialTheme.colorScheme.primaryContainer,
                                 shape = RoundedCornerShape(size = 30.dp)
                             )
+                            .clip(RoundedCornerShape(size = 30.dp))
                             .width(160.dp)
                             .height(90.dp)
                             .clickable { onShippingClicked() }
@@ -294,7 +295,7 @@ fun ProfileScreen(
 
         item {
             // Settings section
-            Column(modifier = Modifier.padding(horizontal = 10.dp)) {
+            Column(modifier = Modifier.padding(horizontal = 0.dp)) {
                 SettingComponent(
                     text = "Sửa địa chỉ nhận hàng",
                     painter = painterResource(id = R.drawable.location),
@@ -348,31 +349,34 @@ fun SettingComponent(
     onClick: () -> Unit,
     color: Color = Color.Black
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
+    Box(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 10.dp)
             .clickable { onClick() }
+            .padding(horizontal = 20.dp)
     ) {
-        Image(
-            painter = painter,
-            contentDescription = null,
-            contentScale = ContentScale.FillBounds,
-            colorFilter = ColorFilter.tint(color),
-            modifier = Modifier
-                .padding(vertical = 10.dp)
-                .width(30.dp)
-                .height(30.dp)
-                .clip(CircleShape)
-        )
-        Spacer(modifier = Modifier.width(12.dp))
-        Text(
-            text = text,
-            style = MaterialTheme.typography.titleMedium.copy(
-                color = color,
-            ),
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Image(
+                painter = painter,
+                contentDescription = null,
+                contentScale = ContentScale.FillBounds,
+                colorFilter = ColorFilter.tint(color),
+                modifier = Modifier
+                    .padding(vertical = 10.dp)
+                    .width(30.dp)
+                    .height(30.dp)
+                    .clip(CircleShape)
+            )
+            Spacer(modifier = Modifier.width(12.dp))
+            Text(
+                text = text,
+                style = MaterialTheme.typography.titleMedium.copy(
+                    color = color,
+                ),
+            )
+        }
     }
 }
 

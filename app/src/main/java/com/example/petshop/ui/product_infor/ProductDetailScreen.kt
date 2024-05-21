@@ -35,7 +35,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -75,6 +77,9 @@ import com.example.petshop.view_model.CartViewModel
 import com.example.petshop.view_model.OrderViewModel
 import com.example.petshop.view_model.ProductViewModel
 import com.example.petshop.view_model.UserViewModel
+import com.google.firebase.annotations.concurrent.Background
+import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 @Composable
 fun getScreenWidth(): Int {
@@ -99,7 +104,6 @@ fun ProductDetail(
     val cartNumber by cartViewModel.productsInCart.collectAsState()
 
     val context = LocalContext.current
-
 
     productViewModel.setSelectedProduct(allProducts.find { it.id == productId }!!)
 
@@ -156,7 +160,9 @@ fun ProductDetail(
                 ProductImageSection(product.image, scrollState)
                 ProductInfoSection(
                     product = product,
-                    onRateClick = { /*TODO*/ },
+                    onRateClick = {
+                        Toast.makeText(context, "Chức năng đang phát triển", Toast.LENGTH_SHORT).show()
+                    },
                     onFavoriteClick = {
                         productViewModel.toggleFavorite()
                         if (product.isFavorite)
@@ -314,7 +320,8 @@ private fun ProductTag(text: String, color: Color) {
             Text(
                 text,
                 style = MaterialTheme.typography.labelLarge.copy(
-                    color = color
+                    color = color,
+                    fontWeight = FontWeight.Bold
                 )
             )
         },
@@ -487,7 +494,7 @@ private fun ProductRatingAndFavorite(
                 )
             )
             Text(
-                text = "(??)",
+                text = "21",
                 style = MaterialTheme.typography.labelLarge.copy(
                     color = Color(0xFF5D4037)
                 )
@@ -663,13 +670,14 @@ fun ProductCustomizationOption(
     options: List<String>,
     onOptionClick: (String) -> Unit,
     selectedOption: String,
+    backgroundColor: Color = Color.White
 ) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.Start),
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = Color(0xFFFFFFFF))
+            .background(color = backgroundColor)
             .padding(10.dp)
     ) {
         Text(
@@ -773,7 +781,8 @@ private fun ProductDescriptionText(description: String) {
             text = description,
             style = MaterialTheme.typography.bodyMedium.copy(
                 color = Color(0xFF555555)
-            )
+            ),
+            textAlign = TextAlign.Justify
         )
     }
 }

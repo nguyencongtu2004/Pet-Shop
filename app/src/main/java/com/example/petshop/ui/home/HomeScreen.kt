@@ -1,15 +1,12 @@
 package com.example.petshop.ui.home
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,17 +15,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -39,17 +31,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -68,15 +56,51 @@ import com.example.petshop.view_model.BannerViewModel
 import com.example.petshop.view_model.ProductViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.yield
-import kotlin.math.max
 
-@OptIn(ExperimentalFoundationApi::class)
+fun filterProductByRate(products: List<Product>, rateFilter: String): List<Product> {
+    if (rateFilter == "") {
+        return products
+    }
+    val star = when (rateFilter) {
+        "< 1 sao" -> 1
+        "1-2 sao" -> 2
+        "2-3 sao" -> 3
+        "3-4 sao" -> 4
+        "4-5 sao" -> 5
+        else -> 5
+    }
+    return products.filter { product ->
+        product.star >= star - 1 && product.star <= star
+    }
+}
+
+fun filterProductByDiscount(products: List<Product>, discountFilter: String): List<Product> {
+    if (discountFilter == "") {
+        return products
+    }
+    val isDiscount = when (discountFilter) {
+        "Đang giảm giá" -> true
+        "Không giảm giá" -> false
+        else -> false
+    }
+    return products.filter { product ->
+        if (isDiscount) {
+            product.oldPrice > product.price
+        } else {
+            product.oldPrice == product.price
+        }
+    }
+}
+
 @Composable
 fun HomeScreen(
     navController: NavController? = null,
     productViewModel: ProductViewModel,
     bannerViewModel: BannerViewModel,
     onProductClick: (String) -> Unit = {},
+
+    rateFilter: String,
+    discountFilter: String,
 ) {
     val allProducts by productViewModel.allProducts.collectAsState()
     val firstTabProduct = allProducts.filterIsInstance<FoodProduct>()
@@ -87,9 +111,21 @@ fun HomeScreen(
     var selectedTabIndex by remember { mutableStateOf(0) }
 
     val selectedProducts = when (selectedTabIndex) {
-        0 -> firstTabProduct
-        1 -> secondTabProduct
-        2 -> thirdTabProduct
+        0 -> filterProductByRate(
+            filterProductByDiscount(firstTabProduct, discountFilter),
+            rateFilter
+        )
+
+        1 -> filterProductByRate(
+            filterProductByDiscount(secondTabProduct, discountFilter),
+            rateFilter
+        )
+
+        2 -> filterProductByRate(
+            filterProductByDiscount(thirdTabProduct, discountFilter),
+            rateFilter
+        )
+
         else -> listOf()
     }
 
@@ -101,19 +137,34 @@ fun HomeScreen(
                 selectedTabIndex = tab
             }
         )
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            modifier = Modifier
-                .fillMaxSize()
-                //.padding(8.dp),
-        ) {
-            items(selectedProducts) { product ->
-                SquareProductWithStar(
-                    product = product,
-                    onProductClick = onProductClick
+        if (selectedProducts.isEmpty())
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Spacer(modifier = Modifier.height(100.dp))
+                Text(
+                    text = "Không có sản phẩm nào!\nHãy thử đổi bộ lọc",
+                    style = MaterialTheme.typography.titleMedium,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(20.dp)
                 )
             }
-        }
+        else
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+
+                items(selectedProducts) { product ->
+                    SquareProductWithStar(
+                        product = product,
+                        onProductClick = onProductClick
+                    )
+                }
+
+            }
     }
 }
 
@@ -304,6 +355,9 @@ fun HomeScreenPreview() {
     HomeScreen(
         productViewModel = ProductViewModel(),
         bannerViewModel = BannerViewModel(),
+        onProductClick = {},
+        rateFilter = "",
+        discountFilter = ""
     )
 }
 
@@ -313,7 +367,7 @@ fun SquareProductWithStar(
     product: Product,
     onProductClick: (String) -> Unit = {},
 ) {
-    Box (
+    Box(
         modifier = Modifier
             .padding(6.dp)
             .shadow(elevation = 3.dp, shape = RoundedCornerShape(size = 10.dp))
@@ -322,7 +376,7 @@ fun SquareProductWithStar(
                 shape = RoundedCornerShape(8.dp)
             )
             .padding(8.dp)
-            .clickable (
+            .clickable(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() },
             ) { onProductClick(product.id) }
@@ -353,7 +407,7 @@ fun SquareProductWithStar(
                     style = MaterialTheme.typography.titleMedium,
                     maxLines = 3,
 
-                )
+                    )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = product.description,
@@ -367,7 +421,10 @@ fun SquareProductWithStar(
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterHorizontally),
+                    horizontalArrangement = Arrangement.spacedBy(
+                        2.dp,
+                        Alignment.CenterHorizontally
+                    ),
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .background(
@@ -385,7 +442,7 @@ fun SquareProductWithStar(
                             .width(24.dp)
                             .height(24.dp)
                             .offset(x = 0.dp, y = (-2).dp),
-                        )
+                    )
                     Text(
                         text = product.star.toString(),
                         style = MaterialTheme.typography.labelLarge

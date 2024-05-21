@@ -39,9 +39,9 @@ import java.util.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditProfile(
+    modifier: Modifier = Modifier,
     navController: NavController? = null,
     userViewModel: UserViewModel,
-    modifier: Modifier = Modifier,
 ) {
     val user by userViewModel.currentUser.collectAsState()
     val context = LocalContext.current
@@ -144,7 +144,7 @@ fun EditProfile(
         }
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = modifier.fillMaxSize()) {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -170,7 +170,9 @@ fun EditProfile(
                         )
                     }
                     TextButton(
-                        onClick = { /* Handle avatar edit */ },
+                        onClick = {
+                            Toast.makeText(context, "Chức năng đang phát triển", Toast.LENGTH_SHORT).show()
+                        },
                         modifier = Modifier.padding(top = 8.dp)
                     ) {
                         Text(

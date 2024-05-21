@@ -38,7 +38,8 @@ fun SearchScreen(
     val cartNumber by cartViewModel.productsInCart.collectAsState()
 
     val filteredProduct = allProducts.filter { product ->
-        product.name.contains(query, ignoreCase = true)}
+        product.name.contains(query, ignoreCase = true)
+    }
 
     Scaffold(
         topBar = {

@@ -2,7 +2,6 @@
 
 package com.example.petshop.ui
 
-import android.icu.text.CaseMap.Title
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -23,6 +22,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BottomAppBar
@@ -37,12 +37,12 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -256,15 +256,20 @@ fun TopAppBarWithSearch(
     notiNumber: Int = 0,
     isSheetOpen: Boolean = false,
     onDismissRequset: () -> Unit = {},
-    sheetState: SheetState,
 
-) {
+    sheetState: SheetState,
+    selectedRatingOption: String,
+    selectedDiscountOption: String,
+    onRateChange: (String) -> Unit,
+    onDiscountChange: (String) -> Unit,
+    resetFilterClick: () -> Unit,
+
+    ) {
     val keyboardController = LocalSoftwareKeyboardController.current
-    val ratingList: List<String> = listOf("1-2 sao", "2-3 sao", "3-4 sao", "4-5 sao")
+    val ratingList: List<String> = listOf("< 1 sao", "1-2 sao", "2-3 sao", "3-4 sao", "4-5 sao")
     val discountList: List<String> = listOf("Đang giảm giá", "Không giảm giá")
     // Filter
-    var selectedRatingOption by remember { mutableStateOf("") }
-    var selectedDiscountOption by remember { mutableStateOf("") }
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -279,52 +284,60 @@ fun TopAppBarWithSearch(
                 .padding(horizontal = 8.dp)
         ) {
             if (isSheetOpen)
-            ModalBottomSheet(
-                onDismissRequest = onDismissRequset,
-                sheetState = sheetState,
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 10.dp)
+                ModalBottomSheet(
+                    onDismissRequest = onDismissRequset,
+                    sheetState = sheetState,
                 ) {
-                    Text(
-                        text = "Lọc",
-                        style = MaterialTheme.typography.titleLarge
-                    )
-
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.fi_done),
-                            contentDescription = "Done",
-                            modifier = Modifier.size(32.dp),
-                            tint = Color(0xFF08F720)
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 10.dp)
+                    ) {
+                        Text(
+                            text = "Lọc",
+                            style = MaterialTheme.typography.titleLarge,
+                            modifier = Modifier.padding(start = 10.dp)
                         )
+                        Row {
+                            TextButton(
+                                onClick = {
+                                    resetFilterClick()
+                                    onDismissRequset()
+                                }
+                            ) {
+                                Text("Đặt lại", style = MaterialTheme.typography.bodyMedium)
+                            }
+                            IconButton(onClick = onDismissRequset) {
+                                Icon(
+                                    imageVector = Icons.Default.Done,
+                                    contentDescription = "Done",
+                                    modifier = Modifier.size(32.dp),
+                                    tint = Color(0xFF09DF1F)
+                                )
+                            }
+                        }
                     }
+                    Spacer(modifier = Modifier.height(10.dp))
+                    ProductCustomizationOption(
+                        "Đánh giá",
+                        options = ratingList,
+                        onOptionClick = onRateChange,
+                        selectedOption = selectedRatingOption,
+                        backgroundColor = Color.Transparent
+                    )
+                    ProductCustomizationOption(
+                        "Khuyến mãi",
+                        options = discountList,
+                        onOptionClick = onDiscountChange,
+                        selectedOption = selectedDiscountOption,
+                        backgroundColor = Color.Transparent
+                    )
+                    Spacer(modifier = Modifier.height(70.dp))
                 }
+            // hết modal bottom sheet
 
-                Spacer(modifier = Modifier.height(10.dp))
-
-                ProductCustomizationOption(
-                    "Đánh giá",
-                    options = ratingList,
-                    onOptionClick = { option ->
-                        selectedRatingOption = option},
-                    selectedOption = selectedRatingOption
-                )
-
-                ProductCustomizationOption(
-                    "Khuyến mãi",
-                    options = discountList,
-                    onOptionClick = { option ->
-                        selectedDiscountOption = option},
-                    selectedOption = selectedDiscountOption
-                )
-
-                Spacer(modifier = Modifier.height(20.dp))
-            }
             Column {
                 Spacer(modifier = Modifier.height(9.dp))
                 Box(
@@ -591,14 +604,19 @@ fun PetShopTopAppBarPreview() {
     val sheetState = rememberModalBottomSheetState()
     var isSheetOpen by rememberSaveable { mutableStateOf(false) }
     TopAppBarWithSearch(
-        filterClicked = { /*TODO*/ },
-        notificationClicked = { /*TODO*/ },
-        cartClicked = { /*TODO*/ },
-        onSearchIconClicked = { /*TODO*/ },
-        onSearchTextChanged = { /*TODO*/ },
+        filterClicked = { },
+        notificationClicked = { },
+        cartClicked = { },
+        onSearchIconClicked = { },
+        onSearchTextChanged = { },
         isSheetOpen = isSheetOpen,
-        onDismissRequset = {isSheetOpen = false},
-        sheetState  = sheetState
+        onDismissRequset = { isSheetOpen = false },
+        sheetState = sheetState,
+        selectedDiscountOption = "Đang giảm giá",
+        selectedRatingOption = "4-5 sao",
+        onDiscountChange = { },
+        onRateChange = { },
+        resetFilterClick = { }
     )
 }
 

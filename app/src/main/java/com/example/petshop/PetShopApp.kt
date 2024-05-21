@@ -135,6 +135,9 @@ fun PetShopApp(
         }
     }
 
+    var selectedRatingOption by remember { mutableStateOf("") }
+    var selectedDiscountOption by remember { mutableStateOf("") }
+
     Scaffold(
         topBar = {
             if (isSearchBarVisible) {
@@ -146,7 +149,24 @@ fun PetShopApp(
                         navController.navigate(Screen.SearchScreen.createRoute(searchText))
                         searchText = ""
                     },
-                    filterClicked = { isSheetOpen = true },
+                    filterClicked = {
+                        isSheetOpen = true
+                    },
+                    onRateChange = {
+                        selectedRatingOption = it
+                        println(selectedRatingOption)
+                        println(selectedDiscountOption)
+                    },
+                    onDiscountChange = {
+                        selectedDiscountOption = it
+                        println(selectedRatingOption)
+                        println(selectedDiscountOption)
+                    },
+                    resetFilterClick = {
+                        selectedRatingOption = ""
+                        selectedDiscountOption = ""
+                    },
+
                     notificationClicked = {
                         navController.navigate(Screen.NotificationScreen.route)
                     },
@@ -157,8 +177,10 @@ fun PetShopApp(
                     cartNumber = cartNumber.size,
                     notiNumber = notiNumber.filter { !it.isSeen }.size,
                     isSheetOpen = isSheetOpen,
-                    onDismissRequset = {isSheetOpen = false},
-                    sheetState  = sheetState,
+                    onDismissRequset = { isSheetOpen = false },
+                    sheetState = sheetState,
+                    selectedRatingOption = selectedRatingOption,
+                    selectedDiscountOption = selectedDiscountOption,
                 )
             }
             if (isNoSearchBarVisible)
@@ -211,7 +233,9 @@ fun PetShopApp(
 
                     onProductClick = { productId ->
                         navController.navigate(Screen.ProductDetailScreen.createRoute(productId))
-                    }
+                    },
+                    rateFilter = selectedRatingOption,
+                    discountFilter = selectedDiscountOption
                 )
             }
 
@@ -235,7 +259,15 @@ fun PetShopApp(
                     onFavoriteProductClicked = {
                         navController.navigate(Screen.FavoriteProductScreen.route)
                     },
-
+                    /*
+                    onLogoutClicked = {
+                        // todo hien pop up
+                        navController.navigate(Screen.LoginScreen.route) {
+                            popUpTo(Screen.LoginScreen.route) { inclusive = true }
+                        }
+                    },
+                    */
+                    onShareAppClicked = { /*TODO*/ },
                 )
             }
 
@@ -399,10 +431,6 @@ fun PetShopApp(
                     }
                 )
             }
-
-
-
-
 
 
         }
