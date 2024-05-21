@@ -47,6 +47,7 @@ import com.example.petshop.ui.shipment.FollowShippingScreen
 import com.example.petshop.ui.shipment.ShipmentStateScreen
 import com.example.petshop.ui.shipping_cart.ShoppingCartScreen
 import com.example.petshop.ui.user_informaion.EditProfile
+import com.example.petshop.ui.user_informaion.FavoriteProductScreen
 import com.example.petshop.ui.user_informaion.ProfileScreen
 import com.example.petshop.view_model.BannerViewModel
 import com.example.petshop.view_model.CartViewModel
@@ -119,7 +120,7 @@ fun PetShopApp(
                 isNavigationBarVisible = true
             }
 
-            Screen.LoadingCheckout.route, Screen.TransactionScreen.route, Screen.ProductDetailScreen.route, Screen.LoginScreen.route, Screen.RegisterScreen.route, Screen.ChatScreen.route, Screen.SearchScreen.route -> {
+            Screen.LoadingCheckout.route, Screen.TransactionScreen.route, Screen.ProductDetailScreen.route, Screen.LoginScreen.route, Screen.RegisterScreen.route, Screen.ChatScreen.route, Screen.SearchScreen.route, Screen.FavoriteProductScreen.route -> {
                 isSearchBarVisible = false
                 isNoSearchBarVisible = false
                 isNavigationBarVisible = false
@@ -224,6 +225,10 @@ fun PetShopApp(
                     onShippedClicked = {
                         navController.navigate(Screen.ShipmentStateScreen2.route)
                     },
+                    onFavoriteProductClicked = {
+                        navController.navigate(Screen.FavoriteProductScreen.route)
+                    },
+
                 )
             }
 
@@ -376,6 +381,22 @@ fun PetShopApp(
                     }
                 )
             }
+            composable(route = Screen.FavoriteProductScreen.route) {
+                FavoriteProductScreen(
+                    navController = navController,
+                    cartViewModel = cartViewModel,
+                    productViewModel = productViewModel,
+                    userViewModel = userViewModel,
+                    onProductClick = { productId ->
+                        navController.navigate(Screen.ProductDetailScreen.createRoute(productId))
+                    }
+                )
+            }
+
+
+
+
+
 
         }
     }

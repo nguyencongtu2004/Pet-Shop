@@ -26,4 +26,5 @@ sealed class Screen(val route: String, val title: String) {
     data object SearchScreen : Screen(route = "search/{query}", title = "Tìm kiếm") {
         fun createRoute(query: String) = "search/$query"
     }
+    data object FavoriteProductScreen : Screen(route = "favorite_product", title = "Sản phẩm yêu thích")
 }
