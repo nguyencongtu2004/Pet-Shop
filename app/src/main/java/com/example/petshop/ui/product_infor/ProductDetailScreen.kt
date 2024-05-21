@@ -108,7 +108,7 @@ fun ProductDetail(
             product?.let {
                 Box(modifier = Modifier
                     .fillMaxWidth()
-                    .background(color = Color.White))
+                    .background(color = MaterialTheme.colorScheme.surface))
                 {
                     TopAppBarNoSearch(
                         title = it.name,

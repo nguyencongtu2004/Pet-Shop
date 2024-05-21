@@ -63,13 +63,13 @@ fun TransactionScreen(
             ActionBottomBar(
                 modifier = Modifier.padding(16.dp),
                 onGoHome = {
-                    navController?.navigate(Screen.HomePage.route) {
-                        popUpTo(Screen.HomePage.route) { inclusive = true }
+                    navController?.navigate(Screen.HomeScreen.route) {
+                        popUpTo(Screen.HomeScreen.route) { inclusive = true }
                     }
                 },
                 onTrackOrder = {
-                    navController?.navigate(Screen.HomePage.route) {
-                        popUpTo(Screen.HomePage.route) { inclusive = true }
+                    navController?.navigate(Screen.HomeScreen.route) {
+                        popUpTo(Screen.HomeScreen.route) { inclusive = true }
                     }
 
                     navController?.navigate(Screen.ProfileScreen.route)

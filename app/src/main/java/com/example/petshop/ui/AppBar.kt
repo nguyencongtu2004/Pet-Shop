@@ -288,6 +288,7 @@ fun TopAppBarWithSearch(
                 ),
                 keyboardActions = KeyboardActions(
                     onSearch = {
+                        onSearchIconClicked()
                         // Đóng bàn phím khi nhấn search
                         keyboardController?.hide()
                     },

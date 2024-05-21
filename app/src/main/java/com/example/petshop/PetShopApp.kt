@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -39,6 +38,7 @@ import com.example.petshop.ui.checkout.SelectPayMethod
 import com.example.petshop.ui.checkout.SelectVoucher
 import com.example.petshop.ui.checkout.TransactionScreen
 import com.example.petshop.ui.home.HomeScreen
+import com.example.petshop.ui.home.SearchScreen
 import com.example.petshop.ui.login_register.Login
 import com.example.petshop.ui.login_register.Register
 import com.example.petshop.ui.notification.NotificationScreen
@@ -83,7 +83,7 @@ fun PetShopApp(
 
     // Lấy màn hình hiện tại
     val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentScreen = backStackEntry?.destination?.route ?: Screen.HomePage.route
+    val currentScreen = backStackEntry?.destination?.route ?: Screen.HomeScreen.route
 
     // Get the current screen object based on the route
     val currentScreenObject = Screen::class.sealedSubclasses
@@ -108,18 +108,18 @@ fun PetShopApp(
     // Cập nhật trạng thái khi currentScreen thay đổi (chạy đoạn code dưới sau mỗi lần currentScreen thay đổi)
     LaunchedEffect(currentScreen) {
         when (currentScreen) {
-            Screen.HomePage.route -> selectedIndex.value = 0
+            Screen.HomeScreen.route -> selectedIndex.value = 0
             Screen.ProfileScreen.route -> selectedIndex.value = 2
         }
 
         when (currentScreen) {
-            Screen.HomePage.route, Screen.ProfileScreen.route -> {
+            Screen.HomeScreen.route, Screen.ProfileScreen.route -> {
                 isSearchBarVisible = true
                 isNoSearchBarVisible = false
                 isNavigationBarVisible = true
             }
 
-            Screen.LoadingCheckout.route, Screen.TransactionScreen.route, Screen.ProductDetailScreen.route, Screen.LoginScreen.route, Screen.RegisterScreen.route, Screen.ChatScreen.route -> {
+            Screen.LoadingCheckout.route, Screen.TransactionScreen.route, Screen.ProductDetailScreen.route, Screen.LoginScreen.route, Screen.RegisterScreen.route, Screen.ChatScreen.route, Screen.SearchScreen.route -> {
                 isSearchBarVisible = false
                 isNoSearchBarVisible = false
                 isNavigationBarVisible = false
@@ -138,7 +138,10 @@ fun PetShopApp(
             if (isSearchBarVisible)
                 TopAppBarWithSearch(
                     onSearchTextChanged = { text -> searchText = text },
-                    onSearchIconClicked = { /*TODO*/ },
+                    onSearchIconClicked = {
+                        navController.navigate(Screen.SearchScreen.createRoute(searchText))
+                        searchText = ""
+                    },
                     filterClicked = { /*TODO*/ },
                     notificationClicked = {
                         navController.navigate(Screen.NotificationScreen.route)
@@ -165,10 +168,10 @@ fun PetShopApp(
                     selectedIndex = selectedIndex.value,
                     updateIndex = { selectedIndex.value = it },
                     onHomeClick = {
-                        if (currentScreen != Screen.HomePage.route) {
+                        if (currentScreen != Screen.HomeScreen.route) {
                             // Xóa hết ngăn xếp chừa HomePage
-                            navController.navigate(Screen.HomePage.route) {
-                                popUpTo(Screen.HomePage.route) { inclusive = true }
+                            navController.navigate(Screen.HomeScreen.route) {
+                                popUpTo(Screen.HomeScreen.route) { inclusive = true }
                             }
                         }
                     },
@@ -178,7 +181,7 @@ fun PetShopApp(
                     onUserClick = {
                         if (currentScreen != Screen.ProfileScreen.route) {
                             navController.navigate(Screen.ProfileScreen.route) {
-                                popUpTo(Screen.HomePage.route) { inclusive = false }
+                                popUpTo(Screen.HomeScreen.route) { inclusive = false }
                             }
                         }
                     },
@@ -188,11 +191,11 @@ fun PetShopApp(
         NavHost(
             navController = navController,
             // Nơi bắt đầu của ứng dụng
-            startDestination = Screen.HomePage.route,
+            startDestination = Screen.HomeScreen.route,
             modifier = Modifier.padding(innerPadding),
         ) {
             // Màn hình chính
-            composable(route = Screen.HomePage.route) {
+            composable(route = Screen.HomeScreen.route) {
                 HomeScreen(
                     navController = navController,
                     productViewModel = productViewModel,
@@ -351,6 +354,26 @@ fun PetShopApp(
                     navController = navController,
                     chatViewModel = chatViewModel,
                     cartViewModel = cartViewModel
+                )
+            }
+
+            composable(
+                route = Screen.SearchScreen.route,
+                arguments = listOf(navArgument("query") {
+                    type = NavType.StringType;
+                    defaultValue = ""
+                    nullable = true
+                })
+            ) { backStackEntry ->
+                val query = backStackEntry.arguments?.getString("query")
+                SearchScreen(
+                    cartViewModel = cartViewModel,
+                    navController = navController,
+                    productViewModel = productViewModel,
+                    query = query!!,
+                    onProductClick = { productId ->
+                        navController.navigate(Screen.ProductDetailScreen.createRoute(productId))
+                    }
                 )
             }
 

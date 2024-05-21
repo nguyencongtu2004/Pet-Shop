@@ -28,7 +28,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -321,7 +320,7 @@ fun ProfileScreen(
                 SettingComponent(
                     text = "Thông tin ứng dụng",
                     painter = painterResource(id = R.drawable.infor),
-                    onClick = { onDismissRequset(); isAppInforOpen = true}
+                    onClick = { onDismissRequset(); isAppInforOpen = true }
                 )
                 if (user.password != null) {
                     SettingComponent(
@@ -383,11 +382,12 @@ fun ShopIntroduction(modifier: Modifier = Modifier) {
         Image(
             painter = painterResource(id = R.drawable.logo_tranfer),
             contentDescription = "Hình ảnh cửa hàng",
-            contentScale = ContentScale.Fit,
+            contentScale = ContentScale.FillWidth,
             modifier = Modifier
-                .fillMaxWidth()
+                //.fillMaxWidth()
                 .height(180.dp)
-                .clip(RoundedCornerShape(8.dp))
+                .width(260.dp)
+                .align(Alignment.CenterHorizontally)
         )
         Text(
             text = "Chào mừng đến với Pet Shop",
@@ -417,7 +417,7 @@ fun ShopIntroduction(modifier: Modifier = Modifier) {
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.padding(horizontal = 10.dp)
         )
-        Spacer(modifier = Modifier.height(50.dp))
+        Spacer(modifier = Modifier.height(70.dp))
     }
 }
 
@@ -446,24 +446,16 @@ fun AppIntroduction(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .padding(horizontal = 10.dp)
         )
-        Spacer(modifier = Modifier.height(50.dp))
+        Spacer(modifier = Modifier.height(70.dp))
     }
 }
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun ProfileScreenPreview() {
-    val sheetState = rememberModalBottomSheetState()
-    var isSheetOpen by rememberSaveable { mutableStateOf(false) }
-    var isShopInforSheetOpen by rememberSaveable { mutableStateOf(false) }
+
     ProfileScreen(
         userViewModel = UserViewModel(),
-        /*isSheetOpen = isSheetOpen,
-        onDismissRequset = { isSheetOpen = false },
-        sheetState = sheetState,
-        isShopInforSheetOpen = isShopInforSheetOpen,
-        onShopInforClicked = { isSheetOpen = true; isShopInforSheetOpen = true },
-        onAppInforClicked = { isSheetOpen = true; isShopInforSheetOpen = false }*/
     )
 }
 
