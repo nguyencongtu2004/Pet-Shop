@@ -206,13 +206,12 @@ fun PetShopApp(
 
             // Màn hình thông tin cá nhân
             composable(route = Screen.ProfileScreen.route) {
-                val sheetState = rememberModalBottomSheetState()
-                var isSheetOpen by rememberSaveable { mutableStateOf(false) }
-                var isShopInforSheetOpen by rememberSaveable { mutableStateOf(false) }
-
                 ProfileScreen(
                     navController = navController,
                     userViewModel = userViewModel,
+                    onEditAddressClicked = {
+                        navController.navigate(Screen.EditProfileScreen.route)
+                    },
                     onEditProfileClicked = {
                         navController.navigate(Screen.EditProfileScreen.route)
                     },
@@ -222,21 +221,6 @@ fun PetShopApp(
                     onShippedClicked = {
                         navController.navigate(Screen.ShipmentStateScreen2.route)
                     },
-                    onShopInforClicked = {
-                        isSheetOpen = true
-                        isShopInforSheetOpen = true
-                    },
-                    onAppInforClicked = {
-                        isSheetOpen = true
-                        isShopInforSheetOpen = false
-                    },
-                    isSheetOpen = isSheetOpen,
-                    onDismissRequset = {
-                        isSheetOpen = false
-                        isShopInforSheetOpen = false
-                    },
-                    sheetState = sheetState,
-                    isShopInforSheetOpen = isShopInforSheetOpen
                 )
             }
 
