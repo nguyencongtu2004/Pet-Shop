@@ -344,7 +344,6 @@ fun TopAppBarWithSearch(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(36.dp)
-                        //.background(Color.Transparent, RoundedCornerShape(16.dp))
                         .border(1.dp, Color(0xFFCACACA), RoundedCornerShape(16.dp))
 
                         // nền trong suốt

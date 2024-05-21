@@ -150,17 +150,14 @@ fun PetShopApp(
                         searchText = ""
                     },
                     filterClicked = {
-                        isSheetOpen = true
+                        if (currentScreen == Screen.HomeScreen.route)
+                            isSheetOpen = true
                     },
                     onRateChange = {
                         selectedRatingOption = it
-                        println(selectedRatingOption)
-                        println(selectedDiscountOption)
                     },
                     onDiscountChange = {
                         selectedDiscountOption = it
-                        println(selectedRatingOption)
-                        println(selectedDiscountOption)
                     },
                     resetFilterClick = {
                         selectedRatingOption = ""

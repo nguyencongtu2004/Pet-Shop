@@ -1,5 +1,6 @@
 package com.example.petshop.ui.home
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -15,9 +16,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -92,6 +92,7 @@ fun filterProductByDiscount(products: List<Product>, discountFilter: String): Li
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen(
     navController: NavController? = null,
@@ -129,43 +130,68 @@ fun HomeScreen(
         else -> listOf()
     }
 
-    Column {
-        HorizontalBanner(bannerItems = bannerItems)
-        ProductTabs(
-            selectedTabIndex = selectedTabIndex,
-            onTabSelected = { tab ->
-                selectedTabIndex = tab
-            }
-        )
-        if (selectedProducts.isEmpty())
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                Spacer(modifier = Modifier.height(100.dp))
-                Text(
-                    text = "Không có sản phẩm nào!\nHãy thử đổi bộ lọc",
-                    style = MaterialTheme.typography.titleMedium,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(20.dp)
-                )
-            }
-        else
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                modifier = Modifier
-                    .fillMaxSize()
-            ) {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        item {
+            HorizontalBanner(bannerItems = bannerItems)
+        }
+        stickyHeader {
+            ProductTabs(
+                selectedTabIndex = selectedTabIndex,
+                onTabSelected = { tab ->
+                    selectedTabIndex = tab
+                }
+            )
+        }
 
-                items(selectedProducts) { product ->
-                    SquareProductWithStar(
-                        product = product,
-                        onProductClick = onProductClick
+        if (selectedProducts.isEmpty()) {
+            item {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 100.dp)
+                ) {
+                    Text(
+                        text = "Không có sản phẩm nào!\nHãy thử đổi bộ lọc",
+                        style = MaterialTheme.typography.titleMedium,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(20.dp)
                     )
                 }
-
             }
+        } else {
+            items(selectedProducts.chunked(2)) { rowProducts ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 4.dp)
+                ) {
+                    for (product in rowProducts) {
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                        ) {
+                            SquareProductWithStar(
+                                product = product,
+                                onProductClick = onProductClick
+                            )
+                        }
+                    }
+
+                    // Add an empty box to fill the row if the number of products is odd
+                    if (rowProducts.size < 2) {
+                        Box(modifier = Modifier
+                            .weight(1f)
+                            .padding(4.dp)) {}
+                    }
+                }
+            }
+        }
+        item { Spacer(modifier = Modifier.height(70.dp)) }
     }
+
 }
 
 @Composable
