@@ -13,17 +13,14 @@ class NotificationViewModel : ViewModel() {
         Notification(
             title = "Thông báo 1",
             description = "Nội dung thông báo 1",
-            isSeen = false,
         ),
         Notification(
             title = "Thông báo 2",
             description = "Nội dung thông báo 2",
-            isSeen = false,
         ),
         Notification(
             title = "Thông báo 3",
             description = "Nội dung thông báo 3",
-            isSeen = false,
         ),
         Notification(
             title = "Thông báo 4",

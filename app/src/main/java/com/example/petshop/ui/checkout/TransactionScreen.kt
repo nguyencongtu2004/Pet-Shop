@@ -34,11 +34,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.petshop.R
+import com.example.petshop.model.ClothesProduct
 import com.example.petshop.model.DeliveryMethod
 import com.example.petshop.model.FoodProduct
 import com.example.petshop.model.PaymentMethod
 import com.example.petshop.model.Product
 import com.example.petshop.model.Screen
+import com.example.petshop.model.ToyProduct
 import com.example.petshop.ui.login_register.Button
 import com.example.petshop.ui.theme.PetShopTheme
 import com.example.petshop.view_model.OrderViewModel
@@ -160,6 +162,7 @@ fun TransactionScreen(
                                     Spacer(modifier = Modifier.height(8.dp))
                                     order.products.forEach { product ->
                                         ProductItem(product = product)
+                                        Spacer(modifier = Modifier.height(4.dp))
                                     }
                                 }
                                 Column(
@@ -259,7 +262,8 @@ fun ProductItem(
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold
-                )
+                ),
+                modifier = Modifier.weight(1f)
             )
             Spacer(modifier = Modifier.weight(1f))
             Text(
@@ -268,10 +272,16 @@ fun ProductItem(
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold
                 ),
+                textAlign = TextAlign.End,
+                modifier = Modifier.width(20.dp)
             )
         }
         Text(
-            text = "Phân loại: ??",
+            text = when (product) {
+                is FoodProduct -> "Phân loại: ${product.selectedFlavor.value} - ${product.selectedWeight.value}"
+                is ToyProduct -> "Phân loại: ${product.selectedSize.value}"
+                is ClothesProduct -> "Phân loại: ${product.selectedSize.value}"
+            },
             style = MaterialTheme.typography.bodySmall,
             modifier = Modifier
         )

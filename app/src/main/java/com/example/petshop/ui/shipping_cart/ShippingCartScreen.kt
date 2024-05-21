@@ -43,6 +43,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -261,17 +262,22 @@ fun BoughtItemCart(
                         .height(69.dp)
                 )
             }
+            Spacer(modifier = Modifier.width(10.dp))
             Column(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
                     text = product.name,
                     style = MaterialTheme.typography.titleMedium,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 Text(
                     text = product.description,
                     style = MaterialTheme.typography.bodySmall,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                 )
                 Spacer(modifier = Modifier.height(6.dp))
             }

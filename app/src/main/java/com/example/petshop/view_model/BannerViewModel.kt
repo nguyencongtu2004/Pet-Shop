@@ -5,11 +5,11 @@ import com.example.petshop.R
 
 class BannerViewModel : ViewModel() {
     var allBanners: List<Int> = listOf(
-        R.drawable.banner,
-        R.drawable.logo,
-        R.drawable.avatar,
-        R.drawable.default_noti,
-        R.drawable.avt,
+        R.drawable.banner1,
+        R.drawable.banner2,
+        R.drawable.banner3,
+        R.drawable.banner4,
+
     )
         private set
 }

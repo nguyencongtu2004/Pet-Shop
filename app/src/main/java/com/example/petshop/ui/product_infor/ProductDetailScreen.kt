@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -53,6 +54,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -169,7 +171,7 @@ fun ProductDetail(
                 ProductCustomizationSection(productViewModel = productViewModel)
                 ProductDescriptionSection(product.detailDescription)
 
-                Spacer(modifier = Modifier.height(500.dp))
+                Spacer(modifier = Modifier.height(200.dp))
             }
         }
     }
@@ -195,7 +197,7 @@ private fun ProductImageSection(
             painter = painterResource(id = imageResource),
             contentDescription = null,
             modifier = Modifier
-                .width(240.dp)
+                .width(300.dp)
                 .height(300.dp),
             contentScale = ContentScale.Crop
         )
@@ -251,7 +253,11 @@ private fun ProductInfoCard(
                 .background(color = Color.White)
         ) {
             ProductTags(tags = product.tags)
-            ProductTitleAndPrice(title = product.name, price = product.price)
+            ProductTitleAndPrice(
+                title = product.name,
+                price = product.price,
+                oldPrice = product.oldPrice
+            )
             ProductDescription(
                 description = product.description,
                 quantity = product.quantity,
@@ -319,7 +325,8 @@ private fun ProductTag(text: String, color: Color) {
 private fun ProductTitleAndPrice(
     modifier: Modifier = Modifier,
     title: String,
-    price: Double
+    price: Double,
+    oldPrice: Double
 ) {
     Row(
         //horizontalArrangement = Arrangement.spacedBy(11.dp, Alignment.Start),
@@ -336,15 +343,31 @@ private fun ProductTitleAndPrice(
             ),
             modifier = Modifier.width(240.dp)
         )
-        Text(
-            text = "${price.toInt()}đ",
-            style = MaterialTheme.typography.titleMedium.copy(
-                fontSize = 18.sp,
-                color = Color(0xFFFF4081)
-            ),
-            textAlign = TextAlign.Right,
+        Column(
+            horizontalAlignment = Alignment.End,
             modifier = Modifier.fillMaxWidth()
-        )
+        ) {
+            Text(
+                text = "${price.toInt()} đ",
+                style = MaterialTheme.typography.titleMedium.copy(
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Red
+                ),
+                textAlign = TextAlign.Right,
+                modifier = Modifier.fillMaxWidth()
+            )
+            if (oldPrice > price) {
+                Text(
+                    text = oldPrice.toString().replace(".0", "") + " đ",
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = Color.Gray
+                    ),
+                    textAlign = TextAlign.End,
+                    textDecoration = TextDecoration.LineThrough
+                )
+            }
+        }
     }
 }
 
@@ -451,10 +474,11 @@ private fun ProductRatingAndFavorite(
             modifier = Modifier.clickable { onRateClick() }
         ) {
             Image(
-                imageVector = Icons.Default.Star,
+                painter = painterResource(id = R.drawable.star),
                 contentDescription = null,
-                modifier = Modifier.size(20.dp),
-                colorFilter = ColorFilter.tint(Color.Yellow)
+                modifier = Modifier
+                    .size(20.dp)
+                    .offset(x = 0.dp, y = (-4).dp),
             )
             Text(
                 text = rating.toString(),

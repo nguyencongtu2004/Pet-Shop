@@ -126,7 +126,7 @@ fun NotificationDemo() {
             notification = Notification(
                 title = "Thông báo 1",
                 description = "Nội dung",
-                image = R.drawable.default_noti,
+                image = R.drawable.noti_icon,
                 isSeen = false
             ),
             onClick = {}
