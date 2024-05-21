@@ -41,12 +41,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -83,7 +85,8 @@ fun HomeScreen(
     val selectedProducts = when (selectedTabIndex) {
         0 -> firstTabProduct
         1 -> secondTabProduct
-        else -> thirdTabProduct
+        2 -> thirdTabProduct
+        else -> listOf()
     }
 
     val bannerHeight = 160.dp
@@ -108,42 +111,6 @@ fun HomeScreen(
             }
         }
         items(selectedProducts) { product ->
-            ProductWithStar(
-                product = product,
-                onProductClick = onProductClick
-            )
-            ProductWithStar(
-                product = product,
-                onProductClick = onProductClick
-            )
-            ProductWithStar(
-                product = product,
-                onProductClick = onProductClick
-            )
-            ProductWithStar(
-                product = product,
-                onProductClick = onProductClick
-            )
-            ProductWithStar(
-                product = product,
-                onProductClick = onProductClick
-            )
-            ProductWithStar(
-                product = product,
-                onProductClick = onProductClick
-            )
-            ProductWithStar(
-                product = product,
-                onProductClick = onProductClick
-            )
-            ProductWithStar(
-                product = product,
-                onProductClick = onProductClick
-            )
-            ProductWithStar(
-                product = product,
-                onProductClick = onProductClick
-            )
             ProductWithStar(
                 product = product,
                 onProductClick = onProductClick
@@ -341,5 +308,129 @@ fun HomeScreenPreview() {
     HomeScreen(
         productViewModel = ProductViewModel(),
         bannerViewModel = BannerViewModel(),
+    )
+}
+
+@Composable
+fun SquareProductWithStar(
+    modifier: Modifier = Modifier,
+    product: Product,
+    onProductClick: (String) -> Unit = {},
+) {
+    Box(
+        modifier = Modifier
+            .clickable { onProductClick(product.id) }
+            .padding(8.dp)
+            .shadow(
+                elevation = 2.2138051986694336.dp,
+                spotColor = Color(0x05000000),
+                ambientColor = Color(0x05000000)
+            )
+            .background(
+                color = Color.White,
+                shape = RoundedCornerShape(8.dp)
+            )
+            .padding(8.dp)
+            .width(150.dp)
+            //.height(220.dp)
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = modifier
+        ) {
+            Box(
+                contentAlignment = Alignment.BottomCenter,
+                modifier = Modifier
+
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.avt),
+                    contentDescription = "image description",
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier
+                        //.width(100.dp)
+                        //.height(100.dp)
+                )
+
+            }
+            Column {
+                Text(
+                    text = product.name,
+                    style = MaterialTheme.typography.titleMedium,
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = product.description,
+                    style = MaterialTheme.typography.bodyMedium,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterHorizontally),
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .background(
+                            color = Color(0xFFFFFFFF),
+                            shape = RoundedCornerShape(size = 10.dp)
+                        )
+                        .padding(horizontal = 4.dp, vertical = 2.dp)
+                        .align(Alignment.Bottom)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.star),
+                        contentDescription = "image description",
+                        contentScale = ContentScale.None,
+                        modifier = Modifier
+                            .width(24.dp)
+                            .height(24.dp)
+                    )
+                    Text(
+                        text = product.star.toString(),
+                        style = MaterialTheme.typography.labelLarge
+                    )
+                }
+                Column(
+                    horizontalAlignment = Alignment.End,
+                ) {
+                    Text(
+                        text = product.price.toString().replace(".0", "") + " đ",
+                        style = MaterialTheme.typography.titleMedium,
+                        textAlign = TextAlign.End,
+                    )
+                    if (product.oldPrice > product.price) {
+                        Text(
+                            text = product.oldPrice.toString().replace(".0", "") + " đ",
+                            style = MaterialTheme.typography.bodyMedium,
+                            textAlign = TextAlign.End,
+                            textDecoration = TextDecoration.LineThrough
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun SquareProductWithStarPreview() {
+    SquareProductWithStar(
+        product = FoodProduct(
+            id = "1",
+            name = "Thức ăn cho mèo dành cho mèo trưởng thành",
+            description = "Thức ăn cho mèo dành cho mèo trưởng thành cho mèo dành cho mèo trưởngcho mèo dành cho mèo trưởng",
+            price = 100000.0,
+            oldPrice = 120000.0,
+            star = 4.5,
+            detailDescription = "Thức ăn cho mèo dành cho mèo trưởng thành",
+            image = R.drawable.avt,
+            quantity = 1
+        )
     )
 }

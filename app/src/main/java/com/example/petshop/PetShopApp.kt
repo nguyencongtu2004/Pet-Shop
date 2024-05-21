@@ -243,7 +243,7 @@ fun PetShopApp(
                     },
                     isSheetOpen = isSheetOpen,
                     onDismissRequset = {isSheetOpen = false},
-                    sheetState  = sheetState,
+                    sheetState = sheetState,
                     isShopInforSheetOpen = isShopInforSheetOpen
                 )
             }
