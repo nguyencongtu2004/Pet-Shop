@@ -41,8 +41,7 @@ import com.example.petshop.ui.theme.PetShopTheme
 fun BoughtItem(
     modifier: Modifier = Modifier,
     p: Product
-)
-{
+) {
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.End,
@@ -109,7 +108,8 @@ fun BoughtItem(
                         text = "${p.price} đ",
 
                         // Body/14/Medium
-                        style = MaterialTheme.typography.bodyMedium)
+                        style = MaterialTheme.typography.bodyMedium
+                    )
                 }
 
                 Row(
@@ -157,7 +157,8 @@ fun BoughtItem(
             ) {
             Spacer(modifier = Modifier.width(69.dp))
 
-            IconButton(onClick = {},
+            IconButton(
+                onClick = {},
                 modifier = Modifier
                     .width(80.dp)
                     .height(20.dp)
@@ -165,7 +166,6 @@ fun BoughtItem(
                 Row(
                     modifier = Modifier.fillMaxSize()
                 ) {
-
 
 
                     Text(
@@ -179,14 +179,14 @@ fun BoughtItem(
                             textAlign = TextAlign.Center,
 
                             ),
-                        )
+                    )
 
                     IconButton(onClick = { /*TODO*/ }) {
                         Icon(
                             imageVector = Icons.Default.Edit,
                             contentDescription = null,
 
-                        )
+                            )
                     }
                 }
             }
@@ -244,17 +244,18 @@ fun BoughtItem(
 @Composable
 fun BoughtItemPreview() {
     PetShopTheme {
-        BoughtItem(p = FoodProduct(
-            id = "1",
-            name = "Đồ ăn cho chó",
-            description = "Chó rất thích ăn nó",
-            price = 10000.0,
-            oldPrice = 15000.0,
-            star = 4.0,
-            quantity = 1,
-            image = R.drawable.avt,
-            detailDescription = "Chi tiết sản phẩm"
-        )
+        BoughtItem(
+            p = FoodProduct(
+                id = "1",
+                name = "Đồ ăn cho chó",
+                description = "Chó rất thích ăn nó",
+                price = 10000.0,
+                oldPrice = 15000.0,
+                star = 4.0,
+                quantity = 1,
+                image = R.drawable.avt,
+                detailDescription = "Chi tiết sản phẩm"
+            )
         )
     }
 }

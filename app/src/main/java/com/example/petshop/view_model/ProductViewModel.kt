@@ -1,7 +1,6 @@
 package com.example.petshop.view_model
 
 import androidx.lifecycle.ViewModel
-import com.example.petshop.R
 import com.example.petshop.data.dummyProductData
 import com.example.petshop.model.ClothesProduct
 import com.example.petshop.model.Flavor

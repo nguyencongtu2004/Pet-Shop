@@ -1,6 +1,5 @@
 package com.example.petshop.model
 
-import androidx.compose.ui.graphics.painter.Painter
 import com.example.petshop.R
 
 data class Notification(

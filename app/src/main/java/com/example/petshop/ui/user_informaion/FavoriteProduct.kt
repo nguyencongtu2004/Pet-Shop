@@ -1,7 +1,5 @@
 package com.example.petshop.ui.user_informaion
 
-import com.example.petshop.ui.home.SquareProductWithStar
-
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.petshop.model.Screen
 import com.example.petshop.ui.TopAppBarNoSearch
+import com.example.petshop.ui.home.SquareProductWithStar
 import com.example.petshop.view_model.CartViewModel
 import com.example.petshop.view_model.ProductViewModel
 import com.example.petshop.view_model.UserViewModel
@@ -70,8 +69,7 @@ fun FavoriteProductScreen(
                     modifier = Modifier.padding(20.dp)
                 )
             }
-        }
-        else
+        } else
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 modifier = modifier

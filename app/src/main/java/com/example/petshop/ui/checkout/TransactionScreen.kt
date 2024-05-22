@@ -75,7 +75,6 @@ fun TransactionScreen(
                     navController?.navigate(Screen.ProfileScreen.route)
                     navController?.navigate(Screen.ShipmentStateScreen1.route)
                     navController?.navigate(Screen.FollowShipping.createRoute(order.id))
-
                 }
             )
         }
@@ -135,8 +134,6 @@ fun TransactionScreen(
                                             bottom = 5.dp
                                         )
                                 ) {
-
-
                                     val currentDateTime = LocalDateTime.now()
 
                                     val dateFormatter = DateTimeFormatter.ofPattern("dd MMMM yyyy")
@@ -147,7 +144,6 @@ fun TransactionScreen(
                                     ItemBold(title = "Mã đơn hàng:", detail = order.id)
                                     ItemBold(title = "Ngày:", detail = dateText)
                                     ItemBold(title = "Thời gian:", detail = timeText)
-
                                 }
                                 Divider()
                                 Column(
@@ -175,10 +171,22 @@ fun TransactionScreen(
                                         modifier = Modifier.fillMaxWidth()
                                     )
                                     Spacer(modifier = Modifier.height(8.dp))
-                                    ItemMedium(title = "Tổng tiền hàng:", detail = order.productTotal.toInt().toString() + " đ")
-                                    ItemMedium(title = "Phí vận chuyển:", detail = order.shippingFee.toInt().toString() + " đ")
-                                    ItemMedium(title = "Voucher:", detail = "- ${order.discount.toInt()} đ")
-                                    ItemBold(title = "Tổng cộng:", detail = order.total.toInt().toString() + " đ")
+                                    ItemMedium(
+                                        title = "Tổng tiền hàng:",
+                                        detail = order.productTotal.toInt().toString() + " đ"
+                                    )
+                                    ItemMedium(
+                                        title = "Phí vận chuyển:",
+                                        detail = order.shippingFee.toInt().toString() + " đ"
+                                    )
+                                    ItemMedium(
+                                        title = "Voucher:",
+                                        detail = "- ${order.discount.toInt()} đ"
+                                    )
+                                    ItemBold(
+                                        title = "Tổng cộng:",
+                                        detail = order.total.toInt().toString() + " đ"
+                                    )
                                 }
                                 Divider()
                                 ItemMedium(

@@ -23,7 +23,6 @@ import com.example.petshop.model.Screen
 import com.example.petshop.ui.TopAppBarNoSearch
 import com.example.petshop.view_model.CartViewModel
 import com.example.petshop.view_model.ProductViewModel
-import com.google.firebase.database.Query
 
 @Composable
 fun SearchScreen(
@@ -65,20 +64,19 @@ fun SearchScreen(
                     modifier = Modifier.padding(20.dp)
                 )
             }
-        }
-        else
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            modifier = modifier
-                .fillMaxSize()
-                .padding(it)
-        ) {
-            items(filteredProduct) { product ->
-                SquareProductWithStar(
-                    product = product,
-                    onProductClick = onProductClick
-                )
+        } else
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(it)
+            ) {
+                items(filteredProduct) { product ->
+                    SquareProductWithStar(
+                        product = product,
+                        onProductClick = onProductClick
+                    )
+                }
             }
-        }
     }
 }

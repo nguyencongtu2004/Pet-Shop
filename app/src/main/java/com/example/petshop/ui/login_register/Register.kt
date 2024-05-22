@@ -1,7 +1,6 @@
 package com.example.petshop.ui.login_register
+
 import android.widget.Toast
-import  android.app.Application
-import kotlinx.coroutines.runBlocking
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,6 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -31,14 +31,12 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.petshop.R
-import com.example.petshop.database.controller.AccountController
-import com.example.petshop.ui.theme.PetShopTheme
-import android.content.Context
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.petshop.R
+import com.example.petshop.database.controller.AccountController
 import com.example.petshop.model.Screen
+import com.example.petshop.ui.theme.PetShopTheme
 
 @Composable
 fun Register(
@@ -94,7 +92,11 @@ fun Register(
                             Toast.makeText(context, "Đăng ký thành công", Toast.LENGTH_SHORT).show()
                             navController.navigate(Screen.LoginScreen.route)
                         } else {
-                            Toast.makeText(context, "Số điện thoại đã được sử dụng", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                context,
+                                "Số điện thoại đã được sử dụng",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
                 },

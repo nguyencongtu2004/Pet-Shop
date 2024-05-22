@@ -29,7 +29,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -124,12 +123,16 @@ fun Login(
                                         )
                                         if (currentUser.name == "Chưa đặt") {
                                             navController.navigate(Screen.HomeScreen.route) {
-                                                popUpTo(Screen.LoginScreen.route) { inclusive = true }
+                                                popUpTo(Screen.LoginScreen.route) {
+                                                    inclusive = true
+                                                }
                                             }
                                             navController.navigate(Screen.EditProfileScreen.route)
                                         } else {
                                             navController.navigate(Screen.HomeScreen.route) {
-                                                popUpTo(Screen.LoginScreen.route) { inclusive = true }
+                                                popUpTo(Screen.LoginScreen.route) {
+                                                    inclusive = true
+                                                }
                                             }
                                         }
                                     } else {
@@ -137,7 +140,11 @@ fun Login(
                                     }
                                 }
                             } else {
-                                Toast.makeText(context, "Sai thông tin đăng nhập", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    context,
+                                    "Sai thông tin đăng nhập",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         }
                     },
@@ -258,7 +265,7 @@ fun Logo(modifier: Modifier = Modifier) {
 fun LoginPreview() {
     PetShopTheme {
         Login(
-            navController = rememberNavController() ,
+            navController = rememberNavController(),
             userViewModel = UserViewModel(),
         )
     }

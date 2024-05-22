@@ -37,7 +37,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.petshop.R
 import com.example.petshop.model.Voucher
 import com.example.petshop.ui.theme.PetShopTheme
 import com.example.petshop.view_model.OrderViewModel
@@ -56,12 +55,12 @@ fun SelectVoucher(
     Scaffold(
         modifier = modifier,
         bottomBar = {
-        if (order.voucher != null)
-            VoucherStatus(
-                onClick = { navController?.popBackStack() },
-                discount = order.discount,
-                numVoucherSelected = 1
-            )
+            if (order.voucher != null)
+                VoucherStatus(
+                    onClick = { navController?.popBackStack() },
+                    discount = order.discount,
+                    numVoucherSelected = 1
+                )
         }
     ) {
         Column(
@@ -222,13 +221,13 @@ fun VoucherStatus(
                 ),
             )
             if (discount > 0.0)
-            Text(
-                text = "Giảm ${discount.toInt()} đ",
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    fontSize = 14.sp,
-                    color = Color(0xFF46AE7C)
-                ),
-            )
+                Text(
+                    text = "Giảm ${discount.toInt()} đ",
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontSize = 14.sp,
+                        color = Color(0xFF46AE7C)
+                    ),
+                )
         }
         Button(
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF46AE7C)),

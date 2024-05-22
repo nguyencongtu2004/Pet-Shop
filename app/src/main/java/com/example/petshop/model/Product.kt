@@ -1,7 +1,5 @@
 package com.example.petshop.model
 
-import com.example.petshop.R
-
 enum class Weight(val value: String) {
     _0_5KG("0.5 kg"), _1KG("1 kg"), _1_5KG("1.5 kg"), _2KG("2 kg")
 }

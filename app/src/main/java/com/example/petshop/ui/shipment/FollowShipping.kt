@@ -44,9 +44,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.petshop.R
 import com.example.petshop.model.ClothesProduct
-import com.example.petshop.model.DeliveryMethod
 import com.example.petshop.model.FoodProduct
-import com.example.petshop.model.Order
 import com.example.petshop.model.OrderStatus
 import com.example.petshop.model.Product
 import com.example.petshop.model.ToyProduct
@@ -65,7 +63,7 @@ fun FollowShippingScreen(
     LazyColumn(
         modifier = modifier
     ) {
-        items (order?.products ?: listOf()) { product ->
+        items(order?.products ?: listOf()) { product ->
             ShippingProducts(
                 product = product,
             )
@@ -214,6 +212,7 @@ fun ShippingProducts(
                         )
                     }
                 }
+
                 is ToyProduct -> {
                     item {
                         FilterChip(
@@ -235,6 +234,7 @@ fun ShippingProducts(
                         )
                     }
                 }
+
                 is ClothesProduct -> {
                     item {
                         FilterChip(

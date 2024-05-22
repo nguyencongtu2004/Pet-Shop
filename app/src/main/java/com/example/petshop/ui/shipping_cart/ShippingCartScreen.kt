@@ -75,7 +75,6 @@ fun ShoppingCartScreen(
     val user by userViewModel.currentUser.collectAsState()
 
 
-
     // Thêm biến trạng thái để kiểm tra xem reset đã được thực hiện chưa
     var isInitialized by remember { mutableStateOf(false) }
 

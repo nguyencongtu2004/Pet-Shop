@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -41,7 +40,7 @@ fun LoadingScreen(
     LaunchedEffect(Unit) {
         while (true) {
             delay(2000) // Đợi vài giây
-            isPayDone= true
+            isPayDone = true
             delay(2000)
             navController?.navigate(Screen.TransactionScreen.route)
         }

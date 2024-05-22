@@ -74,13 +74,10 @@ class OrderViewModel : ViewModel() {
                 val discount = order.productTotal * voucher.discountPercent / 100
                 if (discount > voucher.discountMax) voucher.discountMax else discount
             }
-
             else -> voucher.discount
         }
-
         return discount
     }
-
 
     fun updateOrderStatus(status: OrderStatus) {
         _currentOrder.update { order ->
@@ -151,27 +148,25 @@ class OrderViewModel : ViewModel() {
         _allOrders.update { orders ->
             orders.map {
                 if (it.id == order.id) {
-                    it.copy(
-                        products = it.products.map { product ->
-                            if (product.id == productId) {
-                                when (product) {
-                                    is FoodProduct -> {
-                                        product.copy(star = newRate.toDouble())
-                                    }
-
-                                    is ToyProduct -> {
-                                        product.copy(star = newRate.toDouble())
-                                    }
-
-                                    is ClothesProduct -> {
-                                        product.copy(star = newRate.toDouble())
-                                    }
+                    it.copy(products = it.products.map { product ->
+                        if (product.id == productId) {
+                            when (product) {
+                                is FoodProduct -> {
+                                    product.copy(star = newRate.toDouble())
                                 }
-                            } else {
-                                product
+
+                                is ToyProduct -> {
+                                    product.copy(star = newRate.toDouble())
+                                }
+
+                                is ClothesProduct -> {
+                                    product.copy(star = newRate.toDouble())
+                                }
                             }
+                        } else {
+                            product
                         }
-                    )
+                    })
                 } else {
                     it
                 }

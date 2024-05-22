@@ -2,10 +2,7 @@
 
 package com.example.petshop
 
-import android.content.ActivityNotFoundException
-import android.content.Intent
 import android.os.Build
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -20,9 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -94,8 +89,7 @@ fun PetShopApp(
     val currentScreen = backStackEntry?.destination?.route ?: Screen.HomeScreen.route
 
     // Get the current screen object based on the route
-    val currentScreenObject = Screen::class.sealedSubclasses
-        .mapNotNull { it.objectInstance }
+    val currentScreenObject = Screen::class.sealedSubclasses.mapNotNull { it.objectInstance }
         .find { it.route == currentScreen }
 
     // Tìm kiếm
@@ -142,85 +136,79 @@ fun PetShopApp(
     var selectedRatingOption by remember { mutableStateOf("") }
     var selectedDiscountOption by remember { mutableStateOf("") }
 
-    Scaffold(
-        topBar = {
-            if (isSearchBarVisible) {
-                val sheetState = rememberModalBottomSheetState()
-                var isSheetOpen by rememberSaveable { mutableStateOf(false) }
-                TopAppBarWithSearch(
-                    onSearchTextChanged = { text -> searchText = text },
-                    onSearchIconClicked = {
-                        if (searchText.isNotEmpty()) {
-                            navController.navigate(Screen.SearchScreen.createRoute(searchText))
-                        }
-                        searchText = ""
-                    },
-                    filterClicked = {
-                        if (currentScreen == Screen.HomeScreen.route)
-                            isSheetOpen = true
-                    },
-                    onRateChange = {
-                        selectedRatingOption = it
-                    },
-                    onDiscountChange = {
-                        selectedDiscountOption = it
-                    },
-                    resetFilterClick = {
-                        selectedRatingOption = ""
-                        selectedDiscountOption = ""
-                    },
+    Scaffold(topBar = {
+        if (isSearchBarVisible) {
+            val sheetState = rememberModalBottomSheetState()
+            var isSheetOpen by rememberSaveable { mutableStateOf(false) }
+            TopAppBarWithSearch(
+                onSearchTextChanged = { text -> searchText = text },
+                onSearchIconClicked = {
+                    if (searchText.isNotEmpty()) {
+                        navController.navigate(Screen.SearchScreen.createRoute(searchText))
+                    }
+                    searchText = ""
+                },
+                filterClicked = {
+                    if (currentScreen == Screen.HomeScreen.route) isSheetOpen = true
+                },
+                onRateChange = {
+                    selectedRatingOption = it
+                },
+                onDiscountChange = {
+                    selectedDiscountOption = it
+                },
+                resetFilterClick = {
+                    selectedRatingOption = ""
+                    selectedDiscountOption = ""
+                },
 
-                    notificationClicked = {
-                        navController.navigate(Screen.NotificationScreen.route)
-                    },
-                    cartClicked = {
-                        navController.navigate(Screen.ShoppingCartScreen.route)
-                    },
-                    searchText = searchText,
-                    cartNumber = cartNumber.size,
-                    notiNumber = notiNumber.filter { !it.isSeen }.size,
-                    isSheetOpen = isSheetOpen,
-                    onDismissRequset = { isSheetOpen = false },
-                    sheetState = sheetState,
-                    selectedRatingOption = selectedRatingOption,
-                    selectedDiscountOption = selectedDiscountOption,
-                )
-            }
-            if (isNoSearchBarVisible)
-                TopAppBarNoSearch(
-                    title = currentScreenObject?.title ?: "",
-                    onBackClick = {
-                        navController.popBackStack()
-                    },
-                    cartNumber = cartNumber.size,
-                )
-        },
-        bottomBar = {
-            if (isNavigationBarVisible)
-                PetShopNavigationBar(
-                    selectedIndex = selectedIndex.value,
-                    updateIndex = { selectedIndex.value = it },
-                    onHomeClick = {
-                        if (currentScreen != Screen.HomeScreen.route) {
-                            // Xóa hết ngăn xếp chừa HomePage
-                            navController.navigate(Screen.HomeScreen.route) {
-                                popUpTo(Screen.HomeScreen.route) { inclusive = true }
-                            }
-                        }
-                    },
-                    onChatClick = {
-                        navController.navigate(Screen.ChatScreen.route)
-                    },
-                    onUserClick = {
-                        if (currentScreen != Screen.ProfileScreen.route) {
-                            navController.navigate(Screen.ProfileScreen.route) {
-                                popUpTo(Screen.HomeScreen.route) { inclusive = false }
-                            }
-                        }
-                    },
-                )
+                notificationClicked = {
+                    navController.navigate(Screen.NotificationScreen.route)
+                },
+                cartClicked = {
+                    navController.navigate(Screen.ShoppingCartScreen.route)
+                },
+                searchText = searchText,
+                cartNumber = cartNumber.size,
+                notiNumber = notiNumber.filter { !it.isSeen }.size,
+                isSheetOpen = isSheetOpen,
+                onDismissRequset = { isSheetOpen = false },
+                sheetState = sheetState,
+                selectedRatingOption = selectedRatingOption,
+                selectedDiscountOption = selectedDiscountOption,
+            )
         }
-    ) { innerPadding ->
+        if (isNoSearchBarVisible) TopAppBarNoSearch(
+            title = currentScreenObject?.title ?: "",
+            onBackClick = {
+                navController.popBackStack()
+            },
+            cartNumber = cartNumber.size,
+        )
+    }, bottomBar = {
+        if (isNavigationBarVisible) PetShopNavigationBar(
+            selectedIndex = selectedIndex.value,
+            updateIndex = { selectedIndex.value = it },
+            onHomeClick = {
+                if (currentScreen != Screen.HomeScreen.route) {
+                    // Xóa hết ngăn xếp chừa HomePage
+                    navController.navigate(Screen.HomeScreen.route) {
+                        popUpTo(Screen.HomeScreen.route) { inclusive = true }
+                    }
+                }
+            },
+            onChatClick = {
+                navController.navigate(Screen.ChatScreen.route)
+            },
+            onUserClick = {
+                if (currentScreen != Screen.ProfileScreen.route) {
+                    navController.navigate(Screen.ProfileScreen.route) {
+                        popUpTo(Screen.HomeScreen.route) { inclusive = false }
+                    }
+                }
+            },
+        )
+    }) { innerPadding ->
         NavHost(
             navController = navController,
             // Nơi bắt đầu của ứng dụng
@@ -327,15 +315,13 @@ fun PetShopApp(
 
             composable(route = Screen.TransactionScreen.route) {
                 TransactionScreen(
-                    navController = navController,
-                    orderViewModel = orderViewModel
+                    navController = navController, orderViewModel = orderViewModel
                 )
             }
 
             composable(
-                route = Screen.FollowShipping.route,
-                arguments = listOf(navArgument("orderId") {
-                    type = NavType.StringType;
+                route = Screen.FollowShipping.route, arguments = listOf(navArgument("orderId") {
+                    type = NavType.StringType
                     defaultValue = "no_id"
                     nullable = true
                 })
@@ -355,17 +341,15 @@ fun PetShopApp(
             }
 
             composable(route = Screen.SelectVoucher.route) {
-                SelectVoucher(
-                    navController = navController,
+                SelectVoucher(navController = navController,
                     orderViewModel = orderViewModel,
-                    onSearchVoucher = { /*TODO*/ }
-                )
+                    onSearchVoucher = { /*TODO*/ })
             }
 
             composable(
                 route = Screen.ProductDetailScreen.route,
                 arguments = listOf(navArgument("productId") {
-                    type = NavType.StringType;
+                    type = NavType.StringType
                     defaultValue = "no_id"
                     nullable = true
                 })
@@ -384,8 +368,7 @@ fun PetShopApp(
 
             composable(route = Screen.LoginScreen.route) {
                 Login(
-                    navController = navController,
-                    userViewModel = userViewModel
+                    navController = navController, userViewModel = userViewModel
                 )
             }
 
@@ -404,34 +387,29 @@ fun PetShopApp(
             }
 
             composable(
-                route = Screen.SearchScreen.route,
-                arguments = listOf(navArgument("query") {
-                    type = NavType.StringType;
+                route = Screen.SearchScreen.route, arguments = listOf(navArgument("query") {
+                    type = NavType.StringType
                     defaultValue = ""
                     nullable = true
                 })
             ) { backStackEntry ->
                 val query = backStackEntry.arguments?.getString("query")
-                SearchScreen(
-                    cartViewModel = cartViewModel,
+                SearchScreen(cartViewModel = cartViewModel,
                     navController = navController,
                     productViewModel = productViewModel,
                     query = query!!,
                     onProductClick = { productId ->
                         navController.navigate(Screen.ProductDetailScreen.createRoute(productId))
-                    }
-                )
+                    })
             }
             composable(route = Screen.FavoriteProductScreen.route) {
-                FavoriteProductScreen(
-                    navController = navController,
+                FavoriteProductScreen(navController = navController,
                     cartViewModel = cartViewModel,
                     productViewModel = productViewModel,
                     userViewModel = userViewModel,
                     onProductClick = { productId ->
                         navController.navigate(Screen.ProductDetailScreen.createRoute(productId))
-                    }
-                )
+                    })
             }
 
 

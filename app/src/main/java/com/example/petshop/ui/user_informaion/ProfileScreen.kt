@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.AlertDialog
@@ -344,7 +343,8 @@ fun ProfileScreen(
                     text = "Giới thiệu cho bạn bè",
                     painter = painterResource(id = R.drawable.ic_user),
                     onClick = {
-                        val shareContent = "Hãy tải ứng dụng Pet Shop ngay đi. Nó có nhiều thứ mà thú cưng cần lắm á!"
+                        val shareContent =
+                            "Hãy tải ứng dụng Pet Shop ngay đi. Nó có nhiều thứ mà thú cưng cần lắm á!"
                         val sendIntent = Intent().apply {
                             action = Intent.ACTION_SEND
                             putExtra(Intent.EXTRA_TEXT, shareContent)

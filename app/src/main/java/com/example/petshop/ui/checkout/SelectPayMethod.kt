@@ -134,7 +134,7 @@ fun PayMethod(
         RadioButton(
             selected = isSelected,
             onClick = onClick,
-            )
+        )
     }
 }
 
@@ -181,7 +181,6 @@ fun AddPayMethod(
         }
     }
 }
-
 
 
 @Preview

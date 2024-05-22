@@ -9,7 +9,6 @@ class BannerViewModel : ViewModel() {
         R.drawable.banner2,
         R.drawable.banner3,
         R.drawable.banner4,
-
     )
         private set
 }

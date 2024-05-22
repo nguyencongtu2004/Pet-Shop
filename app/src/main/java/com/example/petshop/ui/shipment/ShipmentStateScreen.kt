@@ -127,8 +127,8 @@ fun ShipmentStateScreen(
                                 navController?.navigate(Screen.FollowShipping.createRoute(orderId))
                             },
                             onRatingChanged = {},
-                        orderViewModel = orderViewModel
-                            )
+                            orderViewModel = orderViewModel
+                        )
                         if (shippingOrders.indexOf(order) != shippingOrders.size - 1) {
                             Divider(
                                 color = Color(0xFFD9D9D9),
@@ -159,7 +159,7 @@ fun ShipmentStateScreen(
                             order = order,
                             showTotalPrice = false,
                             onOrderClick = {},
-                           orderViewModel = orderViewModel,
+                            orderViewModel = orderViewModel,
                             onRatingChanged = { rating ->
                                 allOrders.find { it.id == order.id }?.let {
                                     val newOrder = it.copy(

@@ -232,8 +232,8 @@ val dummyProductData = listOf(
         oldPrice = 21000.0,
         star = 4.7,
         quantity = 1,
-        tags = listOf("Được yêu thích","Đồ chơi", "Mèo"),
-        ),
+        tags = listOf("Được yêu thích", "Đồ chơi", "Mèo"),
+    ),
     ToyProduct(
         id = "TP003",
         name = "Đồ chơi cho chó mèo chất liệu cao su hình Núm ti cho thú cưng đồ chơi cho mèo",
@@ -270,8 +270,8 @@ val dummyProductData = listOf(
         oldPrice = 20140.0,
         star = 4.4,
         quantity = 1,
-        tags = listOf("Được yêu thích","Đồ chơi", "Mèo"),
-        ),
+        tags = listOf("Được yêu thích", "Đồ chơi", "Mèo"),
+    ),
     ToyProduct(
         id = "TP005",
         name = "Ổ Đệm, Nệm, Nhà Êm Ái Có Vành Tai Kèm Cục Bông Tròn Đồ Chơi Dành Cho Thú Cưng Chó Mèo",
@@ -289,7 +289,7 @@ val dummyProductData = listOf(
         star = 3.9,
         quantity = 1,
         tags = listOf("Giường", "Chó", "Mèo"),
-        ),
+    ),
 
     // ===================== Clothes =====================
 
@@ -333,8 +333,8 @@ val dummyProductData = listOf(
         oldPrice = 285000.0,
         star = 5.0,
         quantity = 1,
-        tags = listOf("Được yêu thích","Quần áo", "Chó"),
-        ),
+        tags = listOf("Được yêu thích", "Quần áo", "Chó"),
+    ),
     ClothesProduct(
         id = "CP002",
         name = "ÁO SIÊU NHÂN CHÓ CHÓ MÈO",
@@ -348,8 +348,8 @@ val dummyProductData = listOf(
         oldPrice = 119000.0,
         star = 4.4,
         quantity = 1,
-        tags = listOf("Được yêu thích","Quần áo", "Chó", "Mèo"),
-        ),
+        tags = listOf("Được yêu thích", "Quần áo", "Chó", "Mèo"),
+    ),
     ClothesProduct(
         id = "CP003",
         name = "Áo con tôm cho chó lớn (12 - 26kg)",
@@ -364,5 +364,5 @@ val dummyProductData = listOf(
         star = 5.0,
         quantity = 1,
         tags = listOf("Quần áo", "Chó"),
-        ),
+    ),
 )

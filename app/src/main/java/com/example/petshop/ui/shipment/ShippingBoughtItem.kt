@@ -32,7 +32,7 @@ import com.example.petshop.ui.theme.PetShopTheme
 
 
 @Composable
-fun BoughtItemShipping(){
+fun BoughtItemShipping() {
     Column(
         verticalArrangement = Arrangement.spacedBy(0.dp, Alignment.Top),
         horizontalAlignment = Alignment.Start,
@@ -132,10 +132,15 @@ fun BoughtItemShipping(){
                 verticalAlignment = Alignment.Top
             ) {
                 Spacer(modifier = Modifier.width(4.dp))
-                Column(modifier = Modifier
-                    .height(23.dp)
-                    .background(color = Color(0xFF5D4037), shape = RoundedCornerShape(size = 8.dp))
-                    .padding(start = 12.dp, top = 4.dp, end = 12.dp, bottom = 4.dp)) {
+                Column(
+                    modifier = Modifier
+                        .height(23.dp)
+                        .background(
+                            color = Color(0xFF5D4037),
+                            shape = RoundedCornerShape(size = 8.dp)
+                        )
+                        .padding(start = 12.dp, top = 4.dp, end = 12.dp, bottom = 4.dp)
+                ) {
                     Text(
                         text = "0.5kg",
                         style = TextStyle(
@@ -147,11 +152,16 @@ fun BoughtItemShipping(){
                     )
                 }
 
-                Column (modifier = Modifier
-                    .width(53.dp)
-                    .height(23.dp)
-                    .background(color = Color(0xFF5D4037), shape = RoundedCornerShape(size = 8.dp))
-                    .padding(start = 12.dp, top = 4.dp, end = 12.dp, bottom = 4.dp))
+                Column(
+                    modifier = Modifier
+                        .width(53.dp)
+                        .height(23.dp)
+                        .background(
+                            color = Color(0xFF5D4037),
+                            shape = RoundedCornerShape(size = 8.dp)
+                        )
+                        .padding(start = 12.dp, top = 4.dp, end = 12.dp, bottom = 4.dp)
+                )
                 {
                     Text(
                         text = "Cá hồi",

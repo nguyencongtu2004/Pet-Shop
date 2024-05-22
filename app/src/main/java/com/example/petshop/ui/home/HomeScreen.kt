@@ -181,9 +181,11 @@ fun HomeScreen(
 
                     // Add an empty box to fill the row if the number of products is odd
                     if (rowProducts.size < 2) {
-                        Box(modifier = Modifier
-                            .weight(1f)
-                            .padding(4.dp)) {}
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(4.dp)
+                        ) {}
                     }
                 }
             }

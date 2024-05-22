@@ -1,6 +1,5 @@
 package com.example.petshop.model
 
-import android.media.Image
 import com.example.petshop.R
 
 data class Voucher(

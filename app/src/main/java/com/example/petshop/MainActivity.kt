@@ -29,10 +29,6 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     PetShopApp()
-
-                    // Sửa chỗ này để chuyển giữa các màn hình
-                    //Login()
-                    //Register()
                 }
             }
         }
