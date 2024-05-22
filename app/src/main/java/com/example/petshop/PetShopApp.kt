@@ -255,14 +255,13 @@ fun PetShopApp(
                     onFavoriteProductClicked = {
                         navController.navigate(Screen.FavoriteProductScreen.route)
                     },
-                    /*
+
                     onLogoutClicked = {
-                        // todo hien pop up
                         navController.navigate(Screen.LoginScreen.route) {
                             popUpTo(Screen.LoginScreen.route) { inclusive = true }
                         }
                     },
-                    */
+
                     onShareAppClicked = { /*TODO*/ },
                 )
             }

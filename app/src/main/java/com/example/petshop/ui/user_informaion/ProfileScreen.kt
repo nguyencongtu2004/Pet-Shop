@@ -23,12 +23,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -73,6 +75,7 @@ fun ProfileScreen(
     val sheetState = rememberModalBottomSheetState()
     var isAppInforOpen by rememberSaveable { mutableStateOf(false) }
     var isShopInforOpen by rememberSaveable { mutableStateOf(false) }
+    var isAlertOpen by rememberSaveable { mutableStateOf(false) }
 
     val onDismissRequset = {
         isShopInforOpen = false
@@ -98,22 +101,47 @@ fun ProfileScreen(
         }
     }
 
-    /*Box(modifier = modifier.fillMaxWidth()) {
-        if (isSheetOpen && isShopInforSheetOpen) {
-            ModalBottomSheet(
-                onDismissRequest = onDismissRequset,
-                sheetState = sheetState,
-            ) {
-                ShopIntroduction()
+    if (isAlertOpen) {
+        AlertDialog(
+            onDismissRequest = { isAlertOpen = false },
+            title = {
+                Text(
+                    text = "Đăng xuất",
+                    style = MaterialTheme.typography.titleLarge,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            },
+            text = {
+                Text(
+                    text = "Bạn có chắc muốn đăng xuất?",
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        isAlertOpen = false
+                        onLogoutClicked()
+                    }
+                ) {
+                    Text(
+                        "Đăng xuất", style = MaterialTheme.typography.bodyMedium.copy(
+                            color = Color.Red
+                        )
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { isAlertOpen = false }
+                ) {
+                    Text("Hủy")
+                }
             }
-        } else if (isSheetOpen) {
-            ModalBottomSheet(
-                onDismissRequest = onDismissRequset,
-                sheetState = sheetState,
-            ) {
-                AppIntroduction()
-            }
-        }*/
+        )
+    }
+
 
     LazyColumn {
         item {
@@ -328,7 +356,7 @@ fun ProfileScreen(
                         text = "Đăng xuất",
                         painter = painterResource(id = R.drawable.log_out),
                         color = Color.Red,
-                        onClick = { onLogoutClicked() }
+                        onClick = { isAlertOpen = true }
                     )
                 }
             }
