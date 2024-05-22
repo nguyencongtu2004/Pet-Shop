@@ -293,6 +293,7 @@ fun ProfileScreen(
                                 color = MaterialTheme.colorScheme.tertiaryContainer,
                                 shape = RoundedCornerShape(size = 30.dp)
                             )
+                            .clip(RoundedCornerShape(size = 30.dp))
                             .width(160.dp)
                             .height(90.dp)
                             .clickable { onShippedClicked() }

@@ -146,7 +146,9 @@ fun PetShopApp(
                 TopAppBarWithSearch(
                     onSearchTextChanged = { text -> searchText = text },
                     onSearchIconClicked = {
-                        navController.navigate(Screen.SearchScreen.createRoute(searchText))
+                        if (searchText.isNotEmpty()) {
+                            navController.navigate(Screen.SearchScreen.createRoute(searchText))
+                        }
                         searchText = ""
                     },
                     filterClicked = {
