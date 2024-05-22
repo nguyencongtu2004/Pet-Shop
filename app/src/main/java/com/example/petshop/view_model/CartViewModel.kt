@@ -1,10 +1,17 @@
 package com.example.petshop.view_model
 
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
+import com.example.petshop.R
+import com.example.petshop.database.controller.AccountController
+import com.example.petshop.database.controller.CartController
+import com.example.petshop.database.model.CartItem
 import com.example.petshop.model.ClothesProduct
 import com.example.petshop.model.FoodProduct
 import com.example.petshop.model.Product
+import com.example.petshop.model.Screen
 import com.example.petshop.model.ToyProduct
+import com.example.petshop.model.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -54,6 +61,9 @@ class CartViewModel : ViewModel() {
         product: Product
     ) {
         val products = _productsInCart.value.toMutableList()
+
+
+
         val existingProductIndex = products.indexOfFirst {
             it.id == product.id && (
                     (it is FoodProduct && product is FoodProduct &&

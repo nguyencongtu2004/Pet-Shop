@@ -54,6 +54,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.petshop.R
+import com.example.petshop.database.controller.AccountController
+import com.example.petshop.database.controller.CartController
+import com.example.petshop.database.model.CartItem
 import com.example.petshop.model.ClothesProduct
 import com.example.petshop.model.Flavor
 import com.example.petshop.model.FoodProduct
@@ -62,6 +65,7 @@ import com.example.petshop.model.Product
 import com.example.petshop.model.Screen
 import com.example.petshop.model.Size
 import com.example.petshop.model.ToyProduct
+import com.example.petshop.model.User
 import com.example.petshop.model.Weight
 import com.example.petshop.ui.DetailProductBottomBar
 import com.example.petshop.ui.TopAppBarNoSearch
@@ -128,6 +132,15 @@ fun ProductDetail(
                     cartViewModel.addProductToCart(product!!)
                     cartViewModel.updateSelectedProduct(listOf(product!!))
 
+                    //==================================
+                    val newCartItem = CartItem(id_product = "2aa", quantity = 3)
+                    CartController.addCartItem(user.user_id, newCartItem ) {
+                            success, message ->
+                        if (success) {
+                        } else {
+                        }
+                    }
+                    //===============================
                     // Hiện toast thông báo đã thêm vào giỏ hàng
                     Toast.makeText(context, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show()
                 },
