@@ -78,41 +78,15 @@ class OrderViewModel : ViewModel() {
     }
 
 
-    /*fun updateVoucher(voucher: Voucher) {
-        _currentOrder.update { order ->
-            var updatedOrder = order.copy(voucher = voucher)
-
-            updatedOrder = calculateDiscount(updatedOrder)
-            updatedOrder = calculateProductTotal(updatedOrder)
-            updatedOrder
-        }
-        println("Discount after: ${_currentOrder.value.discount}")
-    }*/
-
-
     fun updateOrderStatus(status: OrderStatus) {
         _currentOrder.update { order ->
             order.copy(status = status)
         }
     }
 
-    /*fun updateOrderDeliveryMethod(deliveryMethod: DeliveryMethod) {
-        _currentOrder.update { order ->
-            order.copy(deliveryMethod = deliveryMethod)
-        }
-        println("Delivery method: ${_currentOrder.value.deliveryMethod}")
-    }
-
-    fun updateOrderPaymentMethod(paymentMethod: PaymentMethod) {
-        _currentOrder.update { order ->
-            order.copy(paymentMethod = paymentMethod)
-        }
-        println("Payment method: $paymentMethod")
-    }*/
-
     fun updateOrder(newOrder: Order) {
         _currentOrder.update {
-            // duma toi da nhan "newOrder" la "it"
+            // duma toi da nham "newOrder" la "it"
             val discount = calculateDiscount(newOrder, newOrder.voucher)
             val total = calculateProductTotal(newOrder)
 

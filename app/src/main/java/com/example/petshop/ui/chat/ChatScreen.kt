@@ -77,16 +77,12 @@ fun ChatScreen(
     ) { paddingValues ->
         if (messages.isEmpty()) {
             Column (
-                verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxSize()
             ){
-                CircularProgressIndicator(
-                    color = Color(0xFFA05F47),
-                )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(500.dp))
                 Text(
-                    text = "Đang tải tin nhắn...",
+                    text = "Hãy bắt đầu cuộc trò chuyện!",
                     style = MaterialTheme.typography.bodyMedium
                 )
             }

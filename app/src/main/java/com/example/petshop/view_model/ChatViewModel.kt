@@ -7,19 +7,12 @@ import com.example.petshop.model.Message
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import com.google.firebase.database.FirebaseDatabase
 
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import com.google.firebase.database.*
 
 
@@ -84,7 +77,8 @@ class ChatViewModel : ViewModel() {
         val newMessage = Message(
             message = content,
             time = getCurrentTimeFormatted(),
-            isMe = true
+            isMe = true,
+            userPhone = UserViewModel().currentUser.value.phone
         )
         addMessage(newMessage)
     }
