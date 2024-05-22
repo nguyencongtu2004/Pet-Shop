@@ -133,16 +133,18 @@ fun ProductDetail(
                     cartViewModel.updateSelectedProduct(listOf(product!!))
 
                     //==================================
-                    val newCartItem = CartItem(id_product = "2aa", quantity = 3)
-                    CartController.addCartItem(user.user_id, newCartItem ) {
-                            success, message ->
+                    val newCartItem = CartItem(id_product = product!!.id, quantity = product!!.quantity) // Sử dụng id_sp thay vì id_product
+                    CartController.addCartItem(user.user_id, newCartItem) { success, message ->
                         if (success) {
+                            Toast.makeText(context, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show()
                         } else {
+                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
                         }
                     }
+
                     //===============================
                     // Hiện toast thông báo đã thêm vào giỏ hàng
-                    Toast.makeText(context, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show()
+
                 },
                 onBuyClicked = {
                     orderViewModel.updateOrder(
