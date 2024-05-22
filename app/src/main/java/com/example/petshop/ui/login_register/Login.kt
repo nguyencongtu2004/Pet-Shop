@@ -59,7 +59,7 @@ fun Login(
     userViewModel: UserViewModel,
     onLoginClick: () -> Unit = {}
 ) {
-    val user by userViewModel.currentUser.collectAsState()
+    val currentUser by userViewModel.currentUser.collectAsState()
     val context = LocalContext.current
     Scaffold(
         modifier = modifier,
@@ -122,13 +122,22 @@ fun Login(
                                                 address = account.address.toString(),
                                             )
                                         )
+                                        if (currentUser.name == "Chưa đặt") {
+                                            navController.navigate(Screen.HomeScreen.route) {
+                                                popUpTo(Screen.LoginScreen.route) { inclusive = true }
+                                            }
+                                            navController.navigate(Screen.EditProfileScreen.route)
+                                        } else {
+                                            navController.navigate(Screen.HomeScreen.route) {
+                                                popUpTo(Screen.LoginScreen.route) { inclusive = true }
+                                            }
+                                        }
                                     } else {
                                         println("Không tìm thấy tài khoản")
                                     }
                                 }
-                                navController.navigate(Screen.ProfileScreen.route)
                             } else {
-                                Toast.makeText(context, "Sai thông tin đăng nhâp", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, "Sai thông tin đăng nhập", Toast.LENGTH_SHORT).show()
                             }
                         }
                     },

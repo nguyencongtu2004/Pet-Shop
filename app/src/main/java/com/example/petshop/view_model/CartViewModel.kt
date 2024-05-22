@@ -1,7 +1,6 @@
 package com.example.petshop.view_model
 
 import androidx.lifecycle.ViewModel
-import com.example.petshop.R
 import com.example.petshop.model.ClothesProduct
 import com.example.petshop.model.FoodProduct
 import com.example.petshop.model.Product
@@ -48,43 +47,7 @@ class CartViewModel : ViewModel() {
         }
     }
 
-    private var _productsInCart = MutableStateFlow<List<Product>>(
-        listOf(
-            FoodProduct(
-                name = "Đồ ăn cho chó cao cấp",
-                description = "Đây là sản phẩm thức ăn cho chó cao cấp",
-                price = 19000.0,
-                oldPrice = 9999999.0,
-                star = 4.5,
-                quantity = 1,
-                image = R.drawable.avt,
-                detailDescription = "Chi tiết sản phẩm",
-                id = "12",
-            ),
-            ToyProduct(
-                name = "Đồ chơi cho chó",
-                description = "Đây là sản phẩm đồ chơi cho chó",
-                price = 50000.0,
-                oldPrice = 9999999.0,
-                star = 4.5,
-                quantity = 1,
-                image = R.drawable.avt,
-                detailDescription = "Chi tiết sản phẩm",
-                id = "13",
-            ),
-            ClothesProduct(
-                name = "Quần áo cho chó",
-                description = "Đây là sản phẩm quần áo cho chó",
-                price = 100000.0,
-                oldPrice = 9999999.0,
-                star = 4.5,
-                quantity = 1,
-                image = R.drawable.avt,
-                detailDescription = "Chi tiết sản phẩm",
-                id = "14",
-            )
-        )
-    )
+    private var _productsInCart = MutableStateFlow<List<Product>>(listOf())
     var productsInCart: StateFlow<List<Product>> = _productsInCart.asStateFlow()
 
     fun addProductToCart(

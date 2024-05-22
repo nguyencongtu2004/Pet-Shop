@@ -27,12 +27,10 @@ class NotificationViewModel : ViewModel() {
         Notification(
             title = "Cập nhật sản phẩm mới",
             description = "Hãy ghé qua và xem thú cưng của bạn thích gì nhé!",
-            isSeen = true,
         ),
         Notification(
             title = "Chào mừng ngày 30/4 - 1/5",
             description = "Giảm giá 30% cho tất cả sản phẩm trong 2 ngày 30/4 và 1/5",
-            isSeen = true,
             image = R.drawable.voucher,
         ),
     ))

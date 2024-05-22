@@ -99,7 +99,6 @@ fun HomeScreen(
     productViewModel: ProductViewModel,
     bannerViewModel: BannerViewModel,
     onProductClick: (String) -> Unit = {},
-
     rateFilter: String,
     discountFilter: String,
 ) {

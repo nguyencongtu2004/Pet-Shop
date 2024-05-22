@@ -40,10 +40,10 @@ class AccountController {
                             numberphone = numberphone,
                             password = password,
                             name = "Chưa đặt",
-                            email = null,
-                            sex = null,
-                            address = null,
-                            birthDay = null
+                            email = "Thêm email",
+                            sex = "Chỉnh sửa",
+                            address = "Thêm địa chỉ",
+                            birthDay = "Chưa đặt"
                         )
                     database.child("Accounts").child(userId).setValue(account)
                         .addOnCompleteListener { task ->

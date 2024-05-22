@@ -82,6 +82,7 @@ fun PetShopApp(
     val orderViewModel = viewModel<OrderViewModel>()
     val chatViewModel = viewModel<ChatViewModel>()
 
+    val currentUser by userViewModel.currentUser.collectAsState()
     // TRẠNG THÁI CỦA MÀN HÌNH Ở ĐÂY
 
     // Lấy màn hình hiện tại
@@ -217,11 +218,12 @@ fun PetShopApp(
         NavHost(
             navController = navController,
             // Nơi bắt đầu của ứng dụng
-            startDestination = Screen.HomeScreen.route,
+            startDestination = Screen.LoginScreen.route,
             modifier = Modifier.padding(innerPadding),
         ) {
             // Màn hình chính
             composable(route = Screen.HomeScreen.route) {
+
                 HomeScreen(
                     navController = navController,
                     productViewModel = productViewModel,
@@ -258,7 +260,7 @@ fun PetShopApp(
 
                     onLogoutClicked = {
                         navController.navigate(Screen.LoginScreen.route) {
-                            popUpTo(Screen.LoginScreen.route) { inclusive = true }
+                            popUpTo(Screen.HomeScreen.route) { inclusive = true }
                         }
                     },
 
