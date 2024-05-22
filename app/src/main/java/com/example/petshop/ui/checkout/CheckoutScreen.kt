@@ -65,7 +65,7 @@ fun CheckoutScreen(
                 onCheckoutClick = {
                     // Thêm sản phẩm vào order mới
                     orderViewModel.addOrder(order)
-
+                    orderViewModel.autoUpdateOrderStatus(order.id)
                     // Xóa sản phẩm đã chọn khỏi giỏ hàng
                     for (product in order.products) {
                         cartViewModel.removeProductFromCart(product)

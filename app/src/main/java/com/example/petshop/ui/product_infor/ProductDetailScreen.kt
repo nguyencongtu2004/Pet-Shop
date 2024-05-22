@@ -141,6 +141,14 @@ fun ProductDetail(
                     Toast.makeText(context, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show()
                 },
                 onBuyClicked = {
+                    orderViewModel.updateOrder(
+                        Order(
+                            products = listOf(allProducts.find { it.id == productId }!!),
+                            user = user,
+                            discount = 0.0,
+                            voucher = null,
+                        )
+                    )
                     cartViewModel.updateSelectedProduct(listOf(product!!))
                     navController?.navigate(Screen.CheckoutScreen.route)
                 },

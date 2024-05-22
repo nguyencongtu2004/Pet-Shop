@@ -163,9 +163,7 @@ fun ShipmentStateScreen(
                         OrderItem(
                             order = order,
                             showTotalPrice = false,
-                            onOrderClick = {
-                                navController?.navigate("order/${order.id}")
-                            }
+                            onOrderClick = {}
                         )
                         Divider(modifier = Modifier.padding(top = 8.dp))
                     }
@@ -195,7 +193,7 @@ fun OrderItem(
             Spacer(modifier = Modifier.height(8.dp))
             CheckoutItem(product = product)
             // Đánh giá
-            if (showTotalPrice == false) {
+            if (!showTotalPrice) {
                 RatingStar(
                     initialRating = product.star.toInt(), // Đặt giá trị đánh giá ban đầu nếu có
                     onRatingChanged = { newRating ->
@@ -252,7 +250,7 @@ fun RatingStar(
                 Icon(
                     imageVector = Icons.Default.Star,
                     contentDescription = null,
-                    tint = if (i <= rating) Color.Yellow else Color.Gray // Tô màu sao filled hoặc unfilled
+                    tint = if (i <= rating) Color(0xFFFFAB40) else Color.Gray // Tô màu sao filled hoặc unfilled
                 )
             }
         }

@@ -41,6 +41,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.petshop.R
 import com.example.petshop.model.ClothesProduct
 import com.example.petshop.model.DeliveryMethod
@@ -54,14 +55,16 @@ import com.example.petshop.view_model.OrderViewModel
 @Composable
 fun FollowShippingScreen(
     modifier: Modifier = Modifier,
-    navController: NavController? = null,
+    navController: NavController,
     orderViewModel: OrderViewModel,
     orderId: String = ""
 ) {
     val allOrders by orderViewModel.allOrders.collectAsState()
     val order = allOrders.find { it.id == orderId }
 
-    LazyColumn {
+    LazyColumn(
+        modifier = modifier
+    ) {
         items (order?.products ?: listOf()) { product ->
             ShippingProducts(
                 product = product,
@@ -71,13 +74,14 @@ fun FollowShippingScreen(
             Spacer(modifier = Modifier.height(16.dp))
             Column {
                 Divider()
-                ShippingStatus()
+                ShippingStatus(
+                    orderStatus = order?.status ?: OrderStatus.PREPARE,
+                )
                 ConfirmReceived(
                     enabled = order?.status == OrderStatus.DELIVERED,
                     modifier = Modifier.padding(top = 30.dp),
                     onClick = {
-                        //navController?.popBackStack()
-                        // TODO
+                        navController?.popBackStack()
                     }
                 )
             }
@@ -408,5 +412,6 @@ fun ShippingProductsPreview() {
 fun FollowShippingScreenPreview() {
     FollowShippingScreen(
         orderViewModel = OrderViewModel(),
+        navController = rememberNavController(),
     )
 }

@@ -1,16 +1,17 @@
 package com.example.petshop.view_model
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.petshop.R
-import com.example.petshop.model.DeliveryMethod
 import com.example.petshop.model.Order
 import com.example.petshop.model.OrderStatus
-import com.example.petshop.model.PaymentMethod
 import com.example.petshop.model.Voucher
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class OrderViewModel : ViewModel() {
     private val _currentOrder = MutableStateFlow<Order>(Order())
@@ -84,6 +85,31 @@ class OrderViewModel : ViewModel() {
         }
     }
 
+    fun autoUpdateOrderStatus(
+        orderId: String,
+    ) {
+        val time: Long = 1000 * 10 // 5 seconds
+        viewModelScope.launch {
+            delay(time)
+            _allOrders.update { orders ->
+                orders.map {
+                    it.copy(
+                        status = if (orderId == it.id) OrderStatus.SHIPPING else it.status
+                    )
+                }
+            }
+
+            delay(time)
+            _allOrders.update { orders ->
+                orders.map {
+                    it.copy(
+                        status = if (orderId == it.id) OrderStatus.DELIVERED else it.status
+                    )
+                }
+            }
+        }
+    }
+
     fun updateOrder(newOrder: Order) {
         _currentOrder.update {
             // duma toi da nham "newOrder" la "it"
@@ -114,3 +140,4 @@ class OrderViewModel : ViewModel() {
         }
     }
 }
+

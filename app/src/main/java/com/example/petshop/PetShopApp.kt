@@ -338,6 +338,7 @@ fun PetShopApp(
             ) { backStackEntry ->
                 val orderId = backStackEntry.arguments?.getString("orderId")
                 FollowShippingScreen(
+                    navController = navController,
                     orderViewModel = orderViewModel,
                     orderId = orderId!!
                 )
