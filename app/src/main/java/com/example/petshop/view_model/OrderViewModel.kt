@@ -3,8 +3,11 @@ package com.example.petshop.view_model
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.petshop.R
+import com.example.petshop.model.ClothesProduct
+import com.example.petshop.model.FoodProduct
 import com.example.petshop.model.Order
 import com.example.petshop.model.OrderStatus
+import com.example.petshop.model.ToyProduct
 import com.example.petshop.model.Voucher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -139,5 +142,42 @@ class OrderViewModel : ViewModel() {
             println("Shipping status: ${it.status}")
         }
     }
+
+    fun getStarOfProduct(order: Order, productId: String): Int {
+        return order.products.find { it.id == productId }?.star?.toInt() ?: 0
+    }
+
+    fun changeRateOfProduct(order: Order, productId: String, newRate: Int) {
+        _allOrders.update { orders ->
+            orders.map {
+                if (it.id == order.id) {
+                    it.copy(
+                        products = it.products.map { product ->
+                            if (product.id == productId) {
+                                when (product) {
+                                    is FoodProduct -> {
+                                        product.copy(star = newRate.toDouble())
+                                    }
+
+                                    is ToyProduct -> {
+                                        product.copy(star = newRate.toDouble())
+                                    }
+
+                                    is ClothesProduct -> {
+                                        product.copy(star = newRate.toDouble())
+                                    }
+                                }
+                            } else {
+                                product
+                            }
+                        }
+                    )
+                } else {
+                    it
+                }
+            }
+        }
+    }
+
 }
 

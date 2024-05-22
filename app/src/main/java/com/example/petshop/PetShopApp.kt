@@ -67,6 +67,7 @@ fun NavHostController.navigateBack() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun PetShopApp(
@@ -91,8 +92,6 @@ fun PetShopApp(
     val currentScreenObject = Screen::class.sealedSubclasses
         .mapNotNull { it.objectInstance }
         .find { it.route == currentScreen }
-
-    val scrollState = rememberScrollState()
 
     // Tìm kiếm
     var searchText by rememberSaveable { mutableStateOf("") }

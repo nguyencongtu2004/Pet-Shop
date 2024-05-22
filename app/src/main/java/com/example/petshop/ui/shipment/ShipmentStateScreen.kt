@@ -1,6 +1,5 @@
 package com.example.petshop.ui.shipment
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,16 +13,11 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -40,19 +34,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.petshop.R
+import com.example.petshop.model.ClothesProduct
 import com.example.petshop.model.FoodProduct
 import com.example.petshop.model.Order
 import com.example.petshop.model.OrderStatus
-import com.example.petshop.model.Product
 import com.example.petshop.model.Screen
+import com.example.petshop.model.ToyProduct
 import com.example.petshop.ui.checkout.CheckoutItem
 import com.example.petshop.ui.theme.PetShopTheme
 import com.example.petshop.view_model.OrderViewModel
@@ -106,7 +98,8 @@ fun ShipmentStateScreen(
             }
         }
         Box {
-            val shippingOrders = allOrders.filter { it.status == OrderStatus.SHIPPING || it.status == OrderStatus.PREPARE}
+            val shippingOrders =
+                allOrders.filter { it.status == OrderStatus.SHIPPING || it.status == OrderStatus.PREPARE }
             val shippedOrders = allOrders.filter { it.status == OrderStatus.DELIVERED }
 
             // Hiển thị nội dung của mỗi tab ở đây
@@ -132,9 +125,11 @@ fun ShipmentStateScreen(
                             onOrderClick = {
                                 val orderId = order.id
                                 navController?.navigate(Screen.FollowShipping.createRoute(orderId))
-                            }
-                        )
-                        if (shippingOrders.indexOf(order) != shippingOrders.size - 1){
+                            },
+                            onRatingChanged = {},
+                        orderViewModel = orderViewModel
+                            )
+                        if (shippingOrders.indexOf(order) != shippingOrders.size - 1) {
                             Divider(
                                 color = Color(0xFFD9D9D9),
                                 modifier = Modifier.padding(top = 8.dp)
@@ -163,7 +158,30 @@ fun ShipmentStateScreen(
                         OrderItem(
                             order = order,
                             showTotalPrice = false,
-                            onOrderClick = {}
+                            onOrderClick = {},
+                           orderViewModel = orderViewModel,
+                            onRatingChanged = { rating ->
+                                allOrders.find { it.id == order.id }?.let {
+                                    val newOrder = it.copy(
+                                        products = it.products.map { product ->
+                                            when (product) {
+                                                is FoodProduct -> {
+                                                    product.copy(star = rating.toDouble())
+                                                }
+
+                                                is ToyProduct -> {
+                                                    product.copy(star = rating.toDouble())
+                                                }
+
+                                                is ClothesProduct -> {
+                                                    product.copy(star = rating.toDouble())
+                                                }
+                                            }
+                                        }
+                                    )
+                                    orderViewModel.updateOrder(newOrder)
+                                }
+                            }
                         )
                         Divider(modifier = Modifier.padding(top = 8.dp))
                     }
@@ -182,11 +200,13 @@ fun OrderItem(
     modifier: Modifier = Modifier,
     order: Order,
     showTotalPrice: Boolean = true,
-    onOrderClick: () -> Unit = { }
+    onOrderClick: () -> Unit = { },
+    onRatingChanged: (Int) -> Unit = { },
+    orderViewModel: OrderViewModel
 ) {
     val products = order.products
 
-    Column (
+    Column(
         modifier = modifier.clickable { onOrderClick() }
     ) {
         products.forEach { product ->
@@ -195,10 +215,9 @@ fun OrderItem(
             // Đánh giá
             if (!showTotalPrice) {
                 RatingStar(
-                    initialRating = product.star.toInt(), // Đặt giá trị đánh giá ban đầu nếu có
-                    onRatingChanged = { newRating ->
-                        // Xử lý sự kiện thay đổi đánh giá
-                        // TODO
+                    initialRating = orderViewModel.getStarOfProduct(order, product.id),
+                    onRatingChanged = { rating ->
+                        orderViewModel.changeRateOfProduct(order, product.id, rating)
                     }
                 )
             }
