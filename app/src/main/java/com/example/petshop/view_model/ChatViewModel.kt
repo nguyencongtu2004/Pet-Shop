@@ -11,6 +11,7 @@ import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -22,14 +23,44 @@ class ChatViewModel : ViewModel() {
 
     private val database = FirebaseDatabase.getInstance().reference.child("ChatMessages")
 
+    var user_id: String? = null
+
+    fun up_set_UserId(id: String) {
+        this.user_id = id
+    }
+
     init {
         // Lắng nghe sự thay đổi trên Firebase khi ứng dụng khởi động
         fetchMessagesFromFirebase()
     }
 
-    private fun fetchMessagesFromFirebase() {
-        // Sử dụng addValueEventListener để lắng nghe sự thay đổi trên Firebase
-        database.addValueEventListener(object : ValueEventListener {
+    fun addMessage(message: Message) {
+        // Xác định user ID của người gửi tin nhắn
+        val userId = user_id ?: "unknown"
+
+        // Tạo một key mới cho tin nhắn trên Firebase
+        val messageKey = database.child(userId).push().key ?: return
+        // Đặt giá trị cho key với tin nhắn mới trên Firebase
+        database.child(userId).child(messageKey).setValue(message)
+            .addOnSuccessListener {
+                // Xử lý thành công nếu cần
+                // Sau khi tin nhắn được ghi vào Firebase thành công, cập nhật _messages
+                val updatedMessages = _messages.value.toMutableList()
+                updatedMessages.add(message)
+                _messages.value = updatedMessages
+            }
+            .addOnFailureListener {
+                // Xử lý lỗi nếu cần
+            }
+    }
+
+
+    fun fetchMessagesFromFirebase() {
+        // Lấy user ID của người dùng hiện tại
+        val userId = user_id ?: "unknown"
+
+        // Sử dụng addValueEventListener để lắng nghe sự thay đổi trên Firebase cho user ID hiện tại
+        database.child(userId).addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val messageList = mutableListOf<Message>()
                 for (messageSnapshot in snapshot.children) {
@@ -39,36 +70,13 @@ class ChatViewModel : ViewModel() {
                     }
                 }
                 // Cập nhật _messages với dữ liệu từ Firebase
-                _messages.value = messageList
+                _messages.update { messageList }
             }
 
             override fun onCancelled(error: DatabaseError) {
                 // Xử lý lỗi nếu cần
             }
         })
-    }
-
-    fun addMessage(message: Message) {
-        // Cập nhật _messages với tin nhắn mới
-        val updatedMessages = _messages.value.toMutableList()
-        updatedMessages.add(message)
-        _messages.value = updatedMessages
-
-        // Đồng bộ tin nhắn mới với Firebase
-        syncMessageToFirebase(message)
-    }
-
-    private fun syncMessageToFirebase(message: Message) {
-        // Tạo một key mới cho tin nhắn trên Firebase
-        val messageKey = database.push().key ?: return
-        // Đặt giá trị cho key với tin nhắn mới trên Firebase
-        database.child(messageKey).setValue(message)
-            .addOnSuccessListener {
-                // Xử lý thành công nếu cần
-            }
-            .addOnFailureListener {
-                // Xử lý lỗi nếu cần
-            }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -88,6 +96,10 @@ class ChatViewModel : ViewModel() {
         val current = LocalDateTime.now()
         val formatter = DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH)
         return current.format(formatter)
+    }
+
+    fun clearMessages() {
+        _messages.update { emptyList() }
     }
 }
 

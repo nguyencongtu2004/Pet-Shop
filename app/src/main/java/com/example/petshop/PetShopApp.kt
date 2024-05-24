@@ -257,6 +257,7 @@ fun PetShopApp(
                     },
 
                     onLogoutClicked = {
+                        chatViewModel.clearMessages()
                         navController.navigate(Screen.LoginScreen.route) {
                             popUpTo(Screen.HomeScreen.route) { inclusive = true }
                         }
@@ -375,6 +376,7 @@ fun PetShopApp(
                     navController = navController,
                     userViewModel = userViewModel,
                     cartViewModel = cartViewModel,
+                    chatViewModel = chatViewModel
                 )
             }
 

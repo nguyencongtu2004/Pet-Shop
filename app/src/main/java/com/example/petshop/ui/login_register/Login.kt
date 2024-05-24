@@ -50,6 +50,7 @@ import com.example.petshop.model.Screen
 import com.example.petshop.model.User
 import com.example.petshop.ui.theme.PetShopTheme
 import com.example.petshop.view_model.CartViewModel
+import com.example.petshop.view_model.ChatViewModel
 import com.example.petshop.view_model.ProductViewModel
 import com.example.petshop.view_model.UserViewModel
 
@@ -59,6 +60,7 @@ fun Login(
     navController: NavController,
     userViewModel: UserViewModel,
     cartViewModel: CartViewModel,
+    chatViewModel: ChatViewModel,
     onLoginClick: () -> Unit = {}
 ) {
     val currentUser by userViewModel.currentUser.collectAsState()
@@ -124,6 +126,9 @@ fun Login(
                                                 address = account.address.toString(),
                                             )
                                         )
+                                        chatViewModel.up_set_UserId(account.user_id.toString())
+                                        chatViewModel.fetchMessagesFromFirebase()
+
                                         cartViewModel.up_set_UserId(account.user_id.toString())
                                         cartViewModel.getProductsByUserId()
 
@@ -273,7 +278,8 @@ fun LoginPreview() {
         Login(
             navController = rememberNavController(),
             userViewModel = UserViewModel(),
-            cartViewModel = CartViewModel(productViewModel = ProductViewModel())
+            cartViewModel = CartViewModel(productViewModel = ProductViewModel()),
+            chatViewModel = ChatViewModel()
         )
     }
 }
