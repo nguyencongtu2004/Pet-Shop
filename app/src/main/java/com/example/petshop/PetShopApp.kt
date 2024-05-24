@@ -74,8 +74,8 @@ fun PetShopApp(
 ) {
     // VIEW MODEL Ở ĐÂY
     val userViewModel = viewModel<UserViewModel>()
-    val cartViewModel = viewModel<CartViewModel>()
     val productViewModel = viewModel<ProductViewModel>()
+    val cartViewModel = CartViewModel(productViewModel = productViewModel)
     val notificationViewModel = viewModel<NotificationViewModel>()
     val bannerViewModel = viewModel<BannerViewModel>()
     val orderViewModel = viewModel<OrderViewModel>()
@@ -102,7 +102,7 @@ fun PetShopApp(
     var selectedIndex = remember { mutableStateOf(0) }
 
     // Số lượng sản phẩm trong giỏ hàng và thông báo
-    val cartNumber by cartViewModel.productsInCart.collectAsState()
+    val cartNumber by cartViewModel.cartNumber.collectAsState()
     val notiNumber by notificationViewModel.allNotifications.collectAsState()
 
     // Cập nhật trạng thái khi currentScreen thay đổi (chạy đoạn code dưới sau mỗi lần currentScreen thay đổi)
@@ -169,7 +169,7 @@ fun PetShopApp(
                     navController.navigate(Screen.ShoppingCartScreen.route)
                 },
                 searchText = searchText,
-                cartNumber = cartNumber.size,
+                cartNumber = cartNumber,
                 notiNumber = notiNumber.filter { !it.isSeen }.size,
                 isSheetOpen = isSheetOpen,
                 onDismissRequset = { isSheetOpen = false },
@@ -183,7 +183,7 @@ fun PetShopApp(
             onBackClick = {
                 navController.popBackStack()
             },
-            cartNumber = cartNumber.size,
+            cartNumber = cartNumber,
         )
     }, bottomBar = {
         if (isNavigationBarVisible) PetShopNavigationBar(

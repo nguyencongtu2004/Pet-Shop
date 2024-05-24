@@ -1,76 +1,75 @@
 package com.example.petshop.view_model
 
-import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.petshop.R
-import com.example.petshop.database.controller.AccountController
-import com.example.petshop.database.controller.CartController
-import com.example.petshop.database.model.Account
-import com.example.petshop.database.model.CartItem
-import com.example.petshop.database.model.UserManager
-import com.example.petshop.model.ClothesProduct
-import com.example.petshop.model.FoodProduct
-import com.example.petshop.model.Message
-import com.example.petshop.model.Product
-import com.example.petshop.model.Screen
-import com.example.petshop.model.ToyProduct
-import com.example.petshop.model.User
+import com.example.petshop.model.*
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 
-class CartViewModel : ViewModel(
-) {
-    //------------------------------------------------------------------------------------------------
+class CartViewModel(
+    private val productViewModel: ProductViewModel
+) : ViewModel() {
+
     var user_id: String? = null
     lateinit var database: DatabaseReference
-    //------------------------------------------------------------------------------------------------
+
     private var _selectedProducts = MutableStateFlow<List<Product>>(listOf())
     var selectedProducts: StateFlow<List<Product>> = _selectedProducts.asStateFlow()
 
     private var _totalAmount = MutableStateFlow(0.0)
     var totalAmount: StateFlow<Double> = _totalAmount.asStateFlow()
 
-    //========================= Sửa cái đoạn này thì nó hiển thị được ra màn hình giỏ hàng
-    // vấn đề là biến product nó nhiều thuộc tính quá
-    // chạy đoạn này là sẽ bị tắt app
-    // anh nghĩ là do biến image
-    // em vào firebase, trong carts nó lưu image là dạng số, anh qua data mẫu của em thì thấy để R.draw.id_sp
-    // em thử chỉnh xem
+    private var _productsInCart = MutableStateFlow<List<Product>>(listOf())
+    var productsInCart: StateFlow<List<Product>> = _productsInCart.asStateFlow()
 
-    fun getProductsByUserId(){
+    private var _cartNumber = MutableStateFlow(0)
+    var cartNumber: StateFlow<Int> = _cartNumber.asStateFlow()
+
+    fun getProductsByUserId() {
         database.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val productList = mutableListOf<Product>()
-                for (productSnapshot in dataSnapshot.children) {
-                    val product = Product.fromSnapshot(productSnapshot)
-                    product?.let {
-                        productList.add(it)
+                val data = dataSnapshot.value as? Map<String, Map<String, Any>> ?: return
+                println(data)
+
+                val newCartProducts = data.mapNotNull { (productId, productData) ->
+                    val type = productData["type"] as? String ?: return@mapNotNull null
+                    val quantity = (productData["quantity"] as? Long)?.toInt() ?: return@mapNotNull null
+
+                    val product = productViewModel.allProducts.value.find { it.id == productId } ?: return@mapNotNull null
+                    when (type) {
+                        "food" -> {
+                            val selectedFlavor = Flavor.valueOf(productData["selectedFlavor"] as? String ?: return@mapNotNull null)
+                            val selectedWeight = Weight.valueOf(productData["selectedWeight"] as? String ?: return@mapNotNull null)
+                            (product as? FoodProduct)?.copy(quantity = quantity, selectedFlavor = selectedFlavor, selectedWeight = selectedWeight)
+                        }
+                        "toy" -> {
+                            val selectedSize = Size.valueOf(productData["selectedSize"] as? String ?: return@mapNotNull null)
+                            (product as? ToyProduct)?.copy(quantity = quantity, selectedSize = selectedSize)
+                        }
+                        "clothes" -> {
+                            val selectedSize = Size.valueOf(productData["selectedSize"] as? String ?: return@mapNotNull null)
+                            (product as? ClothesProduct)?.copy(quantity = quantity, selectedSize = selectedSize)
+                        }
+                        else -> null
                     }
                 }
-                        _productsInCart.update { productList }
+
+                _productsInCart.update { newCartProducts }
+                updateCartNumber()
             }
 
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
+                // Handle the error
             }
         })
     }
-//------------------------------------------------------------------------------------------------
+
     fun addProductToSelected(product: Product) {
         val products = _selectedProducts.value.toMutableList()
         products.add(product)
@@ -82,13 +81,6 @@ class CartViewModel : ViewModel(
         this.user_id = id
         this.database = FirebaseDatabase.getInstance().reference.child("Carts").child(id)
     }
-
-
-
-//    fun resetSelectedProducts() {
-//        _selectedProducts.update { listOf() }
-//        updateTotalAmount()
-//    }
 
     fun removeProductFromSelected(product: Product) {
         val products = _selectedProducts.value.toMutableList()
@@ -102,17 +94,10 @@ class CartViewModel : ViewModel(
     }
 
     fun updateSelectedProduct(products: List<Product>) {
-        _selectedProducts.update { _ ->
-            products
-        }
+        _selectedProducts.update { _ -> products }
     }
 
-    private var _productsInCart = MutableStateFlow<List<Product>>(listOf())
-    var productsInCart: StateFlow<List<Product>> = _productsInCart.asStateFlow()
-
-    fun addProductToCart(
-        product: Product
-    ) {
+    fun addProductToCart(product: Product) {
         val products = _productsInCart.value.toMutableList()
         val existingProductIndex = products.indexOfFirst {
             it.id == product.id && (
@@ -127,7 +112,6 @@ class CartViewModel : ViewModel(
         }
 
         if (existingProductIndex != -1) {
-            // Nếu sản phẩm đã tồn tại, tăng số lượng
             val existingProduct = products[existingProductIndex]
             products[existingProductIndex] = when (existingProduct) {
                 is FoodProduct -> existingProduct.copy(quantity = existingProduct.quantity + product.quantity)
@@ -135,18 +119,47 @@ class CartViewModel : ViewModel(
                 is ClothesProduct -> existingProduct.copy(quantity = existingProduct.quantity + product.quantity)
             }
         } else {
-            // Nếu sản phẩm chưa tồn tại, thêm mới vào danh sách
             products.add(0, product)
         }
 
         _productsInCart.update { products }
 
-        database.child(product.id).setValue(product)
+        val data = when (product) {
+            is FoodProduct -> mapOf(
+                "type" to "food",
+                "quantity" to product.quantity,
+                "selectedFlavor" to product.selectedFlavor.toString(),
+                "selectedWeight" to product.selectedWeight.toString()
+            )
+            is ToyProduct -> mapOf(
+                "type" to "toy",
+                "quantity" to product.quantity,
+                "selectedSize" to product.selectedSize.toString()
+            )
+            is ClothesProduct -> mapOf(
+                "type" to "clothes",
+                "quantity" to product.quantity,
+                "selectedSize" to product.selectedSize.toString()
+            )
+        }
+
+        database.child(product.id).setValue(data)
+
+        updateCartNumber()
     }
 
     fun removeProductFromCart(product: Product) {
         val products = _productsInCart.value.toMutableList()
         products.remove(product)
         _productsInCart.update { products }
+
+        database.child(product.id).removeValue()
+
+        updateCartNumber()
+    }
+
+    fun updateCartNumber() {
+        _cartNumber.update { _productsInCart.value.size }
+        println("Cart number: ${_cartNumber.value}")
     }
 }

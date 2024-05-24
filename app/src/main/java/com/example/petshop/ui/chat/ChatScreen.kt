@@ -54,6 +54,7 @@ import com.example.petshop.model.Screen
 import com.example.petshop.ui.TopAppBarNoSearch
 import com.example.petshop.view_model.CartViewModel
 import com.example.petshop.view_model.ChatViewModel
+import com.example.petshop.view_model.ProductViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -257,6 +258,6 @@ fun ChatScreenPreview() {
     ChatScreen(
         chatViewModel = ChatViewModel(),
         navController = rememberNavController(),
-        cartViewModel = CartViewModel()
+        cartViewModel = CartViewModel(productViewModel = ProductViewModel())
     )
 }

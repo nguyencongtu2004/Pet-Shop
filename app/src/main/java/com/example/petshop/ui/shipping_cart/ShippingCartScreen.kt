@@ -61,6 +61,7 @@ import com.example.petshop.ui.CheckoutBottomBar
 import com.example.petshop.ui.theme.PetShopTheme
 import com.example.petshop.view_model.CartViewModel
 import com.example.petshop.view_model.OrderViewModel
+import com.example.petshop.view_model.ProductViewModel
 import com.example.petshop.view_model.UserViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -75,10 +76,11 @@ fun ShoppingCartScreen(
     val selectedProducts by cartViewModel.selectedProducts.collectAsState()
     val totalAmount by cartViewModel.totalAmount.collectAsState()
     val user by userViewModel.currentUser.collectAsState()
-    cartViewModel.up_set_UserId(user.user_id.toString())
-
-
     val productsInCart by cartViewModel.productsInCart.collectAsState()
+
+    cartViewModel.up_set_UserId(user.user_id)
+    cartViewModel.getProductsByUserId()
+
 
     // Thêm biến trạng thái để kiểm tra xem reset đã được thực hiện chưa
     var isInitialized by remember { mutableStateOf(false) }
@@ -470,7 +472,7 @@ fun BoughtItemCart(
 fun BoughtItemPreview() {
     PetShopTheme {
         ShoppingCartScreen(
-            cartViewModel = CartViewModel(),
+            cartViewModel = CartViewModel(productViewModel = ProductViewModel()),
             userViewModel = UserViewModel(),
             orderViewModel = OrderViewModel(),
         )

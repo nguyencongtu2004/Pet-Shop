@@ -46,11 +46,11 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.petshop.R
 import com.example.petshop.database.controller.AccountController
-import com.example.petshop.database.model.UserManager
 import com.example.petshop.model.Screen
 import com.example.petshop.model.User
 import com.example.petshop.ui.theme.PetShopTheme
 import com.example.petshop.view_model.CartViewModel
+import com.example.petshop.view_model.ProductViewModel
 import com.example.petshop.view_model.UserViewModel
 
 @Composable
@@ -273,7 +273,7 @@ fun LoginPreview() {
         Login(
             navController = rememberNavController(),
             userViewModel = UserViewModel(),
-            cartViewModel = CartViewModel(),
+            cartViewModel = CartViewModel(productViewModel = ProductViewModel())
         )
     }
 }

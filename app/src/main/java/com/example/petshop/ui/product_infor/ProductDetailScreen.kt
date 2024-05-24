@@ -94,7 +94,7 @@ fun ProductDetail(
     val product by productViewModel.selectedProduct.collectAsState()
     val user by userViewModel.currentUser.collectAsState()
     val selectedProducts by cartViewModel.selectedProducts.collectAsState()
-    val cartNumber by cartViewModel.productsInCart.collectAsState()
+
 
     val context = LocalContext.current
 
@@ -109,6 +109,7 @@ fun ProductDetail(
                         .background(color = MaterialTheme.colorScheme.surface)
                 )
                 {
+                    val cartNumber by cartViewModel.cartNumber.collectAsState()
                     TopAppBarNoSearch(
                         title = it.name,
                         isCartEnable = true,
@@ -118,7 +119,7 @@ fun ProductDetail(
                         onBackClick = {
                             navController?.popBackStack()
                         },
-                        cartNumber = cartNumber.size
+                        cartNumber = cartNumber
                     )
                 }
             }
@@ -133,6 +134,7 @@ fun ProductDetail(
                     cartViewModel.up_set_UserId(user_id)
                     cartViewModel.addProductToCart(product!!)
                     cartViewModel.updateSelectedProduct(listOf(product!!))
+                    cartViewModel.updateCartNumber()
 
                     //==================================
 //                    val newCartItem = CartItem(id_product = product!!.id, quantity = product!!.quantity) // Sử dụng id_sp thay vì id_product
@@ -811,7 +813,7 @@ fun ProductDetailPreview() {
     ProductDetail(
         productViewModel = ProductViewModel(),
         userViewModel = UserViewModel(),
-        cartViewModel = CartViewModel(),
+        cartViewModel = CartViewModel(productViewModel = ProductViewModel()),
         orderViewModel = OrderViewModel(),
         productId = "1"
     )
