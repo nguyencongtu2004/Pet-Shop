@@ -146,7 +146,7 @@ fun ShoppingCartScreen(
                     onDeleteClick = {
                         cartViewModel.removeProductFromCart(product)
                         cartViewModel.updateTotalAmount()
-                    }
+                    },
                 )
                 if (productsInCart.indexOf(product) != productsInCart.size - 1) {
                     Divider(color = Color(0xFFD9D9D9))
@@ -163,9 +163,10 @@ fun BoughtItemCart(
     product: Product,
     onQuantityChange: (Boolean, Int) -> Unit,
     onDeleteClick: () -> Unit = {},
+    initCheck: Boolean = false,
 ) {
     var quantity by remember { mutableStateOf(product.quantity) }
-    var checkedState by remember { mutableStateOf(false) }
+    var checkedState by remember { mutableStateOf(initCheck) }
     var showDialog by remember { mutableStateOf(false) }
 
     // Hiện dialog xác nhận xóa sản phẩm khỏi giỏ hàng

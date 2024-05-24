@@ -94,7 +94,7 @@ fun ProductDetail(
     val product by productViewModel.selectedProduct.collectAsState()
     val user by userViewModel.currentUser.collectAsState()
     val selectedProducts by cartViewModel.selectedProducts.collectAsState()
-
+    val cartNumber by cartViewModel.cartNumber.collectAsState()
 
     val context = LocalContext.current
 
@@ -109,7 +109,7 @@ fun ProductDetail(
                         .background(color = MaterialTheme.colorScheme.surface)
                 )
                 {
-                    val cartNumber by cartViewModel.cartNumber.collectAsState()
+
                     TopAppBarNoSearch(
                         title = it.name,
                         isCartEnable = true,

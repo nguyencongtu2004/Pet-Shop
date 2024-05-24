@@ -51,6 +51,7 @@ import com.example.petshop.ui.user_informaion.FavoriteProductScreen
 import com.example.petshop.ui.user_informaion.ProfileScreen
 import com.example.petshop.view_model.BannerViewModel
 import com.example.petshop.view_model.CartViewModel
+import com.example.petshop.view_model.CartViewModelFactory
 import com.example.petshop.view_model.ChatViewModel
 import com.example.petshop.view_model.NotificationViewModel
 import com.example.petshop.view_model.OrderViewModel
@@ -73,9 +74,10 @@ fun PetShopApp(
     navController: NavHostController = rememberNavController(),
 ) {
     // VIEW MODEL Ở ĐÂY
+    val productViewModel: ProductViewModel = viewModel()
+    val cartViewModel: CartViewModel = viewModel(factory = CartViewModelFactory(productViewModel))
+
     val userViewModel = viewModel<UserViewModel>()
-    val productViewModel = viewModel<ProductViewModel>()
-    val cartViewModel = CartViewModel(productViewModel = productViewModel)
     val notificationViewModel = viewModel<NotificationViewModel>()
     val bannerViewModel = viewModel<BannerViewModel>()
     val orderViewModel = viewModel<OrderViewModel>()
@@ -107,6 +109,8 @@ fun PetShopApp(
 
     // Cập nhật trạng thái khi currentScreen thay đổi (chạy đoạn code dưới sau mỗi lần currentScreen thay đổi)
     LaunchedEffect(currentScreen) {
+
+        println("Current screen: $currentScreen - have $cartNumber in cart")
         when (currentScreen) {
             Screen.HomeScreen.route -> selectedIndex.value = 0
             Screen.ProfileScreen.route -> selectedIndex.value = 2

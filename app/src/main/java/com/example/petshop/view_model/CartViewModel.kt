@@ -1,6 +1,7 @@
 package com.example.petshop.view_model
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.example.petshop.model.*
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -143,10 +144,25 @@ class CartViewModel(
             )
         }
 
-        database.child(product.id).setValue(data)
+        // Kiểm tra sự tồn tại của sản phẩm trong cơ sở dữ liệu trước khi thêm hoặc cập nhật
+        val productRef = database.child(product.id)
+        productRef.get().addOnSuccessListener { snapshot ->
+            if (snapshot.exists()) {
+                // Sản phẩm đã tồn tại, cập nhật số lượng
+                val existingQuantity = snapshot.child("quantity").getValue(Int::class.java) ?: 0
+                val newQuantity = existingQuantity + product.quantity
+                productRef.child("quantity").setValue(newQuantity)
+            } else {
+                // Sản phẩm chưa tồn tại, thêm mới
+                productRef.setValue(data)
+            }
+        }.addOnFailureListener {
+            // Xử lý lỗi nếu có
+        }
 
         updateCartNumber()
     }
+
 
     fun removeProductFromCart(product: Product) {
         val products = _productsInCart.value.toMutableList()
@@ -163,3 +179,24 @@ class CartViewModel(
         println("Cart number: ${_cartNumber.value}")
     }
 }
+
+class CartViewModelFactory(
+    private val productViewModel: ProductViewModel
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(CartViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return CartViewModel(productViewModel) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
+}
+/** Lý do sử dụng CartViewModelFactory:
+ * Đúng vậy, việc khởi tạo CartViewModel một cách thủ công như
+ * val cartViewModel = CartViewModel(productViewModel = productViewModel)
+ * có thể gây ra vấn đề trong việc cập nhật số sản phẩm vì CartViewModel
+ * không được quản lý bởi ViewModelProvider của Compose.
+ * Bạn nên để ViewModelProvider quản lý tất cả các ViewModel
+ * để đảm bảo chúng được khởi tạo và duy trì đúng cách.
+ */
+
