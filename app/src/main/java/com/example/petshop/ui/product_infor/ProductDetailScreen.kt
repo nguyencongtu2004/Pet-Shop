@@ -129,18 +129,20 @@ fun ProductDetail(
                     navController?.navigate(Screen.ChatScreen.route)
                 },
                 onAddToCartClicked = {
+                    var user_id = user.user_id.toString()
+                    cartViewModel.up_set_UserId(user_id)
                     cartViewModel.addProductToCart(product!!)
                     cartViewModel.updateSelectedProduct(listOf(product!!))
 
                     //==================================
-                    val newCartItem = CartItem(id_product = product!!.id, quantity = product!!.quantity) // Sử dụng id_sp thay vì id_product
-                    CartController.addCartItem(user.user_id, newCartItem) { success, message ->
-                        if (success) {
+//                    val newCartItem = CartItem(id_product = product!!.id, quantity = product!!.quantity) // Sử dụng id_sp thay vì id_product
+//                    CartController.addCartItem(user.user_id, newCartItem) { success, message ->
+//                        if (success) {
                             Toast.makeText(context, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show()
-                        } else {
-                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                        }
-                    }
+//                        } else {
+//                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+//                        }
+//                    }
 
                     //===============================
                     // Hiện toast thông báo đã thêm vào giỏ hàng

@@ -46,9 +46,11 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.petshop.R
 import com.example.petshop.database.controller.AccountController
+import com.example.petshop.database.model.UserManager
 import com.example.petshop.model.Screen
 import com.example.petshop.model.User
 import com.example.petshop.ui.theme.PetShopTheme
+import com.example.petshop.view_model.CartViewModel
 import com.example.petshop.view_model.UserViewModel
 
 @Composable
@@ -56,6 +58,7 @@ fun Login(
     modifier: Modifier = Modifier,
     navController: NavController,
     userViewModel: UserViewModel,
+    cartViewModel: CartViewModel,
     onLoginClick: () -> Unit = {}
 ) {
     val currentUser by userViewModel.currentUser.collectAsState()
@@ -121,6 +124,9 @@ fun Login(
                                                 address = account.address.toString(),
                                             )
                                         )
+                                        cartViewModel.up_set_UserId(account.user_id.toString())
+                                        cartViewModel.getProductsByUserId()
+
                                         if (currentUser.name == "Chưa đặt") {
                                             navController.navigate(Screen.HomeScreen.route) {
                                                 popUpTo(Screen.LoginScreen.route) {
@@ -267,6 +273,7 @@ fun LoginPreview() {
         Login(
             navController = rememberNavController(),
             userViewModel = UserViewModel(),
+            cartViewModel = CartViewModel(),
         )
     }
 }

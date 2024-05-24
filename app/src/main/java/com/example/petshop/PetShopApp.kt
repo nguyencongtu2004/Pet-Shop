@@ -368,7 +368,9 @@ fun PetShopApp(
 
             composable(route = Screen.LoginScreen.route) {
                 Login(
-                    navController = navController, userViewModel = userViewModel
+                    navController = navController,
+                    userViewModel = userViewModel,
+                    cartViewModel = cartViewModel,
                 )
             }
 

@@ -1,5 +1,7 @@
 package com.example.petshop.model
 
+import com.google.firebase.database.DataSnapshot
+
 enum class Weight(val value: String) {
     _0_5KG("0.5 kg"), _1KG("1 kg"), _1_5KG("1.5 kg"), _2KG("2 kg")
 }
@@ -11,7 +13,6 @@ enum class Flavor(val value: String) {
 enum class Size(val value: String) {
     S("S"), M("M"), L("L"), XL("XL")
 }
-
 
 sealed class Product {
     abstract var id: String
@@ -25,6 +26,40 @@ sealed class Product {
     abstract var star: Double
     abstract var quantity: Int
     abstract var isFavorite: Boolean
+
+    companion object {
+        fun fromSnapshot(snapshot: DataSnapshot): Product? {
+            val productSnapshotValue = snapshot.value as? Map<String, Any> ?: return null
+            val id = productSnapshotValue["id"] as String
+            val name = productSnapshotValue["name"] as String
+            val description = productSnapshotValue["description"] as String
+            val detailDescription = productSnapshotValue["detailDescription"] as String
+            val tags = (productSnapshotValue["tags"] as? Map<String, String>)?.values?.toList() ?: emptyList()
+            val image = (productSnapshotValue["image"] as Long).toInt()
+            val price = (productSnapshotValue["price"] as Double)
+            val oldPrice = (productSnapshotValue["oldPrice"] as Double)
+            val star = (productSnapshotValue["star"] as Double)
+            val quantity = (productSnapshotValue["quantity"] as Long).toInt()
+            val isFavorite = (productSnapshotValue["favorite"] as Boolean)
+
+            return when (val type = productSnapshotValue["type"] as? String) {
+                "food" -> {
+                    val selectedFlavor = Flavor.valueOf((productSnapshotValue["selectedFlavor"] as String))
+                    val selectedWeight = Weight.valueOf((productSnapshotValue["selectedWeight"] as String))
+                    FoodProduct(id, name, description, detailDescription, tags, image, price, oldPrice, star, quantity, isFavorite, selectedFlavor, selectedWeight)
+                }
+                "toy" -> {
+                    val selectedSize = Size.valueOf((productSnapshotValue["selectedSize"] as String))
+                    ToyProduct(id, name, description, detailDescription, tags, image, price, oldPrice, star, quantity, isFavorite, selectedSize)
+                }
+                "clothes" -> {
+                    val selectedSize = Size.valueOf((productSnapshotValue["selectedSize"] as String))
+                    ClothesProduct(id, name, description, detailDescription, tags, image, price, oldPrice, star, quantity, isFavorite, selectedSize)
+                }
+                else -> null // Loại sản phẩm không xác định
+            }
+        }
+    }
 }
 
 data class FoodProduct(

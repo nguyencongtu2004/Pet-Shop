@@ -1,7 +1,7 @@
 package com.example.petshop.database.model
 data class CartItem(
-    val id_product: String="null",
-    var quantity: Int = 0,
+    var id_product: String = "null",
+    var quantity: Int
 )
 
 data class Cart(

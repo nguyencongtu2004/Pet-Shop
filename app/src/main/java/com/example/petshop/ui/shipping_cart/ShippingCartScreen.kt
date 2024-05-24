@@ -32,10 +32,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -60,6 +62,7 @@ import com.example.petshop.ui.theme.PetShopTheme
 import com.example.petshop.view_model.CartViewModel
 import com.example.petshop.view_model.OrderViewModel
 import com.example.petshop.view_model.UserViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 fun ShoppingCartScreen(
@@ -70,19 +73,21 @@ fun ShoppingCartScreen(
     userViewModel: UserViewModel
 ) {
     val selectedProducts by cartViewModel.selectedProducts.collectAsState()
-    val productsInCart by cartViewModel.productsInCart.collectAsState()
     val totalAmount by cartViewModel.totalAmount.collectAsState()
     val user by userViewModel.currentUser.collectAsState()
+    cartViewModel.up_set_UserId(user.user_id.toString())
 
+
+    val productsInCart by cartViewModel.productsInCart.collectAsState()
 
     // Thêm biến trạng thái để kiểm tra xem reset đã được thực hiện chưa
     var isInitialized by remember { mutableStateOf(false) }
 
     // Reset các sản phẩm đã chọn nếu chưa được thực hiện
-    if (!isInitialized) {
-        cartViewModel.resetSelectedProducts()
-        isInitialized = true
-    }
+//    if (!isInitialized) {
+//        cartViewModel.resetSelectedProducts()
+//        isInitialized = true
+//    }
     if (productsInCart.isEmpty()) {
         return Column(
             //verticalArrangement = Arrangement.Center,
@@ -148,7 +153,6 @@ fun ShoppingCartScreen(
         }
     }
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
