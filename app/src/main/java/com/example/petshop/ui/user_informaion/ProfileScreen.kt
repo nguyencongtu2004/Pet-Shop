@@ -486,7 +486,7 @@ fun AppIntroduction(modifier: Modifier = Modifier) {
         )
         Spacer(modifier = Modifier.height(10.dp))
         Text(
-            text = "Đây là ứng dụng bán hàng online, là sản phẩm của môn học SE114 - Nhập môn ứng dụng di động do giảng viên Lê Võ Đình Kha hướng dẫn và được phát triển bởi:\n" +
+            text = "Đây là ứng dụng bán hàng online, là sản phẩm của môn học Quản lý dự án công nghệ thông tin (IS208.O22) do giảng viên Lê Võ Đình Kha hướng dẫn và được phát triển bởi:\n" +
                     "      1. Nguyễn Anh Phi\n" +
                     "      2. Đỗ Trọng Nhân\n" +
                     "      3. Nguyễn Gia Toàn\n" +
