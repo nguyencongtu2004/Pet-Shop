@@ -486,13 +486,11 @@ fun AppIntroduction(modifier: Modifier = Modifier) {
         )
         Spacer(modifier = Modifier.height(10.dp))
         Text(
-            text = "Đây là ứng dụng bán hàng online, là sản phẩm của môn học SE114 - Nhập môn ứng dụng di động do giảng viên Huỳnh Thị Hồ Mộng Trinh hướng dẫn và được phát triển bởi:\n" +
+            text = "Đây là ứng dụng bán hàng online, là sản phẩm của môn học SE114 - Nhập môn ứng dụng di động do giảng viên Lê Võ Đình Kha hướng dẫn và được phát triển bởi:\n" +
                     "      1. Nguyễn Anh Phi\n" +
-                    "      2. Nguyễn Công Tú\n" +
-                    "      3. Bế Ích Tuân\n" +
-                    "      4. Võ Hoàng Tuấn\n" +
-                    "      5. Nguyễn Phú Triệu \n\n" +
-                    "Ứng dụng vẫn đang trong quá trình phát triển nên có thể xảy ra lỗi nào không mong muốn. Kính mong cô và các bạn góp ý.\n" +
+                    "      2. Đỗ Trọng Nhân\n" +
+                    "      3. Nguyễn Gia Toàn\n" +
+                    "Ứng dụng vẫn đang trong quá trình phát triển nên có thể xảy ra lỗi nào không mong muốn. Kính mong thầy và các bạn góp ý.\n" +
                     "Nhóm chúng mình xin cảm ơn <3 !",
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Justify,
